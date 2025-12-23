@@ -1,0 +1,234 @@
+/**
+ * React Hook für Shop-Context
+ * Verwaltet aktiven Shop und Demo-Mode
+ */
+import { useEffect, useState } from 'react';
+import { getCurrentShop, getAvailableShops, switchShop } from '@/lib/api';
+
+export interface Shop {
+  id: number;
+  name: string;
+  type: 'shopify' | 'demo';
+  shop_url: string | null;
+  product_count: number;
+  is_active: boolean;
+}
+
+export interface ShopContext {
+  currentShop: Shop | null;
+  isDemoMode: boolean;
+  shops: Shop[];
+  loading: boolean;
+  error: string | null;
+  refresh: () => Promise<void>;
+  switchToShop: (shopId: number, useDemo: boolean) => Promise<void>;
+}
+
+export function useShop(): ShopContext {
+  const [currentShop, setCurrentShop] = useState<Shop | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadCurrentShop = async () => {
+    try {
+      setError(null);
+      const data = await getCurrentShop();
+      console.log('[useShop] getCurrentShop response:', data);
+      setCurrentShop(data.shop);
+      setIsDemoMode(data.is_demo_mode || false);
+      console.log('[useShop] Current shop updated:', data.shop?.name, 'isDemoMode:', data.is_demo_mode);
+    } catch (err: any) {
+      setError(err.message || 'Fehler beim Laden des Shops');
+      console.error('[useShop] Error loading current shop:', err);
+    }
+  };
+
+  const loadShops = async (preserveDemoMode: boolean = false) => {
+    try {
+      setError(null);
+      const data = await getAvailableShops();
+      console.log('[useShop] getAvailableShops response:', data);
+      
+      setShops(data.shops || []);
+      
+      // WICHTIG: Nur isDemoMode setzen, wenn preserveDemoMode false ist
+      if (!preserveDemoMode) {
+        setIsDemoMode(data.is_demo_mode || false);
+      }
+      
+      // Finde aktiven Shop basierend auf active_shop_id und is_demo_mode
+      const activeShopId = data.active_shop_id;
+      const isDemo = preserveDemoMode ? isDemoMode : (data.is_demo_mode || false);
+      
+      let activeShop = null;
+      if (isDemo) {
+        activeShop = data.shops?.find(s => s.type === 'demo') || null;
+      } else {
+        // Für Live-Shop: Suche nach active_shop_id (ignoriere is_active Flag)
+        activeShop = data.shops?.find(s => s.id === activeShopId && s.type === 'shopify') || null;
+        // Fallback: Erster Live-Shop
+        if (!activeShop && data.shops) {
+          activeShop = data.shops.find(s => s.type === 'shopify') || null;
+        }
+      }
+      
+      // Fallback: Nutze is_active Flag
+      if (!activeShop && data.shops) {
+        activeShop = data.shops.find(s => s.is_active) || null;
+      }
+      
+      // Fallback: Erster Shop in Liste
+      if (!activeShop && data.shops && data.shops.length > 0) {
+        activeShop = data.shops[0];
+        console.warn('[useShop] Using first shop as fallback:', activeShop.name);
+      }
+      
+      setCurrentShop(activeShop);
+      console.log('[useShop] Active shop set to:', activeShop?.name || 'null', 'isDemoMode:', isDemo);
+      
+      // WICHTIG: Setze loading auf false nach erfolgreichem Laden
+      setLoading(false);
+      
+    } catch (err: any) {
+      const errorMsg = err.message || 'Fehler beim Laden der Shops';
+      setError(errorMsg);
+      console.error('Error loading shops:', err);
+      // Setze Demo-Shop als Fallback
+      if (shops.length === 0) {
+        setShops([{
+          id: 999,
+          name: 'Demo Shop',
+          type: 'demo' as const,
+          shop_url: null,
+          product_count: 20,
+          is_active: true
+        }]);
+        setCurrentShop({
+          id: 999,
+          name: 'Demo Shop',
+          type: 'demo' as const,
+          shop_url: null,
+          product_count: 20,
+          is_active: true
+        });
+        setIsDemoMode(true);
+      }
+      // WICHTIG: Setze loading auf false auch bei Fehler
+      setLoading(false);
+    }
+  };
+
+  const refresh = async (preserveDemoMode: boolean = false) => {
+    try {
+      // Lade zuerst Shops (enthält active_shop_id und is_demo_mode)
+      // preserveDemoMode=true verhindert, dass isDemoMode überschrieben wird
+      await loadShops(preserveDemoMode);
+      console.log('[useShop] Refresh completed');
+    } catch (err) {
+      console.error('[useShop] Error during refresh:', err);
+      // Sicherstellen, dass loading auf false gesetzt wird
+      setLoading(false);
+    }
+  };
+
+  const switchToShop = async (shopId: number, useDemo: boolean) => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log(`[useShop] Switching to shop ${shopId}, demo: ${useDemo}`);
+      
+      const result = await switchShop(shopId, useDemo);
+      console.log('[useShop] Switch API response:', result);
+      
+      // WICHTIG: Setze State SOFORT nach erfolgreichem API-Call
+      setIsDemoMode(useDemo);
+      
+      // Finde den neuen Shop in der Liste
+      let newShop = shops.find(s => s.id === shopId);
+      
+      // Falls Shop nicht in Liste, lade Shops neu und suche dort
+      if (!newShop) {
+        console.warn('[useShop] Shop nicht in Liste gefunden, lade Shops neu...');
+        const shopsData = await getAvailableShops();
+        newShop = shopsData.shops?.find(s => s.id === shopId) || null;
+        
+        // Aktualisiere shops State
+        setShops(shopsData.shops || []);
+      }
+      
+      if (newShop) {
+        setCurrentShop(newShop);
+        console.log('[useShop] Optimistic update: currentShop =', newShop.name, 'isDemoMode =', useDemo);
+      } else {
+        console.error('[useShop] Shop nicht gefunden! shopId:', shopId);
+        // Fallback: Nutze Shop aus API-Response
+        if (result.active_shop) {
+          const fallbackShop: Shop = {
+            id: result.active_shop.id,
+            name: result.active_shop.name,
+            type: result.active_shop.type as 'shopify' | 'demo',
+            shop_url: null,
+            product_count: 0,
+            is_active: true
+          };
+          setCurrentShop(fallbackShop);
+          console.log('[useShop] Using shop from API response:', fallbackShop.name);
+        }
+      }
+      
+      // Trigger app-wide refresh event SOFORT
+      window.dispatchEvent(new CustomEvent('shop-switched', { 
+        detail: { shopId, useDemo } 
+      }));
+      console.log('[useShop] shop-switched event dispatched');
+      
+      // WICHTIG: setLoading(false) SOFORT nach API-Call
+      setLoading(false);
+      
+      // Reload data (asynchron im Hintergrund, blockiert UI nicht)
+      // WICHTIG: preserveDemoMode=true verhindert, dass refresh() isDemoMode überschreibt
+      refresh(true).then(() => {
+        console.log('[useShop] Data refreshed after switch');
+        // Stelle sicher, dass isDemoMode korrekt bleibt
+        setIsDemoMode(useDemo);
+      }).catch((err) => {
+        console.error('[useShop] Error during refresh:', err);
+        // Auch bei Fehler: isDemoMode beibehalten
+        setIsDemoMode(useDemo);
+      });
+      
+      return;
+    } catch (err: any) {
+      console.error('[useShop] Error switching shop:', err);
+      setError(err.message || 'Fehler beim Wechseln des Shops');
+      setLoading(false);
+      throw err;
+    }
+  };
+
+  useEffect(() => {
+    // Load on mount
+    refresh();
+
+    // Listen for shop switch events
+    const handleShopSwitch = () => {
+      refresh();
+    };
+
+    window.addEventListener('shop-switched', handleShopSwitch);
+    return () => window.removeEventListener('shop-switched', handleShopSwitch);
+  }, []);
+
+  return {
+    currentShop,
+    isDemoMode,
+    shops,
+    loading,
+    error,
+    refresh,
+    switchToShop
+  };
+}
+
