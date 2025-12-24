@@ -130,6 +130,13 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
     s.type !== 'demo' // Sicherheitscheck
   );
   
+  // FIX: Filter echte Live Shops für Rendering (ohne Demo Shop!)
+  const realLiveShops = liveShops.filter(s =>
+    s.id !== 999 &&
+    s.type !== 'demo' &&
+    s.type === 'shopify'
+  );
+  
   // DEBUG: Prüfe auf doppelte Demo Shops
   const demoShops = shops.filter(s => s.type === 'demo' || s.id === 999);
   if (demoShops.length > 1) {
@@ -239,19 +246,11 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
         // LIVE MODE
         // ═════════════════════════════════════
         <div className="space-y-2">
-          {(() => {
-            // FIX: Filter echte Live Shops (ohne Demo Shop!)
-            const realLiveShops = liveShops.filter(s =>
-              s.id !== 999 &&
-              s.type !== 'demo' &&
-              s.type === 'shopify'
-            );
-            
-            return realLiveShops.length > 0 ? (
-              // ─────────────────────────────────
-              // FALL 1: Shopify Shop ist installiert
-              // ─────────────────────────────────
-              realLiveShops.map((shop) => (
+          {realLiveShops.length > 0 ? (
+            // ─────────────────────────────────
+            // FALL 1: Shopify Shop ist installiert
+            // ─────────────────────────────────
+            realLiveShops.map((shop) => (
               <div
                 key={shop.id}
                 className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
