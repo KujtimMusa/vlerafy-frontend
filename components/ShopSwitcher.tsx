@@ -78,9 +78,17 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
   const demoShop = shops.find(s => s.type === 'demo');
   const liveShops = shops.filter(s => s.type === 'shopify');
   
+  // DEBUG: Prüfe auf doppelte Demo Shops
+  const demoShops = shops.filter(s => s.type === 'demo');
+  if (demoShops.length > 1) {
+    console.warn('[ShopSwitcher] ⚠️ MEHRERE DEMO SHOPS GEFUNDEN:', demoShops.map(s => ({ id: s.id, name: s.name })));
+  }
+  
   console.log('[ShopSwitcher] Render:', {
     shopsCount: shops.length,
+    shops: shops.map(s => ({ id: s.id, name: s.name, type: s.type })),
     demoShop: demoShop?.name,
+    demoShopsCount: demoShops.length,
     liveShopsCount: liveShops.length,
     liveShops: liveShops.map(s => ({ id: s.id, name: s.name })),
     currentShop: currentShop?.name,

@@ -51,7 +51,30 @@ export function useShop(): ShopContext {
       const data = await getAvailableShops();
       console.log('[useShop] getAvailableShops response:', data);
       
-      setShops(data.shops || []);
+      // DEBUG: Prüfe auf doppelte Shops
+      const shopsArray = data.shops || [];
+      const demoShops = shopsArray.filter((s: Shop) => s.type === 'demo');
+      if (demoShops.length > 1) {
+        console.warn('[useShop] ⚠️ BACKEND GIBT MEHRERE DEMO SHOPS ZURÜCK:', demoShops.map((s: Shop) => ({ id: s.id, name: s.name })));
+      }
+      
+      // Entferne doppelte Demo Shops (behalte nur den ersten)
+      const uniqueShops = shopsArray.reduce((acc: Shop[], shop: Shop) => {
+        if (shop.type === 'demo') {
+          // Prüfe ob bereits ein Demo Shop im Array ist
+          const hasDemo = acc.some(s => s.type === 'demo');
+          if (!hasDemo) {
+            acc.push(shop);
+          } else {
+            console.warn('[useShop] ⚠️ Doppelten Demo Shop entfernt:', shop.name);
+          }
+        } else {
+          acc.push(shop);
+        }
+        return acc;
+      }, []);
+      
+      setShops(uniqueShops);
       
       // WICHTIG: Nur isDemoMode setzen, wenn preserveDemoMode false ist
       if (!preserveDemoMode) {
