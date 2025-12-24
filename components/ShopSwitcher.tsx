@@ -142,13 +142,11 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
 
       {/* Shop Cards */}
       <div className="space-y-2">
-        {/* Demo Shop Card */}
-        {demoShop && (
+        {/* Demo Mode: Nur Demo Shop Card */}
+        {isDemoMode && demoShop && (
           <div
             className={`p-4 border rounded-lg cursor-pointer transition-all ${
-              isDemoMode 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-200 hover:bg-gray-50'
+              'border-blue-500 bg-blue-50'
             } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={() => !loading && handleSwitch(demoShop, true)}
           >
@@ -166,25 +164,21 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
               </div>
               
               <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 text-xs rounded ${
-                  isDemoMode 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {isDemoMode ? 'Active' : 'Available'}
+                <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700">
+                  Active
                 </span>
-                {isDemoMode && <span className="text-green-500 text-xl">✓</span>}
+                <span className="text-green-500 text-xl">✓</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* Live Shopify Shops */}
-        {liveShops.map(shop => (
+        {/* Live Mode: Echte Shopify Shops */}
+        {!isDemoMode && liveShops.length > 0 && liveShops.map(shop => (
           <div
             key={shop.id}
             className={`p-4 border rounded-lg cursor-pointer transition-all ${
-              !isDemoMode && shop.is_active 
+              shop.is_active 
                 ? 'border-green-500 bg-green-50' 
                 : 'border-gray-200 hover:bg-gray-50'
             } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -217,45 +211,56 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
               
               <div className="flex items-center gap-2">
                 <span className={`px-2 py-1 text-xs rounded ${
-                  !isDemoMode && shop.is_active
+                  shop.is_active
                     ? 'bg-green-100 text-green-700'
                     : 'bg-gray-100 text-gray-600'
                 }`}>
-                  {!isDemoMode && shop.is_active ? 'Active' : 'Available'}
+                  {shop.is_active ? 'Active' : 'Available'}
                 </span>
-                {!isDemoMode && shop.is_active && (
+                {shop.is_active && (
                   <span className="text-green-500 text-xl">✓</span>
                 )}
               </div>
             </div>
           </div>
         ))}
-      </div>
 
-      {/* No Live Shops - Call to Action */}
-      {liveShops.length === 0 && (
-        <div className="p-4 mt-4 bg-gray-50 border border-gray-200 rounded-lg">
-          <div className="text-center space-y-3">
-            <p className="text-sm text-gray-700">
-              Noch kein echter Shopify-Shop verbunden.
-            </p>
-            <input
-              type="text"
-              value={shopDomain}
-              onChange={(e) => setShopDomain(e.target.value)}
-              placeholder="dein-shop.myshopify.com"
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="button"
-              onClick={handleConnectShopify}
-              className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors w-full"
-            >
-              Shopify-Shop verbinden
-            </button>
+        {/* Live Mode: Connect Shop Card (wenn keine Shops installiert) */}
+        {!isDemoMode && liveShops.length === 0 && (
+          <div className="p-4 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer">
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="text-2xl">🔗</span>
+                <h4 className="font-semibold text-gray-900">Connect Your Shopify Shop</h4>
+              </div>
+              <p className="text-sm text-gray-700">
+                Install PriceIQ to connect your Shopify store and start optimizing prices.
+              </p>
+              <div className="mt-4 space-y-2">
+                <input
+                  type="text"
+                  value={shopDomain}
+                  onChange={(e) => setShopDomain(e.target.value)}
+                  placeholder="dein-shop.myshopify.com"
+                  className="w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleConnectShopify();
+                  }}
+                  className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors w-full"
+                >
+                  <span>🔗</span>
+                  Connect Shopify Shop
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Loading Overlay */}
       {loading && (
