@@ -129,7 +129,7 @@ export default function RecommendationCard({
             {typeof data.reasoning === 'string' 
               ? data.reasoning 
               : typeof data.reasoning === 'object' && data.reasoning !== null
-                ? (data.reasoning.summary || data.reasoning.reasoning || JSON.stringify(data.reasoning, null, 2))
+                ? ((data.reasoning as any)?.summary || (data.reasoning as any)?.reasoning || JSON.stringify(data.reasoning, null, 2))
                 : 'No reasoning provided.'}
           </p>
         </div>
