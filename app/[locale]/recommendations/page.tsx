@@ -157,7 +157,7 @@ function RecommendationsContent() {
         productId={productId.toString()}
         productTitle={productTitle || `Product ${productId}`}
         currentPrice={currentPrice}
-        shopId={currentShop?.id?.toString() || currentShop?.shop_id || 'demo'}
+        shopId={currentShop?.id?.toString() || 'demo'}
         onSave={async (costData) => {
           try {
             await saveProductCosts(productId.toString(), costData)
