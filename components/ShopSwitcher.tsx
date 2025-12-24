@@ -140,127 +140,132 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
         </div>
       )}
 
-      {/* Shop Cards */}
-      <div className="space-y-2">
-        {/* Demo Mode: Nur Demo Shop Card */}
-        {isDemoMode && demoShop && (
-          <div
-            className={`p-4 border rounded-lg cursor-pointer transition-all ${
-              'border-blue-500 bg-blue-50'
-            } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            onClick={() => !loading && handleSwitch(demoShop, true)}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
-                  🧪
+      {/* Shop Cards - Conditional Rendering: Nur 1 Karte pro Mode */}
+      {isDemoMode ? (
+        // Demo Mode: Nur Demo Shop Card
+        demoShop && (
+          <div className="space-y-2">
+            <div
+              className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                'border-blue-500 bg-blue-50'
+              } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={() => !loading && handleSwitch(demoShop, true)}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
+                    🧪
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{demoShop.name}</h4>
+                    <p className="text-sm text-gray-600">
+                      {demoShop.product_count} products • 90 days history
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-medium text-gray-900">{demoShop.name}</h4>
-                  <p className="text-sm text-gray-600">
-                    {demoShop.product_count} products • 90 days history
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700">
-                  Active
-                </span>
-                <span className="text-green-500 text-xl">✓</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Live Mode: Echte Shopify Shops */}
-        {!isDemoMode && liveShops.length > 0 && liveShops.map(shop => (
-          <div
-            key={shop.id}
-            className={`p-4 border rounded-lg cursor-pointer transition-all ${
-              shop.is_active 
-                ? 'border-green-500 bg-green-50' 
-                : 'border-gray-200 hover:bg-gray-50'
-            } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            onClick={async () => {
-              if (loading) {
-                console.log('[ShopSwitcher] Shop card click: Loading, ignoring');
-                return;
-              }
-              console.log('[ShopSwitcher] Shop card click:', shop.id, shop.name);
-              try {
-                await handleSwitch(shop, false);
-                console.log('[ShopSwitcher] Shop card switch completed');
-              } catch (err) {
-                console.error('[ShopSwitcher] Shop card switch failed', err);
-              }
-            }}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-xl">
-                  🏪
-                </div>
-                <div>
-                  <h4 className="font-medium text-gray-900">{shop.name}</h4>
-                  <p className="text-sm text-gray-600">
-                    {shop.product_count} products • Connected via Shopify
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 text-xs rounded ${
-                  shop.is_active
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {shop.is_active ? 'Active' : 'Available'}
-                </span>
-                {shop.is_active && (
+                
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700">
+                    Active
+                  </span>
                   <span className="text-green-500 text-xl">✓</span>
-                )}
+                </div>
               </div>
             </div>
           </div>
-        ))}
-
-        {/* Live Mode: Connect Shop Card (wenn keine Shops installiert) */}
-        {!isDemoMode && liveShops.length === 0 && (
-          <div className="p-4 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer">
-            <div className="text-center space-y-3">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="text-2xl">🔗</span>
-                <h4 className="font-semibold text-gray-900">Connect Your Shopify Shop</h4>
+        )
+      ) : (
+        // Live Mode: Echte Shops oder "Connect" Karte
+        <div className="space-y-2">
+          {liveShops.length > 0 ? (
+            // Echte Shopify Shops anzeigen
+            liveShops.map(shop => (
+              <div
+                key={shop.id}
+                className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                  shop.is_active 
+                    ? 'border-green-500 bg-green-50' 
+                    : 'border-gray-200 hover:bg-gray-50'
+                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={async () => {
+                  if (loading) {
+                    console.log('[ShopSwitcher] Shop card click: Loading, ignoring');
+                    return;
+                  }
+                  console.log('[ShopSwitcher] Shop card click:', shop.id, shop.name);
+                  try {
+                    await handleSwitch(shop, false);
+                    console.log('[ShopSwitcher] Shop card switch completed');
+                  } catch (err) {
+                    console.error('[ShopSwitcher] Shop card switch failed', err);
+                  }
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-xl">
+                      🏪
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">{shop.name}</h4>
+                      <p className="text-sm text-gray-600">
+                        {shop.product_count} products • Connected via Shopify
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-1 text-xs rounded ${
+                      shop.is_active
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {shop.is_active ? 'Active' : 'Available'}
+                    </span>
+                    {shop.is_active && (
+                      <span className="text-green-500 text-xl">✓</span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <p className="text-sm text-gray-700">
-                Install PriceIQ to connect your Shopify store and start optimizing prices.
-              </p>
-              <div className="mt-4 space-y-2">
-                <input
-                  type="text"
-                  value={shopDomain}
-                  onChange={(e) => setShopDomain(e.target.value)}
-                  placeholder="dein-shop.myshopify.com"
-                  className="w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                  onClick={(e) => e.stopPropagation()}
-                />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleConnectShopify();
-                  }}
-                  className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors w-full"
-                >
-                  <span>🔗</span>
-                  Connect Shopify Shop
-                </button>
+            ))
+          ) : (
+            // Kein Shop installiert → "Connect Shop" Karte
+            <div className="p-4 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors">
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <span className="text-2xl">🔗</span>
+                  <h4 className="font-semibold text-gray-900">Connect Your Shopify Shop</h4>
+                </div>
+                <p className="text-sm text-gray-700">
+                  Install PriceIQ to connect your Shopify store and start optimizing prices.
+                </p>
+                <div className="mt-4 space-y-2">
+                  <input
+                    type="text"
+                    value={shopDomain}
+                    onChange={(e) => setShopDomain(e.target.value)}
+                    placeholder="dein-shop.myshopify.com"
+                    className="w-full px-3 py-2 text-sm border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleConnectShopify();
+                    }}
+                    className="inline-flex justify-center items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors w-full"
+                  >
+                    <span>🔗</span>
+                    Connect Shopify Shop
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Loading Overlay */}
       {loading && (
