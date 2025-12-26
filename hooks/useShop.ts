@@ -240,16 +240,47 @@ export function useShop(): ShopContext {
   };
 
   useEffect(() => {
-    // Load on mount
+    // Prüfe localStorage für shop_id beim Mount
+    if (typeof window !== 'undefined') {
+      const storedShopId = localStorage.getItem('current_shop_id');
+      const storedMode = localStorage.getItem('shop_mode');
+      
+      if (storedShopId) {
+        console.log('[useShop] Found shop_id in localStorage:', storedShopId);
+        const shopIdNum = parseInt(storedShopId);
+        const useDemo = storedMode === 'demo';
+        
+        // Wenn shop_id vorhanden, switch zu diesem Shop
+        if (!isNaN(shopIdNum)) {
+          console.log('[useShop] Auto-switching to shop from localStorage:', shopIdNum, 'demo:', useDemo);
+          switchToShop(shopIdNum, useDemo).catch((err) => {
+            console.error('[useShop] Error auto-switching shop:', err);
+            // Bei Fehler: Normal refresh
+            refresh();
+          });
+          return;
+        }
+      }
+    }
+    
+    // Load on mount (wenn keine shop_id in localStorage)
     refresh();
 
     // Listen for shop switch events
-    const handleShopSwitch = () => {
+    const handleShopSwitch = (event: CustomEvent) => {
+      console.log('[useShop] shop-switched event received:', event.detail);
+      // Wenn shop_id im Event, speichere es
+      if (event.detail?.shopId && typeof window !== 'undefined') {
+        localStorage.setItem('current_shop_id', event.detail.shopId.toString());
+        if (event.detail.mode) {
+          localStorage.setItem('shop_mode', event.detail.mode);
+        }
+      }
       refresh();
     };
 
-    window.addEventListener('shop-switched', handleShopSwitch);
-    return () => window.removeEventListener('shop-switched', handleShopSwitch);
+    window.addEventListener('shop-switched', handleShopSwitch as EventListener);
+    return () => window.removeEventListener('shop-switched', handleShopSwitch as EventListener);
   }, []);
 
   return {

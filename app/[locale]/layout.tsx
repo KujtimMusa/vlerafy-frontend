@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ErrorBoundaryWrapper } from '@/components/ErrorBoundaryWrapper';
 import '../globals.css'
 
 const locales = ['de', 'en'];
@@ -29,18 +30,20 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      {/* Header/Navbar */}
-      <nav className="flex items-center justify-between p-4 border-b bg-white">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold">PriceOptimizer</h1>
-        </div>
-        <LanguageSwitcher />
-      </nav>
-      
-      {/* Main Content */}
-      <main>{children}</main>
-    </NextIntlClientProvider>
+    <ErrorBoundaryWrapper>
+      <NextIntlClientProvider messages={messages}>
+        {/* Header/Navbar */}
+        <nav className="flex items-center justify-between p-4 border-b bg-white">
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-bold">PriceOptimizer</h1>
+          </div>
+          <LanguageSwitcher />
+        </nav>
+        
+        {/* Main Content */}
+        <main>{children}</main>
+      </NextIntlClientProvider>
+    </ErrorBoundaryWrapper>
   );
 }
 

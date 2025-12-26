@@ -10,22 +10,42 @@ export default function Home() {
   const { currentShop, isDemoMode, shops, loading, switchToShop } = useShop()
   const searchParams = useSearchParams()
   
-  // Auto-Switch nach OAuth Installation
+  // Auto-Switch nach OAuth Installation (aus URL oder localStorage)
   useEffect(() => {
+    // Prüfe zuerst URL-Parameter
     const shopId = searchParams?.get('shop_id')
     const mode = searchParams?.get('mode')
     const installed = searchParams?.get('installed')
     
     if (shopId && mode === 'live' && installed === 'true') {
-      console.log('[Home] Auto-switching to installed shop:', shopId)
+      console.log('[Home] Auto-switching to installed shop from URL:', shopId)
       switchToShop(parseInt(shopId), false)
       
       // Clean URL (entferne Query-Parameter)
       if (typeof window !== 'undefined') {
         window.history.replaceState({}, '', window.location.pathname)
       }
+      return;
     }
-  }, [searchParams, switchToShop])
+    
+    // Fallback: Prüfe localStorage (falls /dashboard bereits shop_id gespeichert hat)
+    if (typeof window !== 'undefined' && !shopId) {
+      const storedShopId = localStorage.getItem('current_shop_id')
+      const storedMode = localStorage.getItem('shop_mode')
+      
+      if (storedShopId && !currentShop) {
+        console.log('[Home] Auto-switching to shop from localStorage:', storedShopId)
+        const shopIdNum = parseInt(storedShopId)
+        const useDemo = storedMode === 'demo'
+        
+        if (!isNaN(shopIdNum)) {
+          switchToShop(shopIdNum, useDemo).catch((err) => {
+            console.error('[Home] Error switching to shop from localStorage:', err)
+          })
+        }
+      }
+    }
+  }, [searchParams, switchToShop, currentShop])
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
