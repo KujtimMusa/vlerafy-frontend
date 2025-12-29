@@ -209,9 +209,15 @@ export function useShop(): ShopContext {
         }
       }
       
+      // Aktualisiere localStorage SOFORT
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('current_shop_id', shopId.toString());
+        localStorage.setItem('shop_mode', useDemo ? 'demo' : 'live');
+      }
+      
       // Trigger app-wide refresh event SOFORT
       window.dispatchEvent(new CustomEvent('shop-switched', { 
-        detail: { shopId, useDemo } 
+        detail: { shopId, useDemo, mode: useDemo ? 'demo' : 'live' } 
       }));
       console.log('[useShop] shop-switched event dispatched');
       
@@ -272,11 +278,28 @@ export function useShop(): ShopContext {
       // Wenn shop_id im Event, speichere es
       if (event.detail?.shopId && typeof window !== 'undefined') {
         localStorage.setItem('current_shop_id', event.detail.shopId.toString());
-        if (event.detail.mode) {
-          localStorage.setItem('shop_mode', event.detail.mode);
+        const mode = event.detail.mode || (event.detail.useDemo ? 'demo' : 'live');
+        localStorage.setItem('shop_mode', mode);
+        
+        // WICHTIG: Setze State SOFORT, ohne auf refresh() zu warten
+        const useDemo = mode === 'demo';
+        setIsDemoMode(useDemo);
+        
+        // Finde Shop in aktueller Liste
+        const switchedShop = shops.find((s: Shop) => s.id === event.detail.shopId);
+        if (switchedShop) {
+          setCurrentShop(switchedShop);
+          console.log('[useShop] Shop updated from event:', switchedShop.name, 'demo:', useDemo);
         }
       }
-      refresh();
+      
+      // Refresh mit preserveDemoMode=true, damit isDemoMode nicht überschrieben wird
+      refresh(true).then(() => {
+        // Stelle sicher, dass isDemoMode korrekt bleibt
+        if (event.detail?.useDemo !== undefined) {
+          setIsDemoMode(event.detail.useDemo);
+        }
+      });
     };
 
     window.addEventListener('shop-switched', handleShopSwitch as EventListener);

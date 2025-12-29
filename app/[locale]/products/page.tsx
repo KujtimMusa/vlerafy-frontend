@@ -13,10 +13,12 @@ export default function ProductsPage() {
 
   // Lade Produkte beim Shop-Wechsel
   useEffect(() => {
-    if (currentShop) {
-      console.log('[ProductsPage] Shop changed, reloading products:', currentShop.name, 'isDemoMode:', isDemoMode)
-      loadProducts()
+    if (!currentShop) {
+      console.log('[ProductsPage] No current shop, skipping load')
+      return
     }
+    console.log('[ProductsPage] Shop changed, reloading products:', currentShop.name, 'isDemoMode:', isDemoMode)
+    loadProducts()
   }, [currentShop?.id, isDemoMode])
   
   // Höre auf Shop-Wechsel Events (für sofortiges Reload)
@@ -26,7 +28,7 @@ export default function ProductsPage() {
       // Kurze Verzögerung, damit Shop-Context aktualisiert ist
       setTimeout(() => {
         loadProducts()
-      }, 200)
+      }, 300)
     }
     
     window.addEventListener('shop-switched', handleShopSwitch as EventListener)

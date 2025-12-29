@@ -60,7 +60,6 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
       s.type === 'shopify' // Nur Shopify Shops
     );
     
-    console.log('[ShopSwitcher] liveShops (all):', liveShops.map(s => ({ id: s.id, name: s.name, type: s.type })));
     console.log('[ShopSwitcher] realLiveShops (filtered):', realLiveShops.map(s => ({ id: s.id, name: s.name, type: s.type })));
     
     if (realLiveShops.length > 0) {

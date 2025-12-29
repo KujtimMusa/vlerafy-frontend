@@ -24,33 +24,75 @@ function RecommendationsContent() {
 
   // Lade Produkt-Preis und Margin-Daten
   useEffect(() => {
+    if (!productId || !currentShop) {
+      console.log('[RecommendationsPage] Missing productId or currentShop, skipping load')
+      return
+    }
+    
     const loadProductData = async () => {
       try {
-        const products = await fetchProducts()
+        console.log('[RecommendationsPage] Loading product data:', { productId, shopId: currentShop.id, isDemoMode })
+        const products = await fetchProducts() // Backend nutzt ShopContext
         const product = products.find((p: any) => p.id === productId)
-        if (product) {
-          setCurrentPrice(product.price || 0)
-          setProductTitle(product.title || product.name || `Product ${productId}`)
-          
-          // Lade Margin-Daten wenn Preis vorhanden
-          if (product.price && product.price > 0) {
-            try {
-              const margin = await calculateMargin(productId.toString(), product.price)
-              setMarginData(margin)
-            } catch (error) {
-              // Keine Kostendaten vorhanden - das ist OK
-              setMarginData({ has_cost_data: false })
-            }
+        
+        if (!product) {
+          console.error('[RecommendationsPage] Product not found in current shop', { productId, currentShop, productsCount: products.length })
+          setMarginData({ has_cost_data: false, error: `Produkt ${productId} nicht im aktuellen Shop gefunden. Bitte Shop wechseln oder Produkt-ID prüfen.` })
+          setCurrentPrice(0)
+          setProductTitle(`Product ${productId} (nicht gefunden)`)
+          return
+        }
+        
+        setCurrentPrice(product.price || 0)
+        setProductTitle(product.title || product.name || `Product ${productId}`)
+        
+        // Lade Margin-Daten wenn Preis vorhanden
+        if (product.price && product.price > 0) {
+          try {
+            const margin = await calculateMargin(productId.toString(), product.price)
+            setMarginData(margin)
+          } catch (error) {
+            // Keine Kostendaten vorhanden - das ist OK
+            setMarginData({ has_cost_data: false })
           }
         }
       } catch (error) {
-        console.error('Fehler beim Laden der Produktdaten:', error)
-        setMarginData({ has_cost_data: false })
+        console.error('[RecommendationsPage] Fehler beim Laden der Produktdaten:', error)
+        setMarginData({ has_cost_data: false, error: 'Fehler beim Laden der Produktdaten.' })
       }
     }
-    if (productId) {
-      loadProductData()
+    
+    loadProductData()
+  }, [productId, currentShop?.id, isDemoMode])
+  
+  // Höre auf Shop-Wechsel Events
+  useEffect(() => {
+    const handleShopSwitch = (event: CustomEvent) => {
+      console.log('[RecommendationsPage] Shop switched event received:', event.detail)
+      // Reload product data when shop changes
+      if (productId) {
+        setTimeout(() => {
+          const loadProductData = async () => {
+            try {
+              const products = await fetchProducts()
+              const product = products.find((p: any) => p.id === productId)
+              if (product) {
+                setCurrentPrice(product.price || 0)
+                setProductTitle(product.title || product.name || `Product ${productId}`)
+              } else {
+                setMarginData({ has_cost_data: false, error: `Produkt ${productId} nicht im neuen Shop gefunden.` })
+              }
+            } catch (error) {
+              console.error('[RecommendationsPage] Error reloading product after shop switch:', error)
+            }
+          }
+          loadProductData()
+        }, 300)
+      }
     }
+    
+    window.addEventListener('shop-switched', handleShopSwitch as EventListener)
+    return () => window.removeEventListener('shop-switched', handleShopSwitch as EventListener)
   }, [productId])
 
   return (

@@ -78,8 +78,22 @@ export function CompetitorAnalysis({ productId, currentPrice }: CompetitorAnalys
       // Speichere Ergebnisse im Cache
       saveCachedData(productId, result)
     } catch (err: any) {
-      setError('Fehler beim Laden der Wettbewerber-Daten')
-      console.error(err)
+      console.error('[CompetitorAnalysis] Fehler beim Laden:', err)
+      
+      // Differenzierte Fehlermeldungen
+      let errorMessage = 'Fehler beim Laden der Wettbewerber-Daten'
+      
+      if (err?.response?.status === 404) {
+        errorMessage = 'Produkt nicht gefunden. Prüfe Shop-Auswahl und Produkt-ID.'
+      } else if (err?.response?.status === 429) {
+        errorMessage = 'API-Limit erreicht. Bitte später erneut versuchen.'
+      } else if (err?.response?.status === 500) {
+        errorMessage = 'Server-Fehler. Bitte später erneut versuchen oder Support kontaktieren.'
+      } else if (err?.message) {
+        errorMessage = err.message
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -122,8 +136,9 @@ export function CompetitorAnalysis({ productId, currentPrice }: CompetitorAnalys
       
       {/* Error State */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded p-4 text-red-700">
-          {error}
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+          <p className="text-sm font-medium mb-1">⚠️ Fehler</p>
+          <p className="text-sm">{error}</p>
         </div>
       )}
       
