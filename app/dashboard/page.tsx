@@ -1,17 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 /**
- * Dashboard Redirect Handler
- * 
- * Diese Route wird vom Backend nach OAuth-Installation aufgerufen:
- * /dashboard?shop_id=1&installed=true
- * 
- * Sie speichert shop_id in localStorage und redirectet dann zur Root-Route.
+ * Dashboard Redirect Handler Content
+ * Wrapped in Suspense für useSearchParams()
  */
-export default function DashboardPage() {
+function DashboardContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<'loading' | 'redirecting' | 'error'>('loading');
@@ -30,10 +26,8 @@ export default function DashboardPage() {
           localStorage.setItem('shop_id', shopId);
           localStorage.setItem('current_shop_id', shopId);
           
-          // Speichere auch mode, falls vorhanden
-          if (mode) {
-            localStorage.setItem('shop_mode', mode);
-          }
+          // Speichere auch mode, falls vorhanden (default: 'live' für Shopify)
+          localStorage.setItem('shop_mode', mode || 'live');
           
           console.log('[Dashboard] Saved to localStorage:', {
             shop_id: shopId,
@@ -104,4 +98,30 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+/**
+ * Dashboard Redirect Handler
+ * 
+ * Diese Route wird vom Backend nach OAuth-Installation aufgerufen:
+ * /dashboard?shop_id=1&installed=true
+ * 
+ * Sie speichert shop_id in localStorage und redirectet dann zur Root-Route.
+ * 
+ * Wrapped in Suspense für useSearchParams() (Next.js 13+ Requirement)
+ */
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Lade...</p>
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
+  );
+}
+
 
