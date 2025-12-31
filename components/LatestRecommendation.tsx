@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { getLatestRecommendation, generateRecommendation } from '@/lib/api'
 import { applyRecommendedPrice } from '@/lib/shopifyService'
 import { PriceRecommendationCard } from './pricing/PriceRecommendationCard'
+import { PriceStoryExplainer } from './explainability/PriceStoryExplainer'
 import { useShop } from '@/hooks/useShop'
 
 interface RecommendationData {
@@ -22,6 +23,26 @@ interface RecommendationData {
   days_of_stock?: number | null
   sales_7d?: number | null
   competitor_avg_price?: number | null
+  
+  // Price Story (Explainable AI)
+  price_story?: {
+    steps: Array<{
+      step: number
+      title: string
+      explanation: string
+      impact: number
+      impact_pct: number
+      confidence: number
+      data_points: any
+      reasoning: string
+    }>
+    total_impact: number
+    total_impact_pct: number
+    base_price: number
+    recommended_price: number
+    confidence: number
+    summary: string
+  }
   
   created_at: string
   applied_at?: string | null
@@ -255,12 +276,21 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
   }
 
   return (
-    <PriceRecommendationCard
-      recommendation={transformedRecommendation}
-      onRefresh={handleGenerate}
-      onDismiss={() => {}}
-      onApply={handleApplyPrice}
-    />
+    <div className="space-y-6">
+      <PriceRecommendationCard
+        recommendation={transformedRecommendation}
+        onRefresh={handleGenerate}
+        onDismiss={() => {}}
+        onApply={handleApplyPrice}
+      />
+      
+      {/* Price Story Explainer - zeigt warum dieser Preis empfohlen wird */}
+      {recommendation.price_story && (
+        <div className="mt-6">
+          <PriceStoryExplainer priceStory={recommendation.price_story} />
+        </div>
+      )}
+    </div>
   )
 }
 
