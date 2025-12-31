@@ -35,20 +35,26 @@ export function MarginDisplay({ marginData, compact = false, onAddCosts }: Margi
   
   if (!marginData.has_cost_data) {
     return (
-      <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+            <span className="text-lg">💡</span>
+          </div>
           <div className="flex-1">
-            <p className="font-medium text-yellow-900">Keine Kostendaten hinterlegt</p>
-            <p className="text-sm text-yellow-700 mt-1">
-              Hinterlege Kosten, um Margen zu berechnen und Preise sicher zu optimieren.
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">
+              Noch präziser mit Kostendaten
+            </h3>
+            <p className="text-xs text-gray-600 mb-3">
+              Die Preisempfehlung funktioniert auch ohne Kosten. 
+              <strong> Mit Kostendaten</strong> können wir zusätzlich deine <strong>Marge optimieren</strong> und 
+              sicherstellen, dass du immer profitabel bleibst.
             </p>
             {onAddCosts && (
               <button 
                 onClick={onAddCosts}
-                className="mt-2 text-sm font-medium text-yellow-800 hover:text-yellow-900 underline"
+                className="text-xs font-medium text-blue-600 hover:text-blue-700 underline transition"
               >
-                → Kosten jetzt hinterlegen
+                Kosten hinterlegen (optional)
               </button>
             )}
           </div>

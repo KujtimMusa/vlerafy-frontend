@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Store, TrendingUp, Package, AlertCircle } from 'lucide-react';
 import { formatCurrency, formatPercentage } from '@/lib/formatters';
 
@@ -30,6 +30,19 @@ interface Props {
 }
 
 export function PriceStoryExplainer({ priceStory }: Props) {
+  // 🆕 NEU: State für expanded Details - Step 1 default open
+  const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([1]));
+  
+  const toggleStep = (step: number) => {
+    const newExpanded = new Set(expandedSteps);
+    if (newExpanded.has(step)) {
+      newExpanded.delete(step);
+    } else {
+      newExpanded.add(step);
+    }
+    setExpandedSteps(newExpanded);
+  };
+  
   // Icon mapping
   const getStepIcon = (step: number) => {
     const icons: Record<number, typeof Store> = {
@@ -66,7 +79,9 @@ export function PriceStoryExplainer({ priceStory }: Props) {
     };
   };
 
-  const maxImpact = Math.max(...priceStory.steps.map(s => Math.abs(s.impact)), 1);
+  // Berechne maxImpact - mindestens 1 für Division, aber ignoriere 0-Impacts
+  const impacts = priceStory.steps.map(s => Math.abs(s.impact)).filter(i => i > 0);
+  const maxImpact = impacts.length > 0 ? Math.max(...impacts) : 1;
 
   // Format explanation with bold text
   const formatExplanation = (text: string) => {
@@ -90,6 +105,7 @@ export function PriceStoryExplainer({ priceStory }: Props) {
           {priceStory.steps.map((step) => {
             const Icon = getStepIcon(step.step);
             const colors = getImpactColor(step.impact);
+            const isExpanded = expandedSteps.has(step.step);
 
             return (
               <div key={step.step} className="flex gap-4">
@@ -129,21 +145,28 @@ export function PriceStoryExplainer({ priceStory }: Props) {
                       </div>
                     </div>
                     <div className={`text-sm font-bold ${colors.text} min-w-[80px] text-right tabular-nums`}>
-                      {step.impact > 0 ? '+' : ''}{formatCurrency(step.impact)}
+                      {step.impact > 0 ? '+' : ''}{step.impact === 0 ? '±' : ''}{formatCurrency(Math.abs(step.impact))}
                     </div>
                   </div>
 
-                  {/* Additional Reasoning */}
+                  {/* 🆕 GEÄNDERT: Controlled Details statt <details> */}
                   {step.reasoning && (
-                    <details className="mt-3">
-                      <summary className="cursor-pointer text-xs font-medium text-blue-600 hover:text-blue-700 transition">
-                        💡 Mehr Details anzeigen
-                      </summary>
-                      <p 
-                        className="mt-2 text-xs text-gray-600 pl-4 border-l-2 border-blue-200 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: formatExplanation(step.reasoning) }}
-                      />
-                    </details>
+                    <div className="mt-3">
+                      <button
+                        onClick={() => toggleStep(step.step)}
+                        className="cursor-pointer text-xs font-medium text-blue-600 hover:text-blue-700 transition flex items-center gap-1"
+                      >
+                        <span>{isExpanded ? '▼' : '▶'}</span>
+                        <span>💡 {isExpanded ? 'Weniger Details' : 'Mehr Details anzeigen'}</span>
+                      </button>
+                      
+                      {isExpanded && (
+                        <div 
+                          className="mt-2 text-xs text-gray-600 pl-4 border-l-2 border-blue-200 leading-relaxed animate-fadeIn"
+                          dangerouslySetInnerHTML={{ __html: formatExplanation(step.reasoning) }}
+                        />
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
