@@ -157,9 +157,11 @@ export function CostInputModal({
     try {
       await onSave(costData)
       onClose()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save costs:', error)
-      setError('Fehler beim Speichern der Kosten')
+      // 🆕 Verbesserte Error-Message
+      const errorMessage = error?.message || error?.detail || 'Fehler beim Speichern der Kosten'
+      setError(errorMessage)
     } finally {
       setIsSaving(false)
     }
