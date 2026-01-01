@@ -72,12 +72,16 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     setLoading(true)
     setError(null)
     try {
-      console.log('[LatestRecommendation] Loading recommendation for product:', productIdNum)
-      const data = await getLatestRecommendation(productIdNum)
-      console.log('[LatestRecommendation] API Response:', data)
+      console.log('[LatestRecommendation] 🔄 Generating FRESH recommendation for product:', productIdNum)
+      // ALWAYS generate fresh - never use cached!
+      const data = await generateRecommendation(productIdNum)
+      console.log('[LatestRecommendation] ✅ Fresh recommendation generated:', data)
       
-      if (data.recommendations && data.recommendations.length > 0) {
-        const rec = data.recommendations[0]
+      // Response structure from POST /generate is different:
+      // { success: true, recommendation: {...} }
+      const rec = data.recommendation || data
+      
+      if (rec) {
         console.log('[LatestRecommendation] Recommendation data:', rec)
         
         // Stelle sicher, dass alle erforderlichen Felder vorhanden sind
@@ -100,16 +104,16 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         }
         rec.reasoning = reasoningParsed
         
-        console.log('[LatestRecommendation] Setting recommendation:', rec)
+        console.log('[LatestRecommendation] ✅ Setting fresh recommendation:', rec)
         setRecommendation(rec)
       } else {
-        console.log('[LatestRecommendation] No recommendations found')
+        console.log('[LatestRecommendation] No recommendation in response')
         setRecommendation(null)
       }
     } catch (err: any) {
-      console.error('[LatestRecommendation] Error loading recommendation:', err)
+      console.error('[LatestRecommendation] Error generating recommendation:', err)
       console.error('[LatestRecommendation] Error details:', err.response || err.message)
-      setError(err.message || 'Fehler beim Laden der Empfehlung')
+      setError(err.message || 'Fehler beim Generieren der Empfehlung')
       setRecommendation(null)
     } finally {
       setLoading(false)
@@ -132,9 +136,8 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     setGenerating(true)
     setError(null)
     try {
-      await generateRecommendation(productIdNum)
-      
-      // Reload nach Generierung
+      console.log('[LatestRecommendation] 🔄 Manual refresh requested')
+      // Reload generates fresh recommendation
       await loadLatestRecommendation()
     } catch (err: any) {
       console.error('[LatestRecommendation] Error generating recommendation:', err)
@@ -195,10 +198,16 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     loadLatestRecommendation()
   }, [productId])
 
-  if (loading) {
+  if (loading || generating) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-gray-600">Lade Empfehlung...</div>
+      <div className="flex flex-col items-center justify-center py-12 space-y-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="text-gray-600 text-center">
+          <p className="font-medium">Analysiere aktuelle Marktdaten...</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Prüfe Wettbewerber, analysiere 90 Tage Verkaufsdaten...
+          </p>
+        </div>
       </div>
     )
   }

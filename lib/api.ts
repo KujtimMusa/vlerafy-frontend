@@ -65,17 +65,38 @@ export async function getRecommendations(productId: number) {
   return response.json();
 }
 
+/**
+ * ⚠️ DEPRECATED: Use generateRecommendation() instead
+ * 
+ * This function now ALWAYS generates fresh recommendations.
+ * Never uses cached/stale data from database.
+ * 
+ * For pricing decisions, you ALWAYS want the latest:
+ * - Current competitor prices
+ * - Real-time inventory
+ * - Recent sales trends
+ * - Current market conditions
+ */
 export async function getLatestRecommendation(productId: number) {
-  const response = await fetch(`${API_URL}/recommendations/product/${productId}?limit=1`, {
-    headers: getHeaders()
-  });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || 'Fehler beim Laden der Empfehlung');
-  }
-  return response.json();
+  // ALWAYS generate fresh - never use cached!
+  // This ensures recommendations reflect CURRENT market data
+  return generateRecommendation(productId);
 }
 
+/**
+ * ✅ PRIMARY ENDPOINT for recommendations
+ * 
+ * Generates FRESH recommendation using:
+ * - Latest CSV/Shopify data
+ * - Current competitor prices
+ * - Real-time inventory
+ * - Recent sales trends (90 days)
+ * 
+ * Always call this for live pricing decisions.
+ * Never uses cached/stale recommendations.
+ * 
+ * Performance: ~1-2 seconds (acceptable for pricing use case)
+ */
 export async function generateRecommendation(productId: number) {
   const response = await fetch(`${API_URL}/recommendations/generate/${productId}`, {
     method: 'POST',
