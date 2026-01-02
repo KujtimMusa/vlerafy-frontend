@@ -207,7 +207,8 @@ export function CostInputModal({
       
       // Reload to get updated data
       await loadExistingCosts()
-      setIsEditing(false) // Back to view mode
+      // 🔥 WICHTIG: Nach Save direkt editierbar bleiben (nicht zurück zu View-Mode)
+      setIsEditing(true) // Direct edit mode after save!
     } catch (error: any) {
       console.error('Failed to save costs:', error)
       // 🆕 Verbesserte Error-Message
@@ -272,21 +273,27 @@ export function CostInputModal({
         {/* Body */}
         <div className="p-6 space-y-6">
           
-          {/* VIEW MODE: Show Saved Data + Edit Button */}
+          {/* VIEW MODE: Show Saved Data + Prominent Edit Button */}
           {savedCostData && !isEditing && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-lg text-gray-900">📊 Gespeicherte Kosten</h3>
-                <button
+            <div className="bg-green-50 border-2 border-green-300 rounded-xl p-6 mb-8 shadow-md">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-xl font-bold text-green-800 mb-1">✅ Gespeicherte Kosten</h3>
+                  <p className="text-sm text-green-700">Klicke Bearbeiten um Werte anzupassen</p>
+                </div>
+                {/* 🔥 PROMINENTER EDIT-BUTTON */}
+                <button 
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2"
+                  className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 flex items-center gap-2 shadow-md transition-all hover:scale-105"
+                  title="Kosten bearbeiten"
                 >
                   <Edit2 className="w-4 h-4" />
                   Bearbeiten
                 </button>
               </div>
               
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              {/* Read-only Kosten-Grid */}
+              <div className="grid grid-cols-2 gap-4 text-sm mb-6">
                 <div>
                   <span className="text-gray-600">Einkauf:</span>
                   <span className="font-bold ml-2 text-gray-900">€{savedCostData.purchase_cost.toFixed(2)}</span>
@@ -313,7 +320,7 @@ export function CostInputModal({
                 </div>
               </div>
               
-              <div className="mt-4 pt-4 border-t border-green-300">
+              <div className="pt-4 border-t border-green-300">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-900">Gesamt Kosten:</span>
                   <span className="text-2xl font-bold text-green-600">
