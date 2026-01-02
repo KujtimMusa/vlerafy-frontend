@@ -113,7 +113,11 @@
     "low": "Niedrige Sicherheit",
     "strong_signals": "Starke Signale unterstützen diesen Preis",
     "moderate_evidence": "Moderate Evidenz unterstützt diesen Preis",
-    "limited_data": "Begrenzte Daten verfügbar - Vorsicht geboten"
+    "limited_data": "Begrenzte Daten verfügbar - Vorsicht geboten",
+    "title": "Unsere KI ist {confidence}% sicher",
+    "whatAnalyzes": "Was analysiert unsere KI?",
+    "why": "Warum genau {confidence}% Sicherheit?",
+    "whyText": "Deine Produkte verkaufen sich bei diesem Preis sehr gut, Konkurrenten haben ähnliche Preise und deine Marge bleibt stabil. Alle Daten deuten auf Erfolg hin!"
   },
   "breakdown": {
     "strategy_breakdown": "Strategie-Übersicht",

@@ -113,7 +113,11 @@
     "low": "Low Confidence",
     "strong_signals": "Strong signals support this price",
     "moderate_evidence": "Moderate evidence supports this price",
-    "limited_data": "Limited data available - use caution"
+    "limited_data": "Limited data available - use caution",
+    "title": "Our AI is {confidence}% confident",
+    "whatAnalyzes": "What does our AI analyze?",
+    "why": "Why exactly {confidence}% confidence?",
+    "whyText": "Your products sell very well at this price, competitors have similar prices and your margin remains stable. All data points to success!"
   },
   "breakdown": {
     "strategy_breakdown": "Strategy Breakdown",

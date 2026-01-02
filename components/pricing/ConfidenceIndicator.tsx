@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react'
-import { CheckCircle, AlertCircle, HelpCircle } from 'lucide-react'
+import { CheckCircle, AlertCircle, HelpCircle, Check } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface ConfidenceBasis {
   ml_models?: number
@@ -24,6 +25,8 @@ export function ConfidenceIndicator({
   compact = false,
   confidenceBasis
 }: ConfidenceIndicatorProps) {
+  const t = useTranslations('confidence')
+  
   // Normalize confidence to 0-100
   const confidencePct = confidence > 1 ? confidence : confidence * 100
   
@@ -41,8 +44,7 @@ export function ConfidenceIndicator({
       borderColor: 'border-green-200',
       textColor: 'text-green-700',
       barColor: 'bg-green-500',
-      label: 'High Confidence',
-      description: 'Strong signals support this price'
+      gradientBar: 'bg-gradient-to-r from-green-500 to-emerald-600'
     },
     medium: {
       icon: AlertCircle,
@@ -51,8 +53,7 @@ export function ConfidenceIndicator({
       borderColor: 'border-yellow-200',
       textColor: 'text-yellow-700',
       barColor: 'bg-yellow-500',
-      label: 'Medium Confidence',
-      description: 'Moderate evidence supports this price'
+      gradientBar: 'bg-gradient-to-r from-yellow-500 to-amber-600'
     },
     low: {
       icon: HelpCircle,
@@ -61,42 +62,12 @@ export function ConfidenceIndicator({
       borderColor: 'border-red-200',
       textColor: 'text-red-700',
       barColor: 'bg-red-500',
-      label: 'Low Confidence',
-      description: 'Limited data available - use caution'
+      gradientBar: 'bg-gradient-to-r from-red-500 to-orange-600'
     }
   }
   
   const current = config[level]
   const Icon = current.icon
-  
-  // Generate basis items based on confidence level
-  const basisItems: string[] = []
-  if (confidenceBasis) {
-    const mlModels = confidenceBasis.ml_models || 4
-    const compCount = confidenceBasis.competitor_count || 0
-    const sales30d = confidenceBasis.sales_30d || 0
-    const marginPct = confidenceBasis.margin_pct
-    
-    // Always show ML models if available
-    if (mlModels > 0) {
-      basisItems.push(`✅ ${mlModels} ML-Modelle (XGBoost Ensemble)`)
-    }
-    
-    // Always show competitor count (even if 0, but only for high confidence)
-    if (level === 'high' || compCount > 0) {
-      basisItems.push(`✅ ${compCount} Wettbewerber analysiert`)
-    }
-    
-    // Always show sales if available
-    if (sales30d > 0) {
-      basisItems.push(`✅ ${sales30d} Verkäufe (30 Tage)`)
-    }
-    
-    // Show margin if stable
-    if (marginPct !== undefined && marginPct !== null && confidenceBasis.margin_stable) {
-      basisItems.push(`✅ Margin ${Math.round(marginPct)}% stabil`)
-    }
-  }
   
   // Compact version (for header badge)
   if (compact) {
@@ -110,54 +81,55 @@ export function ConfidenceIndicator({
     )
   }
   
-  // Full version
+  // Get competitor count and sales data
+  const compCount = confidenceBasis?.competitor_count || 0
+  const sales30d = confidenceBasis?.sales_30d || 0
+  
+  // Full version - New improved design
   return (
-    <div className={`space-y-4 p-5 rounded-lg border-2 ${current.bgColor} ${current.borderColor}`}>
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border-l-4 border-blue-500 space-y-4">
       
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className={`text-xl font-bold ${current.textColor} mb-1`}>
-            Unsere KI ist zu {confidencePct.toFixed(0)}% sicher
+      {/* HEADLINE: Größte Schrift + Progressbar */}
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+          <Check className="w-6 h-6 text-white" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-2xl font-bold text-gray-900">
+            {t('title', { confidence: confidencePct.toFixed(0) })}
           </h3>
-          <p className="text-sm text-gray-600">
-            Basierend auf {confidenceBasis?.ml_models || 4} ML-Modellen + Marktanalyse
-          </p>
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div 
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-500"
+              style={{width: `${confidencePct}%`}}
+            />
+          </div>
         </div>
-        <Icon className={`w-8 h-8 ${current.textColor}`} />
       </div>
-      
-      {/* Progress Bar */}
-      <div className="relative">
-        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-          <div
-            className={`h-full ${current.barColor} transition-all duration-500 ease-out`}
-            style={{ width: `${confidencePct}%` }}
-          />
-        </div>
-        
-        {/* Threshold markers */}
-        <div className="absolute top-0 left-[60%] w-px h-3 bg-gray-400 opacity-30" />
-        <div className="absolute top-0 left-[85%] w-px h-3 bg-gray-400 opacity-30" />
-      </div>
-      
-      {/* Basis Items */}
-      {basisItems.length > 0 && (
-        <ul className="space-y-2">
-          {basisItems.map((item, idx) => (
-            <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-              <span>{item}</span>
-            </li>
-          ))}
+
+      {/* NEUE ERKLÄRUNG: Klar + konkret */}
+      <div className="p-4 bg-white/50 rounded-xl border">
+        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          📊 <span>{t('whatAnalyzes')}</span>
+        </h4>
+        <ul className="space-y-2 text-sm text-gray-700">
+          <li>• Echte Verkaufsdaten aus deinem Shopify-Shop</li>
+          <li>• Aktuelle Preise deiner {compCount > 0 ? `${compCount}-${Math.max(compCount, 10)}` : '5-10'} wichtigsten Konkurrenten</li>
+          <li>• {confidenceBasis?.ml_models || 4} spezialisierte Machine-Learning-Modelle (Umsatz, Konkurrenz, Marge, Saisonalität)</li>
+          <li>• Deine eingetragenen Kosten und bisherigen Margen</li>
         </ul>
-      )}
-      
-      {/* Fallback if no basis data */}
-      {basisItems.length === 0 && (
-        <p className="text-sm text-gray-600">
-          {current.description}
+      </div>
+
+      {/* WARUM-ERKLÄRUNG: Konkret statt "strong signals" */}
+      <div className="p-4 bg-yellow-50/80 border border-yellow-200 rounded-xl">
+        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          💡 {t('why', { confidence: confidencePct.toFixed(0) })}
+        </h4>
+        <p className="text-sm text-gray-800 leading-relaxed">
+          {t('whyText')}
         </p>
-      )}
+      </div>
       
     </div>
   )

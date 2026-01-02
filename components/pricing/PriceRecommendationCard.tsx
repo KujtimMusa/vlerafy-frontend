@@ -8,7 +8,6 @@ import { KeyInsights } from './KeyInsights'
 import { DetailedBreakdown } from './DetailedBreakdown'
 import { CompetitorPositionSlider } from './CompetitorPositionSlider'
 import { ActionButtons } from './ActionButtons'
-import { ConfidenceExplanation } from '../ConfidenceExplanation'
 import { PriceRecommendationBreakdown } from '../PriceRecommendationBreakdown'
 import { formatCurrency, formatPercentage, formatTimeAgo } from '@/lib/formatters'
 import { generateRecommendationTexts } from '@/lib/recommendationTexts'
@@ -66,6 +65,25 @@ interface PriceRecommendationCardProps {
     // Metadata
     created_at?: string
     generated_at?: string
+    
+    // Confidence Basis (NEW)
+    confidence_basis?: {
+      ml_models?: number
+      competitor_count?: number
+      sales_30d?: number
+      margin_stable?: boolean
+      margin_pct?: number | null
+    }
+    
+    // SHAP Explanation (NEW)
+    shap_explanation?: Array<{
+      feature: string
+      impact: number
+      pct: number
+    }>
+    
+    // Competitor Count (NEW)
+    competitor_count?: number
   }
   
   onApply?: (price: number) => Promise<void>
@@ -266,20 +284,12 @@ export function PriceRecommendationCard({
           confidence={recommendation.confidence}
           reasoning={recommendationTexts.confidence}
           compact={false}
+          confidenceBasis={recommendation.confidence_basis}
         />
-        
-        {/* Confidence Explanation */}
-        <div className="mt-4">
-          <ConfidenceExplanation
-            confidence={recommendation.confidence}
-            competitorCount={recommendation.competitor_data?.prices?.length || 0}
-            salesDataDays={30} // Default, could be extracted from recommendation
-          />
-        </div>
         
         {/* Warum diese Empfehlung - Bullet Points */}
         {recommendationTexts.bulletPoints.length > 0 && (
-          <div className="mt-3 rounded-lg bg-white px-4 py-3 text-sm text-gray-700 border border-gray-200">
+          <div className="mt-4 rounded-lg bg-white px-4 py-3 text-sm text-gray-700 border border-gray-200">
             <p className="font-medium mb-2 text-gray-900">{t('why_recommendation')}</p>
             <ul className="list-disc list-inside space-y-1">
               {recommendationTexts.bulletPoints.map((bullet, idx) => (
@@ -386,6 +396,8 @@ export function PriceRecommendationCard({
               strategyDetails={recommendation.strategy_details || []}
               marginAnalysis={recommendation.margin_analysis}
               competitorData={recommendation.competitor_data}
+              shapExplanation={recommendation.shap_explanation}
+              recommendedPrice={recommendation.recommended_price}
             />
           </div>
         )}
