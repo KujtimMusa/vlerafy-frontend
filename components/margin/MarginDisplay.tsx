@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, DollarSign } from 'lucide-react'
+import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, DollarSign, Edit2 } from 'lucide-react'
 
 interface MarginDisplayProps {
   marginData: {
@@ -29,9 +29,10 @@ interface MarginDisplayProps {
   }
   compact?: boolean
   onAddCosts?: () => void
+  onEditCosts?: () => void
 }
 
-export function MarginDisplay({ marginData, compact = false, onAddCosts }: MarginDisplayProps) {
+export function MarginDisplay({ marginData, compact = false, onAddCosts, onEditCosts }: MarginDisplayProps) {
   
   if (!marginData.has_cost_data) {
     return (
@@ -106,11 +107,27 @@ export function MarginDisplay({ marginData, compact = false, onAddCosts }: Margi
           <DollarSign className="w-6 h-6 text-gray-700" />
           <h3 className="text-lg font-semibold text-gray-900">Margin-Analyse</h3>
         </div>
-        <div className={`flex items-center gap-2 ${marginColor}`}>
-          {marginIcon}
-          <span className="text-2xl font-bold">
-            {marginData.margin?.percent.toFixed(1)}%
-          </span>
+        <div className="flex items-center gap-3">
+          {/* Margin Badge */}
+          <div className={`flex items-center gap-2 ${marginColor}`}>
+            {marginIcon}
+            <span className="text-2xl font-bold">
+              {marginData.margin?.percent.toFixed(1)}%
+            </span>
+          </div>
+          
+          {/* ✅ Edit Button (when cost data exists) */}
+          {marginData.has_cost_data && onEditCosts && (
+            <button
+              onClick={onEditCosts}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-all"
+              title="Kosten bearbeiten"
+              aria-label="Kostendaten bearbeiten"
+            >
+              <Edit2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Bearbeiten</span>
+            </button>
+          )}
         </div>
       </div>
       

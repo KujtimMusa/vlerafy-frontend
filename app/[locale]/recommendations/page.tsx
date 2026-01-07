@@ -194,6 +194,7 @@ function RecommendationsContent() {
                   <MarginDisplay 
                     marginData={marginData || { has_cost_data: false }}
                     onAddCosts={() => setShowCostModal(true)}
+                    onEditCosts={() => setShowCostModal(true)}
                   />
                 </section>
               )}
