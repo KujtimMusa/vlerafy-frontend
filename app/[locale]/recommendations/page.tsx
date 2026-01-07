@@ -7,7 +7,6 @@ import { ShopSwitcher } from '@/components/ShopSwitcher'
 import { useShop } from '@/hooks/useShop'
 import LatestRecommendation from '@/components/LatestRecommendation'
 import { CompetitorAnalysis } from '@/components/CompetitorAnalysis'
-import { CompetitorAnalysisButton } from '@/components/CompetitorAnalysisButton'
 import { MarginDisplay } from '@/components/margin/MarginDisplay'
 import { CostInputModal } from '@/components/margin/CostInputModal'
 import { fetchProducts, calculateMargin, saveProductCosts } from '@/lib/api'
@@ -185,44 +184,37 @@ function RecommendationsContent() {
                 </div>
               </div>
 
-              {/* Competitor Analysis (Serper API) */}
-              {currentPrice > 0 && (
-                <div className="mb-8">
-                  <CompetitorAnalysis productId={productId} currentPrice={currentPrice} />
-                </div>
-              )}
-
-              {/* Margin Display */}
-              {currentPrice > 0 && (
-                <div className="mb-8">
+              {/* ✅ SECTION 1: MARGIN ANALYSIS (Risk First!) */}
+              {currentPrice > 0 && marginData && (
+                <section className="mb-8">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-3xl">💰</span>
+                    <h2 className="text-2xl font-bold text-gray-900">Margen-Analyse</h2>
+                  </div>
                   <MarginDisplay 
                     marginData={marginData || { has_cost_data: false }}
                     onAddCosts={() => setShowCostModal(true)}
                   />
-                </div>
+                </section>
               )}
 
-              {/* Latest Recommendation */}
-              <div className="mb-8">
+              {/* ✅ SECTION 2: PRICE RECOMMENDATION (Action!) */}
+              <section className="mb-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">💡</span>
+                  <h2 className="text-2xl font-bold text-gray-900">Preisempfehlung</h2>
+                </div>
                 <LatestRecommendation productId={productId} />
-              </div>
+              </section>
 
-              {/* NEU: Wettbewerbsanalyse-Trigger, sichtbar in Demo und Live */}
+              {/* ✅ SECTION 3: COMPETITOR ANALYSIS (Context Last!) */}
               {currentPrice > 0 && (
-                <section className="mt-6 mb-8">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2">
-                    Wettbewerbsanalyse
-                  </h3>
-                  <p className="text-xs text-gray-600 mb-3">
-                    Starte eine aktuelle Wettbewerbsanalyse für dieses Produkt.
-                    {isDemoMode && ' Im Demo-Modus werden synthetische Competitor-Daten verwendet.'}
-                  </p>
-
-                  <CompetitorAnalysisButton
-                    productId={productId}
-                    productTitle={productTitle || `Product ${productId}`}
-                    currentPrice={currentPrice}
-                  />
+                <section className="mb-8">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-3xl">🏪</span>
+                    <h2 className="text-2xl font-bold text-gray-900">Wettbewerbsanalyse</h2>
+                  </div>
+                  <CompetitorAnalysis productId={productId} currentPrice={currentPrice} />
                 </section>
               )}
         </div>
