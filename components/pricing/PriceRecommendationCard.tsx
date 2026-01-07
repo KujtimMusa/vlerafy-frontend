@@ -357,7 +357,7 @@ export function PriceRecommendationCard({
                   const effectiveWeight = baseWeight * strategy.confidence
                   
                   // Calculate total weight for normalization
-                  const totalWeight = recommendation.strategy_details.reduce((sum: number, s: any) => {
+                  const totalWeight = (recommendation.strategy_details || []).reduce((sum: number, s: any) => {
                     const bw = baseWeights[s.strategy] || 0.1
                     return sum + (bw * s.confidence)
                   }, 0)
