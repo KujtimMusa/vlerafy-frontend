@@ -122,7 +122,31 @@ export default function Home() {
         setStats(null)
       })
       .finally(() => setLoading(false))
-  }, [currentShop, shopLoading])
+  }, [currentShop?.id, isDemoMode, shopLoading])
+
+  // Höre auf Shop-Wechsel Events (für sofortiges Reload)
+  useEffect(() => {
+    const handleShopSwitch = (event: CustomEvent) => {
+      console.log('[Home] Shop switched event received:', event.detail)
+      // Kurze Verzögerung, damit Shop-Context aktualisiert ist
+      setTimeout(() => {
+        setLoading(true)
+        getDashboardStats()
+          .then(data => {
+            console.log('[Home] Dashboard stats reloaded after shop switch:', data)
+            setStats(data)
+          })
+          .catch(err => {
+            console.error('[Home] Error reloading stats after shop switch:', err)
+            setStats(null)
+          })
+          .finally(() => setLoading(false))
+      }, 300)
+    }
+    
+    window.addEventListener('shop-switched', handleShopSwitch as EventListener)
+    return () => window.removeEventListener('shop-switched', handleShopSwitch as EventListener)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
