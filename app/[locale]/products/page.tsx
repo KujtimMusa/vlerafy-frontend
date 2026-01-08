@@ -1,52 +1,14 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { fetchProducts, syncProducts } from '@/lib/api'
-import { formatCurrency, formatPercentage } from '@/lib/formatters'
 import { ShopSwitcher } from '@/components/ShopSwitcher'
 import { useShop } from '@/hooks/useShop'
 import { Link } from '@/navigation'
-import { 
-  Package, 
-  DollarSign, 
-  AlertCircle, 
-  TrendingUp, 
-  Lightbulb,
-  Search,
-  Filter,
-  ArrowUpDown,
-  Info,
-  CheckCircle2,
-  XCircle
-} from 'lucide-react'
-
-interface Product {
-  id: number
-  title: string
-  price: number
-  cost?: number
-  inventory: number
-  category?: string
-}
-
-interface ProductWithDetails extends Product {
-  margin?: number
-  hasRecommendation?: boolean
-  recommendationPotential?: number
-  status: 'optimal' | 'warning' | 'critical' | 'optimizable'
-  hasCostData?: boolean
-}
-
-type FilterType = 'all' | 'critical' | 'optimizable' | 'optimal'
-type SortType = 'name' | 'price' | 'margin' | 'inventory' | 'potential'
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [productsWithDetails, setProductsWithDetails] = useState<ProductWithDetails[]>([])
+  const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filter, setFilter] = useState<FilterType>('all')
-  const [sortBy, setSortBy] = useState<SortType>('name')
   const { currentShop, isDemoMode, refresh: refreshShop } = useShop()
 
   // Lade Produkte beim Shop-Wechsel
@@ -59,10 +21,11 @@ export default function ProductsPage() {
     loadProducts()
   }, [currentShop?.id, isDemoMode])
   
-  // Höre auf Shop-Wechsel Events
+  // Höre auf Shop-Wechsel Events (für sofortiges Reload)
   useEffect(() => {
     const handleShopSwitch = (event: CustomEvent) => {
       console.log('[ProductsPage] Shop switched event received:', event.detail)
+      // Kurze Verzögerung, damit Shop-Context aktualisiert ist
       setTimeout(() => {
         loadProducts()
       }, 300)
@@ -76,28 +39,13 @@ export default function ProductsPage() {
     setLoading(true)
     try {
       console.log('[ProductsPage] Loading products, currentShop:', currentShop?.name, 'isDemoMode:', isDemoMode)
+      // Nutze Shop-Context (kein shop_id mehr nötig)
       const data = await fetchProducts()
       console.log('[ProductsPage] Products loaded:', data.length, 'products')
       setProducts(data || [])
-      
-      // ✅ FIX: Keine Details-Ladung mehr (verhindert 60+ API-Calls)
-      // Details werden nur bei Bedarf geladen (on-demand)
-      // Status basierend auf Lagerbestand
-      const details: ProductWithDetails[] = data.map(product => ({
-        ...product,
-        status: product.inventory === 0 ? 'critical' : 
-                product.inventory < 10 ? 'warning' : 'optimal',
-        hasCostData: false, // Wird nicht mehr geladen (Performance)
-        margin: undefined, // Wird nicht mehr geladen (Performance)
-        hasRecommendation: false, // Wird nicht mehr geladen (Performance)
-        recommendationPotential: undefined
-      }))
-      
-      setProductsWithDetails(details)
     } catch (error) {
       console.error('[ProductsPage] Fehler beim Laden der Produkte:', error)
       setProducts([])
-      setProductsWithDetails([])
     } finally {
       setLoading(false)
     }
@@ -126,97 +74,9 @@ export default function ProductsPage() {
     }
   }
 
-  // Filter & Sortierung
-  const filteredAndSorted = useMemo(() => {
-    let filtered = productsWithDetails
-
-    // Suche
-    if (searchQuery) {
-      filtered = filtered.filter(p => 
-        p.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    }
-
-    // Filter
-    if (filter === 'critical') {
-      filtered = filtered.filter(p => p.status === 'critical')
-    } else if (filter === 'optimizable') {
-      filtered = filtered.filter(p => p.hasRecommendation || p.status === 'warning')
-    } else if (filter === 'optimal') {
-      filtered = filtered.filter(p => p.status === 'optimal')
-    }
-
-    // Sortierung
-    filtered = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case 'price':
-          return a.price - b.price
-        case 'margin':
-          return (b.margin || 0) - (a.margin || 0)
-        case 'inventory':
-          return b.inventory - a.inventory
-        case 'potential':
-          return (b.recommendationPotential || 0) - (a.recommendationPotential || 0)
-        case 'name':
-        default:
-          return a.title.localeCompare(b.title)
-      }
-    })
-
-    return filtered
-  }, [productsWithDetails, searchQuery, filter, sortBy])
-
-  // Summary Stats
-  const summaryStats = useMemo(() => {
-    const total = productsWithDetails.length
-    const withCosts = productsWithDetails.filter(p => p.hasCostData).length
-    const critical = productsWithDetails.filter(p => p.status === 'critical').length
-    const warning = productsWithDetails.filter(p => p.status === 'warning').length
-    
-    // Durchschnittliche Marge (nur wenn Kosten vorhanden)
-    const productsWithMargin = productsWithDetails.filter(p => p.margin !== undefined && p.margin !== null)
-    const avgMargin = productsWithMargin.length > 0
-      ? productsWithMargin.reduce((sum, p) => sum + (p.margin || 0), 0) / productsWithMargin.length
-      : 0
-
-    return {
-      total,
-      withCosts,
-      critical,
-      warning,
-      avgMargin
-    }
-  }, [productsWithDetails])
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'critical':
-        return 'bg-red-500'
-      case 'warning':
-        return 'bg-yellow-500'
-      case 'optimizable':
-        return 'bg-blue-500'
-      default:
-        return 'bg-green-500'
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'critical':
-        return <XCircle className="w-5 h-5 text-red-600" />
-      case 'warning':
-        return <AlertCircle className="w-5 h-5 text-yellow-600" />
-      case 'optimizable':
-        return <Lightbulb className="w-5 h-5 text-blue-600" />
-      default:
-        return <CheckCircle2 className="w-5 h-5 text-green-600" />
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
+      {/* Sidebar mit Shop-Switcher */}
       <aside className="w-80 bg-gradient-to-b from-white via-gray-50 to-white border-r border-gray-200 p-6 overflow-y-auto shadow-sm">
         <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-200">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
@@ -227,10 +87,12 @@ export default function ProductsPage() {
           </h2>
         </div>
         
+        {/* Shop Switcher */}
         <div className="mb-6">
           <ShopSwitcher />
         </div>
         
+        {/* Navigation */}
         <nav className="space-y-2">
           <Link 
             href="/" 
@@ -256,282 +118,84 @@ export default function ProductsPage() {
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900">Produkte</h1>
-            <div className="flex gap-4 items-center">
-              {currentShop && (
-                <div className="px-4 py-2 bg-gray-100 rounded text-gray-700 text-sm">
-                  {currentShop.name} {isDemoMode && '(Demo)'}
-                </div>
-              )}
-              {!isDemoMode && currentShop && currentShop.type === 'shopify' && (
-                <button
-                  onClick={handleSync}
-                  disabled={loading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                >
-                  {loading ? 'Synchronisiere...' : 'Produkte synchronisieren'}
-                </button>
-              )}
-              {isDemoMode && (
-                <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded text-blue-700 text-sm">
-                  Demo-Mode: Keine Synchronisation möglich
-                </div>
-              )}
-              <Link
-                href="/"
-                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900">Produkte</h1>
+          <div className="flex gap-4 items-center">
+            {currentShop && (
+              <div className="px-4 py-2 bg-gray-100 rounded text-gray-700 text-sm">
+                {currentShop.name} {isDemoMode && '(Demo)'}
+              </div>
+            )}
+            {!isDemoMode && currentShop && currentShop.type === 'shopify' && (
+              <button
+                onClick={handleSync}
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                Zurück
-              </Link>
-            </div>
+                {loading ? 'Synchronisiere...' : 'Produkte synchronisieren'}
+              </button>
+            )}
+            {isDemoMode && (
+              <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded text-blue-700 text-sm">
+                Demo-Mode: Keine Synchronisation möglich
+              </div>
+            )}
+            <Link
+              href="/"
+              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+            >
+              Zurück
+            </Link>
           </div>
+        </div>
 
-          {/* Summary Cards */}
-          {productsWithDetails.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Package className="w-5 h-5 text-gray-600" />
-                  <span className="text-sm text-gray-600">Produkte</span>
-                </div>
-                <div className="text-2xl font-bold text-gray-900">{summaryStats.total}</div>
-              </div>
-              
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="w-5 h-5 text-gray-600" />
-                  <span className="text-sm text-gray-600">Ø Marge</span>
-                </div>
-                <div className="text-2xl font-bold text-gray-900">
-                  {summaryStats.avgMargin > 0 ? `${summaryStats.avgMargin.toFixed(1)}%` : 'N/A'}
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertCircle className="w-5 h-5 text-red-600" />
-                  <span className="text-sm text-gray-600">Kritisch</span>
-                </div>
-                <div className="text-2xl font-bold text-red-600">{summaryStats.critical}</div>
-              </div>
-              
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertCircle className="w-5 h-5 text-yellow-600" />
-                  <span className="text-sm text-gray-600">Achtung</span>
-                </div>
-                <div className="text-2xl font-bold text-yellow-600">{summaryStats.warning}</div>
-              </div>
-            </div>
-          )}
-
-          {/* Filter & Search */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Produkte durchsuchen..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              {/* Filter */}
-              <div className="flex items-center gap-2">
-                <Filter className="w-5 h-5 text-gray-600" />
-                <select
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value as FilterType)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">Alle</option>
-                  <option value="critical">Kritisch</option>
-                  <option value="optimizable">Optimierbar</option>
-                  <option value="optimal">Optimal</option>
-                </select>
-              </div>
-
-              {/* Sort */}
-              <div className="flex items-center gap-2">
-                <ArrowUpDown className="w-5 h-5 text-gray-600" />
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortType)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="name">Name (A-Z)</option>
-                  <option value="price">Preis</option>
-                  <option value="margin">Marge</option>
-                  <option value="inventory">Lagerbestand</option>
-                  <option value="potential">Potenzial</option>
-                </select>
-              </div>
-
-              {/* Results Count */}
-              <div className="flex items-center px-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-700">
-                {filteredAndSorted.length} {filteredAndSorted.length === 1 ? 'Produkt' : 'Produkte'}
-              </div>
-            </div>
-          </div>
-
-          {/* Products Grid */}
-          {loading && products.length === 0 ? (
-            <div className="text-center py-12 text-gray-600">Lade Produkte...</div>
-          ) : filteredAndSorted.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-bold mb-2">Keine Produkte gefunden</h3>
-              <p className="text-gray-600 mb-4">
-                {searchQuery || filter !== 'all' 
-                  ? 'Versuche einen anderen Filter oder Suchbegriff.'
-                  : 'Synchronisiere zuerst deine Produkte.'}
-              </p>
-              {(searchQuery || filter !== 'all') && (
+        {loading && products.length === 0 ? (
+          <div className="text-center py-12 text-gray-600">Lade Produkte...</div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-12">
+            {isDemoMode ? (
+              <>
+                <p className="text-gray-600 mb-4">
+                  Demo-Shop: Produkte werden automatisch geladen. Falls keine angezeigt werden, prüfe die Browser-Console.
+                </p>
                 <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setFilter('all')
-                  }}
+                  onClick={() => loadProducts()}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
                 >
-                  Filter zurücksetzen
+                  Produkte neu laden
                 </button>
-              )}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredAndSorted.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
+              </>
+            ) : (
+              <>
+                <p className="text-gray-600 mb-4">Keine Produkte gefunden. Synchronisiere zuerst deine Produkte.</p>
+                <button
+                  onClick={handleSync}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
+                  Produkte synchronisieren
+                </button>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map((product) => (
+              <div key={product.id} className="p-6 bg-white rounded-lg shadow border border-gray-200">
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">{product.title}</h3>
+                <p className="text-gray-600 mb-2">Preis: <span className="font-semibold text-gray-900">€{product.price.toFixed(2)}</span></p>
+                <p className="text-gray-600 mb-4">Lager: <span className="font-semibold text-gray-900">{product.inventory}</span></p>
+                <Link
+                  href={`/recommendations?product_id=${product.id}`}
+                  className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                >
+                  Preisempfehlungen anzeigen →
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
         </div>
       </main>
-    </div>
-  )
-}
-
-// Product Card Component
-function ProductCard({ product }: { product: ProductWithDetails }) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'critical':
-        return 'bg-red-500'
-      case 'warning':
-        return 'bg-yellow-500'
-      case 'optimizable':
-        return 'bg-blue-500'
-      default:
-        return 'bg-green-500'
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'critical':
-        return <XCircle className="w-5 h-5 text-red-600" />
-      case 'warning':
-        return <AlertCircle className="w-5 h-5 text-yellow-600" />
-      case 'optimizable':
-        return <Lightbulb className="w-5 h-5 text-blue-600" />
-      default:
-        return <CheckCircle2 className="w-5 h-5 text-green-600" />
-    }
-  }
-
-  return (
-    <div className="bg-white rounded-lg shadow border border-gray-200 hover:shadow-lg transition-all">
-      {/* Header mit Status */}
-      <div className="flex items-start justify-between p-4 border-b border-gray-100">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className={`w-3 h-3 rounded-full ${getStatusColor(product.status)}`} />
-            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
-              {product.title}
-            </h3>
-          </div>
-          {product.category && (
-            <p className="text-sm text-gray-500">{product.category}</p>
-          )}
-        </div>
-        
-      </div>
-
-      {/* Body - Preise & Marge */}
-      <div className="p-4 space-y-3">
-        {/* Aktueller Preis */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Verkaufspreis</span>
-          <span className="text-xl font-bold text-gray-900">
-            {formatCurrency(product.price)}
-          </span>
-        </div>
-
-        {/* Kosten & Marge - Wird nicht mehr angezeigt (Performance-Optimierung) */}
-        {/* Details können auf der Empfehlungs-Seite eingesehen werden */}
-
-        {/* Lagerbestand */}
-        <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-          <span className="text-sm text-gray-600">Lagerbestand</span>
-          <span className={`text-sm font-medium ${
-            product.inventory > 20 ? 'text-green-600' :
-            product.inventory > 0 ? 'text-yellow-600' : 'text-red-600'
-          }`}>
-            {product.inventory} Einheiten
-          </span>
-        </div>
-
-      </div>
-
-      {/* Footer - Actions */}
-      <div className="p-4 border-t border-gray-100 space-y-2">
-        {/* Primary Button */}
-        <Link href={`/recommendations?product_id=${product.id}`}>
-          <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-            <Lightbulb className="w-4 h-4" />
-            Preisempfehlungen
-          </button>
-        </Link>
-
-        {/* Secondary Actions */}
-        <div className="grid grid-cols-3 gap-2">
-          <Link href={`/recommendations?product_id=${product.id}`}>
-            <button 
-              className="w-full px-3 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm flex items-center justify-center gap-1"
-              title="Kosten bearbeiten"
-            >
-              <DollarSign className="w-4 h-4" />
-              Kosten
-            </button>
-          </Link>
-          
-          <Link href={`/recommendations?product_id=${product.id}`}>
-            <button 
-              className="w-full px-3 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm flex items-center justify-center gap-1"
-              title="Wettbewerber"
-            >
-              <Search className="w-4 h-4" />
-              Markt
-            </button>
-          </Link>
-          
-          <Link href={`/recommendations?product_id=${product.id}`}>
-            <button 
-              className="w-full px-3 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm flex items-center justify-center gap-1"
-              title="Details"
-            >
-              <Info className="w-4 h-4" />
-              Info
-            </button>
-          </Link>
-        </div>
-      </div>
     </div>
   )
 }
