@@ -70,13 +70,13 @@ export default function Home() {
             href="/products" 
             className="block px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            Products
+            Produkte
           </Link>
           <Link 
             href="/recommendations" 
             className="block px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            Recommendations
+            Empfehlungen
           </Link>
         </nav>
       </aside>

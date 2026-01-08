@@ -154,13 +154,13 @@ function RecommendationsContent() {
             href="/products" 
             className="block px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            Products
+            Produkte
           </Link>
           <Link 
             href="/recommendations" 
             className="block px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors bg-gray-100"
           >
-            Recommendations
+            Empfehlungen
           </Link>
         </nav>
       </aside>
@@ -192,7 +192,9 @@ function RecommendationsContent() {
         </div>
 
               <div className="mb-6 p-4 bg-white rounded-lg border border-gray-200">
-                <label className="block mb-2 font-semibold text-gray-900">Produkt ID:</label>
+                <label className="block mb-2 font-semibold text-gray-900">
+                  {productTitle || `Produkt ${productId}`}
+                </label>
                 <div className="flex gap-4">
                   <input
                     type="number"
@@ -200,6 +202,7 @@ function RecommendationsContent() {
                     onChange={(e) => setProductId(Number(e.target.value))}
                     className="px-4 py-2 border border-gray-300 rounded text-gray-900 bg-white"
                     min="1"
+                    placeholder="Produkt ID"
                   />
                 </div>
               </div>
