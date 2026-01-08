@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { AlertTriangle, Clock, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { ConfidenceIndicator } from './ConfidenceIndicator'
-import { KeyInsights } from './KeyInsights'
 import { ActionButtons } from './ActionButtons'
 import { formatCurrency, formatPercentage, formatTimeAgo } from '@/lib/formatters'
 import { generateRecommendationTexts } from '@/lib/recommendationTexts'
@@ -100,40 +99,11 @@ export function PriceRecommendationCard({
   
   const [isApplying, setIsApplying] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [selectedStrategy, setSelectedStrategy] = useState<string>('balanced')
   
-  // Calculate recommended price based on selected strategy
-  const getRecommendedPrice = () => {
-    if (selectedStrategy === 'balanced') {
-      return recommendation.recommended_price // Use weighted average
-    }
-    
-    // Use specific strategy price
-    const strategy = recommendation.strategy_details?.find(
-      (s: any) => s.strategy === selectedStrategy
-    )
-    
-    return strategy?.recommended_price || recommendation.recommended_price
-  }
-  
-  const displayedPrice = getRecommendedPrice()
+  // Calculate derived values
+  const displayedPrice = recommendation.recommended_price
   const displayedPriceChange = displayedPrice - recommendation.current_price
   const displayedPriceChangePct = (displayedPriceChange / recommendation.current_price) * 100
-  
-  // Helper function for strategy descriptions
-  const getStrategyDescription = (strategy: string): string => {
-    const descriptions: Record<string, string> = {
-      'balanced': t('strategy_balanced_description'),
-      'competitive': t('strategy_competitive_description'),
-      'demand': t('strategy_demand_description'),
-      'inventory': t('strategy_inventory_description'),
-      'cost': t('strategy_cost_description')
-    }
-    
-    return descriptions[strategy] || descriptions['balanced']
-  }
-  
-  // Calculate derived values (use displayedPrice for consistency)
   const priceChange = displayedPriceChange
   const priceIncrease = priceChange > 0
   const priceDecrease = priceChange < 0
@@ -249,11 +219,6 @@ export function PriceRecommendationCard({
               'text-green-700'
             }`}>
               {t('recommended')}
-              {selectedStrategy !== 'balanced' && (
-                <span className="ml-2 text-xs font-normal">
-                  ({t('using_strategy').replace('{strategy}', t(`strategy_${selectedStrategy}`))})
-                </span>
-              )}
             </p>
             <p className={`text-3xl font-bold ${
               isCriticalWarning ? 'text-red-900' :
@@ -460,52 +425,6 @@ export function PriceRecommendationCard({
           </div>
         )}
 
-        {/* NEW: Interactive Strategy Selector */}
-        {recommendation.strategy_details && recommendation.strategy_details.length > 1 && (
-          <div className="mt-4 p-4 bg-white rounded-lg border border-gray-200">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('strategy_selector_label')}
-            </label>
-            
-            <select
-              value={selectedStrategy}
-              onChange={(e) => setSelectedStrategy(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="balanced">
-                ⚖️ {t('strategy_balanced')} ({t('standard')})
-              </option>
-              
-              {recommendation.strategy_details.map((strategy: any) => {
-                const impact = strategy.recommended_price - recommendation.current_price
-                const impactPct = ((impact / recommendation.current_price) * 100).toFixed(1)
-                
-                const icons: Record<string, string> = {
-                  'competitive': '🏪',
-                  'demand': '📊',
-                  'inventory': '📦',
-                  'cost': '💰'
-                }
-                
-                return (
-                  <option key={strategy.strategy} value={strategy.strategy}>
-                    {icons[strategy.strategy] || '⚖️'} {t(`strategy_${strategy.strategy}`)} 
-                    ({strategy.confidence > 0 ? (strategy.confidence * 100).toFixed(0) : 0}% {t('confidence')}) 
-                    → {impact > 0 ? '+' : ''}{impactPct}%
-                  </option>
-                )
-              })}
-            </select>
-            
-            {/* Strategy Description */}
-            <div className="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
-              <p className="text-xs text-blue-800 leading-relaxed">
-                {getStrategyDescription(selectedStrategy)}
-              </p>
-            </div>
-          </div>
-        )}
-
         {/* Action Buttons */}
         {(onApply || onDismiss) && (
           <ActionButtons
@@ -539,22 +458,6 @@ export function PriceRecommendationCard({
           </div>
         </div>
       )}
-      
-      {/* ==========================================
-          KEY INSIGHTS (Only show if insights exist)
-          ========================================== */}
-      
-      {recommendation.strategy_details && recommendation.strategy_details.length > 0 && (
-        <div className="p-6 border-t border-gray-200">
-          <KeyInsights
-            strategyDetails={recommendation.strategy_details || []}
-            marginAnalysis={recommendation.margin_analysis}
-            competitorData={recommendation.competitor_data}
-            warnings={recommendation.warnings || []}
-          />
-        </div>
-      )}
-      
       
       {/* ==========================================
           FOOTER - Metadata
