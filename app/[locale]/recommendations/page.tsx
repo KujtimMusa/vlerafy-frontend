@@ -10,7 +10,7 @@ import { CompetitorAnalysis } from '@/components/CompetitorAnalysis'
 import { MarginDisplay } from '@/components/margin/MarginDisplay'
 import { CostInputModal } from '@/components/margin/CostInputModal'
 import { fetchProducts, calculateMargin, saveProductCosts } from '@/lib/api'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, Info } from 'lucide-react'
 
 function RecommendationsContent() {
   const searchParams = useSearchParams()
@@ -27,8 +27,19 @@ function RecommendationsContent() {
     price: boolean
     competitor: boolean
   }>({
+    margin: false, // ✅ Alle standardmäßig zugeklappt
+    price: false,
+    competitor: false
+  })
+
+  // State für Info-Tooltips
+  const [showInfoTooltip, setShowInfoTooltip] = useState<{
+    margin: boolean
+    price: boolean
+    competitor: boolean
+  }>({
     margin: false,
-    price: true, // Preisempfehlung standardmäßig geöffnet
+    price: false,
     competitor: false
   })
 
@@ -131,6 +142,26 @@ function RecommendationsContent() {
     return () => window.removeEventListener('shop-switched', handleShopSwitch as EventListener)
   }, [productId])
 
+  // Schließe Tooltips beim Klick außerhalb
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      // Prüfe ob Klick außerhalb der Info-Icons war
+      if (!target.closest('.info-tooltip-button')) {
+        setShowInfoTooltip({
+          margin: false,
+          price: false,
+          competitor: false
+        })
+      }
+    }
+
+    if (showInfoTooltip.margin || showInfoTooltip.price || showInfoTooltip.competitor) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [showInfoTooltip])
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar mit Shop-Switcher */}
@@ -218,25 +249,55 @@ function RecommendationsContent() {
               {/* ✅ SECTION 1: MARGIN ANALYSIS (Risk First!) */}
               {currentPrice > 0 && marginData && (
                 <section className="mb-6">
-                  <button
-                    onClick={() => toggleSection('margin')}
-                    className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-4xl">💰</span>
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Margen-Analyse</h2>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Prüfe deine Kosten und Margen vor Preisänderungen
-                        </p>
+                  <div className="relative">
+                    <button
+                      onClick={() => toggleSection('margin')}
+                      className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="text-4xl">💰</span>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h2 className="text-2xl font-bold text-gray-900">Margen-Analyse</h2>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setShowInfoTooltip(prev => ({ ...prev, margin: !prev.margin }))
+                              }}
+                              className="relative info-tooltip-button"
+                            >
+                              <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 transition-colors" />
+                              {showInfoTooltip.margin && (
+                                <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
+                                  <div className="font-semibold mb-2">Was passiert hier?</div>
+                                  <p className="mb-2">
+                                    Die Margen-Analyse zeigt dir, ob dein aktueller Preis über deinen Kosten liegt und wie viel Gewinn du pro Verkauf machst.
+                                  </p>
+                                  <p className="mb-2">
+                                    <strong>Wichtig:</strong> Bevor du Preise änderst, solltest du immer prüfen, dass du nicht unter deine Kosten verkaufst!
+                                  </p>
+                                  <p>
+                                    Hier kannst du auch Kosten für dein Produkt hinterlegen (Einkaufspreis, Versand, Verpackung, etc.).
+                                  </p>
+                                  <div className="absolute bottom-0 left-4 transform translate-y-full">
+                                    <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
+                                  </div>
+                                </div>
+                              )}
+                            </button>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Prüfe deine Kosten und Margen vor Preisänderungen
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    {openSections.margin ? (
-                      <ChevronUp className="w-6 h-6 text-gray-500" />
-                    ) : (
-                      <ChevronDown className="w-6 h-6 text-gray-500" />
-                    )}
-                  </button>
+                      {openSections.margin ? (
+                        <ChevronUp className="w-6 h-6 text-gray-500" />
+                      ) : (
+                        <ChevronDown className="w-6 h-6 text-gray-500" />
+                      )}
+                    </button>
+                  </div>
                   
                   {openSections.margin && (
                     <div className="mt-4 bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
@@ -252,25 +313,61 @@ function RecommendationsContent() {
 
               {/* ✅ SECTION 2: PRICE RECOMMENDATION (Action!) */}
               <section className="mb-6">
-                <button
-                  onClick={() => toggleSection('price')}
-                  className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
-                >
-                  <div className="flex items-center gap-4">
-                    <span className="text-4xl">💡</span>
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900">Preisempfehlung</h2>
-                      <p className="text-sm text-gray-600 mt-1">
-                        KI-basierte Preisempfehlung basierend auf Marktdaten
-                      </p>
-                    </div>
+                <div className="relative">
+                  <button
+                    onClick={() => toggleSection('price')}
+                    className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-4xl">💡</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-2xl font-bold text-gray-900">Preisempfehlung</h2>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setShowInfoTooltip(prev => ({ ...prev, price: !prev.price }))
+                            }}
+                            className="relative info-tooltip-button"
+                          >
+                            <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 transition-colors" />
+                            {showInfoTooltip.price && (
+                              <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
+                                <div className="font-semibold mb-2">Was passiert hier?</div>
+                                <p className="mb-2">
+                                  Unsere KI analysiert verschiedene Faktoren wie Nachfrage, Lagerbestand, Wettbewerbspreise und deine Kosten, um dir eine optimale Preisempfehlung zu geben.
+                                </p>
+                                  <p className="mb-2">
+                                    <strong>Die Empfehlung berücksichtigt:</strong>
+                                  </p>
+                                  <ul className="list-disc list-inside mb-2 space-y-1">
+                                    <li>Verkaufsdaten der letzten 30 Tage</li>
+                                    <li>Aktuelle Preise deiner Konkurrenten</li>
+                                    <li>Deine Lagerbestände</li>
+                                    <li>Deine Kosten und Margen</li>
+                                  </ul>
+                                  <p>
+                                    Du kannst die Empfehlung direkt anwenden oder erst die Details ansehen.
+                                  </p>
+                                  <div className="absolute bottom-0 left-4 transform translate-y-full">
+                                    <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
+                                  </div>
+                                </div>
+                              )}
+                            </button>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">
+                            KI-basierte Preisempfehlung basierend auf Marktdaten
+                          </p>
+                        </div>
+                      </div>
+                      {openSections.price ? (
+                        <ChevronUp className="w-6 h-6 text-gray-500" />
+                      ) : (
+                        <ChevronDown className="w-6 h-6 text-gray-500" />
+                      )}
+                    </button>
                   </div>
-                  {openSections.price ? (
-                    <ChevronUp className="w-6 h-6 text-gray-500" />
-                  ) : (
-                    <ChevronDown className="w-6 h-6 text-gray-500" />
-                  )}
-                </button>
                 
                 {openSections.price && (
                   <div className="mt-4 bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
@@ -282,25 +379,61 @@ function RecommendationsContent() {
               {/* ✅ SECTION 3: COMPETITOR ANALYSIS (Context Last!) */}
               {currentPrice > 0 && (
                 <section className="mb-6">
-                  <button
-                    onClick={() => toggleSection('competitor')}
-                    className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-4xl">🏪</span>
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Wettbewerbsanalyse</h2>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Vergleiche deine Preise mit der Konkurrenz
-                        </p>
+                  <div className="relative">
+                    <button
+                      onClick={() => toggleSection('competitor')}
+                      className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="text-4xl">🏪</span>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h2 className="text-2xl font-bold text-gray-900">Wettbewerbsanalyse</h2>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setShowInfoTooltip(prev => ({ ...prev, competitor: !prev.competitor }))
+                              }}
+                              className="relative info-tooltip-button"
+                            >
+                              <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 transition-colors" />
+                              {showInfoTooltip.competitor && (
+                                <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
+                                  <div className="font-semibold mb-2">Was passiert hier?</div>
+                                  <p className="mb-2">
+                                    Die Wettbewerbsanalyse zeigt dir, wie dein Preis im Vergleich zu anderen Anbietern steht.
+                                  </p>
+                                  <p className="mb-2">
+                                    <strong>Du siehst:</strong>
+                                  </p>
+                                  <ul className="list-disc list-inside mb-2 space-y-1">
+                                    <li>Preise deiner Konkurrenten (Neuware, Gebraucht, etc.)</li>
+                                    <li>Deine Marktposition (günstigster, teuerster, Durchschnitt)</li>
+                                    <li>Durchschnittspreis und Preisspanne</li>
+                                    <li>Datenqualität der Analyse</li>
+                                  </ul>
+                                  <p>
+                                    Nutze diese Informationen, um deine Preise strategisch anzupassen.
+                                  </p>
+                                  <div className="absolute bottom-0 left-4 transform translate-y-full">
+                                    <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
+                                  </div>
+                                </div>
+                              )}
+                            </button>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Vergleiche deine Preise mit der Konkurrenz
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    {openSections.competitor ? (
-                      <ChevronUp className="w-6 h-6 text-gray-500" />
-                    ) : (
-                      <ChevronDown className="w-6 h-6 text-gray-500" />
-                    )}
-                  </button>
+                      {openSections.competitor ? (
+                        <ChevronUp className="w-6 h-6 text-gray-500" />
+                      ) : (
+                        <ChevronDown className="w-6 h-6 text-gray-500" />
+                      )}
+                    </button>
+                  </div>
                   
                   {openSections.competitor && (
                     <div className="mt-4 bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
