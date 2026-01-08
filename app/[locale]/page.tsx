@@ -31,7 +31,13 @@ interface DashboardStats {
     level: string
     points: number
     next_level_points: number
+    points_needed?: number
     completed_steps: string[]
+    pending_steps?: Array<{
+      text: string
+      points: number
+      action: string
+    }>
   }
   next_steps: Array<{
     urgent: boolean
@@ -305,7 +311,7 @@ function MissedRevenueHero({ stats }: { stats: DashboardStats }) {
 }
 
 function TrustLadder({ stats }: { stats: DashboardStats }) {
-  const { level, points, next_level_points, completed_steps } = stats.progress
+  const { level, points, next_level_points, points_needed, completed_steps, pending_steps } = stats.progress
   const progress = (points / next_level_points) * 100
 
   const levelConfig: Record<string, { name: string; color: string }> = {
@@ -316,6 +322,17 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
   }
 
   const config = levelConfig[level] || levelConfig.bronze
+
+  const getActionHref = (action: string) => {
+    switch (action) {
+      case 'products':
+        return '/products'
+      case 'recommendations':
+        return '/recommendations'
+      default:
+        return '/'
+    }
+  }
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
@@ -338,18 +355,51 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
           </div>
           <div className="text-xs text-gray-600 mt-1">
             {Math.round(progress)}% zum nächsten Level ({points}/{next_level_points} Punkte)
+            {points_needed && points_needed > 0 && (
+              <span className="text-gray-500 ml-2">
+                • Noch {points_needed} Punkte bis {levelConfig[level === 'bronze' ? 'silver' : level === 'silver' ? 'gold' : 'platinum']?.name.split(' - ')[1] || 'nächstes Level'}
+              </span>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="space-y-2">
-        {completed_steps.map((step, idx) => (
-          <div key={idx} className="flex items-center gap-3 text-green-700">
-            <CheckCircle className="w-5 h-5 flex-shrink-0" />
-            <span className="text-sm">{step}</span>
+      {/* Abgeschlossene Schritte */}
+      {completed_steps.length > 0 && (
+        <div className="mb-4">
+          <div className="text-sm font-semibold text-gray-700 mb-2">Abgeschlossen:</div>
+          <div className="space-y-2">
+            {completed_steps.map((step, idx) => (
+              <div key={idx} className="flex items-center gap-3 text-green-700">
+                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                <span className="text-sm">{step}</span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* Fehlende Schritte */}
+      {pending_steps && pending_steps.length > 0 && (
+        <div className="border-t border-gray-200 pt-4 mt-4">
+          <div className="text-sm font-semibold text-gray-700 mb-2">
+            Noch zu erledigen (bis zum nächsten Level):
+          </div>
+          <div className="space-y-2">
+            {pending_steps.map((step, idx) => (
+              <Link key={idx} href={getActionHref(step.action)}>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-blue-600 transition-colors cursor-pointer p-2 rounded hover:bg-gray-50">
+                  <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center border-2 border-gray-300 rounded-full">
+                    <span className="text-xs font-bold">{step.points}</span>
+                  </div>
+                  <span className="text-sm flex-1">{step.text}</span>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0 opacity-50" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
