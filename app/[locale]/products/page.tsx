@@ -33,7 +33,7 @@ interface ProductWithDetails extends Product {
   margin?: number
   hasRecommendation?: boolean
   recommendationPotential?: number
-  status: 'optimal' | 'warning' | 'critical'
+  status: 'optimal' | 'warning' | 'critical' | 'optimizable'
   hasCostData?: boolean
 }
 
