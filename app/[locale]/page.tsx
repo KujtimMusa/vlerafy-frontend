@@ -5,10 +5,46 @@ import { useSearchParams } from 'next/navigation'
 import { Link } from '@/navigation'
 import { ShopSwitcher } from '@/components/ShopSwitcher'
 import { useShop } from '@/hooks/useShop'
+import { getDashboardStats } from '@/lib/api'
+import { 
+  TrendingUp, 
+  AlertCircle, 
+  Package, 
+  Lightbulb,
+  CheckCircle,
+  ArrowRight,
+  Trophy
+} from 'lucide-react'
+
+interface DashboardStats {
+  products_count: number
+  recommendations_pending: number
+  recommendations_applied: number
+  missed_revenue: {
+    total: number
+    product_count: number
+    avg_per_product: number
+  }
+  progress: {
+    level: string
+    points: number
+    next_level_points: number
+    completed_steps: string[]
+  }
+  next_steps: Array<{
+    urgent: boolean
+    title: string
+    description: string
+    action: string
+    href: string
+  }>
+}
 
 export default function Home() {
-  const { currentShop, isDemoMode, shops, loading, switchToShop } = useShop()
+  const { currentShop, isDemoMode, shops, loading: shopLoading, switchToShop } = useShop()
   const searchParams = useSearchParams()
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [loading, setLoading] = useState(true)
   
   // Auto-Switch nach OAuth Installation (aus URL oder localStorage)
   useEffect(() => {
@@ -25,7 +61,7 @@ export default function Home() {
       if (typeof window !== 'undefined') {
         window.history.replaceState({}, '', window.location.pathname)
       }
-      return;
+      return
     }
     
     // Fallback: Prüfe localStorage (falls /dashboard bereits shop_id gespeichert hat)
@@ -46,6 +82,23 @@ export default function Home() {
       }
     }
   }, [searchParams, switchToShop, currentShop])
+
+  // Lade Dashboard Stats
+  useEffect(() => {
+    if (!currentShop || shopLoading) return
+    
+    setLoading(true)
+    getDashboardStats()
+      .then(data => {
+        console.log('Dashboard stats:', data)
+        setStats(data)
+      })
+      .catch(err => {
+        console.error('Error loading stats:', err)
+        setStats(null)
+      })
+      .finally(() => setLoading(false))
+  }, [currentShop, shopLoading])
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -69,7 +122,7 @@ export default function Home() {
         <nav className="space-y-2">
           <Link 
             href="/" 
-            className="block px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            className="block px-4 py-2 text-gray-700 rounded-lg bg-gray-100 transition-colors"
           >
             Dashboard
           </Link>
@@ -91,20 +144,208 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link href="/products" className="p-6 bg-white rounded-lg shadow hover:shadow-lg transition border border-gray-200">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-900">Produkte</h2>
-            <p className="text-gray-600">Verwalte deine Shopify-Produkte und synchronisiere sie mit der Datenbank.</p>
-          </Link>
-          
-          <Link href="/recommendations" className="p-6 bg-white rounded-lg shadow hover:shadow-lg transition border border-gray-200">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-900">Preisempfehlungen</h2>
-            <p className="text-gray-600">Sieh dir Preisempfehlungen basierend auf verschiedenen Strategien an.</p>
-          </Link>
-        </div>
+          {loading || shopLoading ? (
+            <div className="text-center py-12 text-gray-600">Lade Dashboard...</div>
+          ) : stats ? (
+            <>
+              {/* 1. MISSED REVENUE HERO */}
+              <MissedRevenueHero stats={stats} />
+
+              {/* 2. TRUST LADDER */}
+              <TrustLadder stats={stats} />
+
+              {/* 3. QUICK ACTIONS */}
+              <QuickActions stats={stats} />
+
+              {/* 4. NEXT STEPS */}
+              <NextSteps stats={stats} />
+            </>
+          ) : (
+            <div className="text-center py-12 text-red-600">
+              Fehler beim Laden der Dashboard-Daten
+            </div>
+          )}
         </div>
       </main>
     </div>
   )
 }
 
+// SUB-COMPONENTS
+
+function MissedRevenueHero({ stats }: { stats: DashboardStats }) {
+  const { total, product_count } = stats.missed_revenue
+
+  if (product_count === 0) return null
+
+  return (
+    <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl border-2 border-red-200 p-8 mb-6">
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0">
+          <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
+            <AlertCircle className="w-8 h-8 text-white" />
+          </div>
+        </div>
+        
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-red-900 mb-2">
+            💸 Du verlierst aktuell Geld!
+          </h2>
+          <p className="text-red-800 mb-6">
+            {product_count} Produkte haben suboptimale Preise.
+          </p>
+
+          <div className="bg-white rounded-lg border-2 border-green-300 p-6 mb-4">
+            <div className="text-center">
+              <div className="text-sm text-gray-600 uppercase tracking-wide mb-2">
+                POTENZIAL DIESEN MONAT
+              </div>
+              <div className="text-5xl font-bold text-green-600 mb-2">
+                + {Math.round(total).toLocaleString('de-DE')} €
+              </div>
+              <div className="text-gray-600">
+                mehr Umsatz möglich
+              </div>
+            </div>
+          </div>
+
+          <Link href="/recommendations">
+            <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              Alle Empfehlungen ansehen
+            </button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TrustLadder({ stats }: { stats: DashboardStats }) {
+  const { level, points, next_level_points, completed_steps } = stats.progress
+  const progress = (points / next_level_points) * 100
+
+  const levelConfig: Record<string, { name: string; color: string }> = {
+    bronze: { name: '🥉 Bronze - Anfänger', color: 'from-orange-400 to-orange-600' },
+    silver: { name: '🥈 Silber - Fortgeschritten', color: 'from-gray-300 to-gray-500' },
+    gold: { name: '🥇 Gold - Profi', color: 'from-yellow-400 to-yellow-600' },
+    platinum: { name: '💎 Platin - Experte', color: 'from-purple-400 to-purple-600' },
+  }
+
+  const config = levelConfig[level] || levelConfig.bronze
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+        <Trophy className="w-6 h-6 text-yellow-500" />
+        Deine Optimierungs-Reise
+      </h3>
+
+      <div className="mb-6">
+        <div className="text-lg font-semibold mb-3">
+          {config.name}
+        </div>
+
+        <div className="relative">
+          <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className={`h-full bg-gradient-to-r ${config.color} transition-all duration-500`}
+              style={{ width: `${Math.min(progress, 100)}%` }}
+            />
+          </div>
+          <div className="text-xs text-gray-600 mt-1">
+            {Math.round(progress)}% zum nächsten Level ({points}/{next_level_points} Punkte)
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        {completed_steps.map((step, idx) => (
+          <div key={idx} className="flex items-center gap-3 text-green-700">
+            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+            <span className="text-sm">{step}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function QuickActions({ stats }: { stats: DashboardStats }) {
+  const actions = [
+    {
+      icon: <Package className="w-8 h-8" />,
+      title: 'Produkte',
+      value: stats.products_count,
+      description: 'synchronisiert',
+      href: '/products',
+      color: 'from-blue-50 to-blue-100 border-blue-200 text-blue-700',
+    },
+    {
+      icon: <Lightbulb className="w-8 h-8" />,
+      title: 'Empfehlungen',
+      value: stats.recommendations_pending,
+      description: 'ausstehend',
+      href: '/recommendations',
+      color: 'from-yellow-50 to-yellow-100 border-yellow-200 text-yellow-700',
+    },
+    {
+      icon: <TrendingUp className="w-8 h-8" />,
+      title: 'Umgesetzt',
+      value: stats.recommendations_applied,
+      description: 'Empfehlungen',
+      href: '/recommendations',
+      color: 'from-green-50 to-green-100 border-green-200 text-green-700',
+    },
+  ]
+
+  return (
+    <div className="mb-6">
+      <h3 className="text-xl font-bold mb-4">⚡ Schnellaktionen</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {actions.map((action, idx) => (
+          <Link key={idx} href={action.href}>
+            <div className={`bg-gradient-to-br ${action.color} border-2 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer`}>
+              <div className="mb-4">{action.icon}</div>
+              <h4 className="font-bold text-lg mb-1">{action.title}</h4>
+              <div className="text-3xl font-bold mb-2">{action.value}</div>
+              <div className="text-sm opacity-80">{action.description}</div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function NextSteps({ stats }: { stats: DashboardStats }) {
+  if (stats.next_steps.length === 0) return null
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <h3 className="text-xl font-bold mb-4">📌 Nächste Schritte</h3>
+
+      <div className="space-y-3">
+        {stats.next_steps.map((step, idx) => (
+          <div 
+            key={idx}
+            className={`${step.urgent ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'} border-2 rounded-lg p-4`}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <div className="font-semibold mb-2">{step.title}</div>
+                <p className="text-sm text-gray-700 mb-3">{step.description}</p>
+                <Link href={step.href}>
+                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                    {step.action} <ArrowRight className="w-4 h-4" />
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

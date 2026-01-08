@@ -1,5 +1,20 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
+/**
+ * Dashboard Stats API
+ * Lädt Missed Revenue und Trust Ladder Daten
+ */
+export async function getDashboardStats() {
+  const response = await fetch(`${API_URL}/api/dashboard/stats`, {
+    headers: getHeaders()
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Fehler beim Laden der Dashboard-Daten');
+  }
+  return response.json();
+}
+
 // Session-ID Management
 function getOrCreateSessionId(): string {
   if (typeof window === 'undefined') return 'server-session';
