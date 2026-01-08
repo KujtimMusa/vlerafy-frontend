@@ -85,9 +85,9 @@ export function ConfidenceIndicator({
   const compCount = confidenceBasis?.competitor_count || 0
   const sales30d = confidenceBasis?.sales_30d || 0
   
-  // Full version - New improved design
+  // Full version - New improved design (visuell prominent: p-6, border-2, shadow-md)
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border-l-4 border-blue-500 space-y-4">
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border-2 border-blue-500 shadow-md space-y-4">
       
       {/* HEADLINE: Größte Schrift + Progressbar */}
       <div className="flex items-center gap-3">
