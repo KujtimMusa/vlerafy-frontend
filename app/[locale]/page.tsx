@@ -19,10 +19,12 @@ import {
 interface DashboardStats {
   products_count: number
   recommendations_pending: number
+  products_with_recommendations?: number
   recommendations_applied: number
   missed_revenue: {
     total: number
     product_count: number
+    recommendation_count?: number
     avg_per_product: number
   }
   progress: {
@@ -38,6 +40,28 @@ interface DashboardStats {
     action: string
     href: string
   }>
+}
+
+/**
+ * Formatiert Zahlen mit deutschem Format (Tausender-Trennung)
+ * 7205470 → "7.205.470"
+ */
+function formatNumber(num: number): string {
+  return new Intl.NumberFormat('de-DE', {
+    maximumFractionDigits: 0
+  }).format(num)
+}
+
+/**
+ * Formatiert Geldbeträge mit Euro-Symbol
+ * 7205470 → "7.205.470 €"
+ */
+function formatCurrency(num: number): string {
+  return new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0  // Keine Cents bei großen Zahlen
+  }).format(num)
 }
 
 export default function Home() {
@@ -174,7 +198,7 @@ export default function Home() {
 // SUB-COMPONENTS
 
 function MissedRevenueHero({ stats }: { stats: DashboardStats }) {
-  const { total, product_count } = stats.missed_revenue
+  const { total, product_count, recommendation_count } = stats.missed_revenue
 
   if (product_count === 0) return null
 
@@ -192,16 +216,24 @@ function MissedRevenueHero({ stats }: { stats: DashboardStats }) {
             💸 Du verlierst aktuell Geld!
           </h2>
           <p className="text-red-800 mb-6">
-            {product_count} Produkte haben suboptimale Preise.
+            {/* ✅ FIXED: Zeige Produkt-Anzahl, nicht Recommendation-Anzahl */}
+            {product_count} {product_count === 1 ? 'Produkt hat' : 'Produkte haben'} suboptimale Preise.
+            {recommendation_count && recommendation_count !== product_count && (
+              <span className="text-sm text-red-700 ml-2">
+                ({recommendation_count} Empfehlungen verfügbar)
+              </span>
+            )}
           </p>
 
+          {/* Big Number */}
           <div className="bg-white rounded-lg border-2 border-green-300 p-6 mb-4">
             <div className="text-center">
               <div className="text-sm text-gray-600 uppercase tracking-wide mb-2">
                 POTENZIAL DIESEN MONAT
               </div>
               <div className="text-5xl font-bold text-green-600 mb-2">
-                + {Math.round(total).toLocaleString('de-DE')} €
+                {/* ✅ FIXED: Formatiere mit Tausender-Trennung */}
+                + {formatCurrency(total)}
               </div>
               <div className="text-gray-600">
                 mehr Umsatz möglich
@@ -209,10 +241,37 @@ function MissedRevenueHero({ stats }: { stats: DashboardStats }) {
             </div>
           </div>
 
-          <Link href="/recommendations">
+          {/* Details */}
+          <div className="bg-gray-50 rounded-lg p-4 mb-4">
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                <span>•</span>
+                <span>
+                  <strong>{product_count}</strong> {product_count === 1 ? 'Produkt' : 'Produkte'} mit Optimierungspotenzial
+                </span>
+              </li>
+              {recommendation_count && recommendation_count !== product_count && (
+                <li className="flex items-center gap-2">
+                  <span>•</span>
+                  <span>
+                    <strong>{recommendation_count}</strong> Preisempfehlungen insgesamt
+                  </span>
+                </li>
+              )}
+              <li className="flex items-center gap-2">
+                <span>•</span>
+                <span>
+                  Ø <strong>{formatCurrency(total / product_count)}</strong> pro Produkt/Monat
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          {/* ✅ FIXED: Link zu /products statt /recommendations */}
+          <Link href="/products">
             <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
-              <TrendingUp className="w-5 h-5" />
-              Alle Empfehlungen ansehen
+              <Package className="w-5 h-5" />
+              Produkte optimieren
             </button>
           </Link>
         </div>
@@ -276,7 +335,7 @@ function QuickActions({ stats }: { stats: DashboardStats }) {
     {
       icon: <Package className="w-8 h-8" />,
       title: 'Produkte',
-      value: stats.products_count,
+      value: stats.products_count,  // ✅ Alle Produkte (20)
       description: 'synchronisiert',
       href: '/products',
       color: 'from-blue-50 to-blue-100 border-blue-200 text-blue-700',
@@ -284,7 +343,7 @@ function QuickActions({ stats }: { stats: DashboardStats }) {
     {
       icon: <Lightbulb className="w-8 h-8" />,
       title: 'Empfehlungen',
-      value: stats.recommendations_pending,
+      value: stats.recommendations_pending,  // ✅ Alle Recommendations (166)
       description: 'ausstehend',
       href: '/recommendations',
       color: 'from-yellow-50 to-yellow-100 border-yellow-200 text-yellow-700',
@@ -292,7 +351,7 @@ function QuickActions({ stats }: { stats: DashboardStats }) {
     {
       icon: <TrendingUp className="w-8 h-8" />,
       title: 'Umgesetzt',
-      value: stats.recommendations_applied,
+      value: stats.recommendations_applied,  // ✅ Angewendete Recs
       description: 'Empfehlungen',
       href: '/recommendations',
       color: 'from-green-50 to-green-100 border-green-200 text-green-700',
@@ -309,7 +368,10 @@ function QuickActions({ stats }: { stats: DashboardStats }) {
             <div className={`bg-gradient-to-br ${action.color} border-2 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer`}>
               <div className="mb-4">{action.icon}</div>
               <h4 className="font-bold text-lg mb-1">{action.title}</h4>
-              <div className="text-3xl font-bold mb-2">{action.value}</div>
+              {/* ✅ FIXED: Formatiere große Zahlen */}
+              <div className="text-3xl font-bold mb-2">
+                {formatNumber(action.value)}
+              </div>
               <div className="text-sm opacity-80">{action.description}</div>
             </div>
           </Link>
