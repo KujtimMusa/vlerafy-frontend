@@ -296,8 +296,7 @@ export function PriceRecommendationCard({
             marginAnalysis={recommendation.margin_analysis}
           />
         )}
-        
-      </div>
+      )}
       
       {/* ==========================================
           CRITICAL WARNINGS (if any)
@@ -318,6 +317,8 @@ export function PriceRecommendationCard({
           </div>
         </div>
       )}
+      
+      </div>
       
       {/* ==========================================
           FOOTER - Metadata
