@@ -441,7 +441,7 @@ const QuickActions = ({ stats }: { stats: DashboardStats }) => {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-6 text-gray-900">⚡ Schnellaktionen</h3>
+      <h3 className="text-2xl font-bold mb-6" style={{ color: '#f1f5f9' }}>⚡ Schnellaktionen</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {actions.map((action, idx) => {
@@ -505,7 +505,7 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
             <Zap className="h-5 w-5 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900">
+          <h3 className="text-xl font-bold" style={{ color: '#f1f5f9' }}>
             Nächste Schritte
           </h3>
         </div>
