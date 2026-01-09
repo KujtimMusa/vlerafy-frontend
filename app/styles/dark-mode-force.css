@@ -721,3 +721,49 @@ html[class*="dark"] {
   background: linear-gradient(to bottom, #1e293b, #0f172a, #1e293b) !important;
 }
 
+/* === OVERRIDE MAIN CONTENT AREAS === */
+
+/* Main content areas */
+main,
+[role="main"],
+.main-content,
+.content {
+  background-color: #0f172a !important;
+  color: #cbd5e1 !important;
+}
+
+/* Override bg-gradient-to-br from-gray-50 to-gray-100 */
+.bg-gradient-to-br.from-gray-50.to-gray-100,
+[class*="from-gray-50"][class*="to-gray-100"] {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+}
+
+/* Override all card-like elements */
+.card,
+[class*="Card"],
+[class*="card"]:not([class*="product-card"]):not([class*="stat-card"]) {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Product cards specifically */
+.product-card {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+/* Override all rounded elements */
+.rounded-lg,
+.rounded-xl,
+.rounded-2xl,
+[class*="rounded"] {
+  /* Keep border radius, just ensure background is dark */
+}
+
+/* Override flex containers */
+.flex,
+[class*="flex"] {
+  /* Keep flex, but ensure children are dark */
+}
+
