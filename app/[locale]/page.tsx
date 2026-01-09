@@ -6,6 +6,8 @@ import { Link } from '@/navigation'
 import { ShopSwitcher } from '@/components/ShopSwitcher'
 import { useShop } from '@/hooks/useShop'
 import { getDashboardStats } from '@/lib/api'
+import { motion } from 'framer-motion'
+import { ModernCard } from '@/components/ui/modern-card'
 import { 
   TrendingUp, 
   AlertCircle, 
@@ -13,7 +15,13 @@ import {
   Lightbulb,
   CheckCircle,
   ArrowRight,
-  Trophy
+  Trophy,
+  Sparkles,
+  Info,
+  Target,
+  Zap,
+  Flame,
+  Plus
 } from 'lucide-react'
 
 interface DashboardStats {
@@ -196,12 +204,26 @@ export default function Home() {
       </aside>
       
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-7xl mx-auto space-y-8">
           {loading || shopLoading ? (
             <div className="text-center py-12 text-gray-600">Lade Dashboard...</div>
           ) : stats ? (
             <>
+              {/* Page Header */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-2"
+              >
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+                  Dashboard
+                </h1>
+                <p className="text-lg text-gray-600">
+                  Willkommen zurück! Hier ist deine Übersicht.
+                </p>
+              </motion.div>
+
               {/* 1. MISSED REVENUE HERO */}
               <MissedRevenueHero stats={stats} />
 
@@ -228,85 +250,120 @@ export default function Home() {
 // SUB-COMPONENTS
 
 function MissedRevenueHero({ stats }: { stats: DashboardStats }) {
-  const { total, product_count, recommendation_count } = stats.missed_revenue
+  const { total, product_count, recommendation_count, avg_per_product } = stats.missed_revenue
 
   if (product_count === 0) return null
 
+  const percentIncrease = total > 0 ? Math.round((total / (total * 0.3)) * 100) : 0
+
   return (
-    <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl border-2 border-red-200 p-8 mb-6">
-      <div className="flex items-start gap-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-500 via-red-600 to-red-700 p-8 shadow-xl"
+    >
+      {/* Subtle pattern overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-10" />
+      
+      <div className="relative flex items-start gap-6">
+        {/* Icon with glow effect */}
         <div className="flex-shrink-0">
-          <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
-            <AlertCircle className="w-8 h-8 text-white" />
+          <div className="relative">
+            <div className="absolute inset-0 animate-pulse rounded-full bg-white/30 blur-xl" />
+            <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+              <AlertCircle className="h-7 w-7 text-white" />
+            </div>
           </div>
         </div>
         
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold text-red-900 mb-2">
-            💸 Du verlierst aktuell Geld!
-          </h2>
-          <p className="text-red-800 mb-6">
-            {/* ✅ FIXED: Zeige Produkt-Anzahl, nicht Recommendation-Anzahl */}
-            {product_count} {product_count === 1 ? 'Produkt hat' : 'Produkte haben'} suboptimale Preise.
+        {/* Content */}
+        <div className="flex-1 space-y-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-yellow-300" />
+            <h2 className="text-2xl font-bold text-white">
+              Du verlierst aktuell Geld!
+            </h2>
+          </div>
+          <p className="text-sm text-red-50">
+            {product_count} {product_count === 1 ? 'Produkt hat' : 'Produkte haben'} suboptimale Preise
             {recommendation_count && recommendation_count !== product_count && (
-              <span className="text-sm text-red-700 ml-2">
+              <span className="ml-2 text-red-100">
                 ({recommendation_count} Empfehlungen verfügbar)
               </span>
             )}
           </p>
 
-          {/* Big Number */}
-          <div className="bg-white rounded-lg border-2 border-green-300 p-6 mb-4">
-            <div className="text-center">
-              <div className="text-sm text-gray-600 uppercase tracking-wide mb-2">
-                POTENZIAL DIESEN MONAT
+          {/* Revenue Potential Card with Glassmorphism */}
+          <ModernCard variant="glass" className="relative overflow-hidden mt-6">
+            {/* Background gradient accent */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-green-400/20 to-emerald-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            
+            <div className="relative p-8 space-y-6">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600 uppercase tracking-wider">
+                    Potenzial diesen Monat
+                  </p>
+                  <div className="flex items-baseline gap-2">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    <span className="text-xs text-green-600 font-semibold">
+                      +{percentIncrease}% mehr Umsatz möglich
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="text-5xl font-bold text-green-600 mb-2">
-                {/* ✅ FIXED: Formatiere mit Tausender-Trennung */}
-                + {formatCurrency(total)}
-              </div>
-              <div className="text-gray-600">
-                mehr Umsatz möglich
-              </div>
-            </div>
-          </div>
-
-          {/* Details */}
-          <div className="bg-gray-50 rounded-lg p-4 mb-4">
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li className="flex items-center gap-2">
-                <span>•</span>
-                <span>
-                  <strong>{product_count}</strong> {product_count === 1 ? 'Produkt' : 'Produkte'} mit Optimierungspotenzial
-                </span>
-              </li>
-              {recommendation_count && recommendation_count !== product_count && (
-                <li className="flex items-center gap-2">
-                  <span>•</span>
-                  <span>
-                    <strong>{recommendation_count}</strong> Preisempfehlungen insgesamt
+              
+              {/* Amount with animated counter */}
+              <div className="space-y-2">
+                <motion.div
+                  className="flex items-baseline gap-2"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2, type: "spring" }}
+                >
+                  <Plus className="h-8 w-8 text-green-600" />
+                  <span className="text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    {formatCurrency(total)}
                   </span>
-                </li>
-              )}
-              <li className="flex items-center gap-2">
-                <span>•</span>
-                <span>
-                  Ø <strong>{formatCurrency(total / product_count)}</strong> pro Produkt/Monat
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          {/* ✅ FIXED: Link zu /products statt /recommendations */}
-          <Link href="/products">
-            <button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
-              <Package className="w-5 h-5" />
-              Produkte optimieren
-            </button>
-          </Link>
+                </motion.div>
+                <p className="text-sm text-gray-600">
+                  mehr Umsatz möglich
+                </p>
+              </div>
+              
+              {/* Stats Row */}
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-500">Produkte</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {product_count} mit Potenzial
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-500">Ø pro Produkt</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {formatCurrency(avg_per_product)}/Monat
+                  </p>
+                </div>
+              </div>
+              
+              {/* CTA Button */}
+              <Link href="/products">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                >
+                  <Target className="h-5 w-5" />
+                  Produkte optimieren
+                </motion.button>
+              </Link>
+            </div>
+          </ModernCard>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -314,14 +371,16 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
   const { level, points, next_level_points, points_needed, completed_steps, pending_steps } = stats.progress
   const progress = (points / next_level_points) * 100
 
-  const levelConfig: Record<string, { name: string; color: string }> = {
-    bronze: { name: '🥉 Bronze - Anfänger', color: 'from-orange-400 to-orange-600' },
-    silver: { name: '🥈 Silber - Fortgeschritten', color: 'from-gray-300 to-gray-500' },
-    gold: { name: '🥇 Gold - Profi', color: 'from-yellow-400 to-yellow-600' },
-    platinum: { name: '💎 Platin - Experte', color: 'from-purple-400 to-purple-600' },
+  const levelConfig: Record<string, { name: string; color: string; shortName: string }> = {
+    bronze: { name: '🥉 Bronze - Anfänger', color: 'from-orange-400 to-orange-600', shortName: 'Anfänger' },
+    silver: { name: '🥈 Silber - Fortgeschritten', color: 'from-gray-300 to-gray-500', shortName: 'Fortgeschritten' },
+    gold: { name: '🥇 Gold - Profi', color: 'from-yellow-400 to-yellow-600', shortName: 'Profi' },
+    platinum: { name: '💎 Platin - Experte', color: 'from-purple-400 to-purple-600', shortName: 'Experte' },
   }
 
   const config = levelConfig[level] || levelConfig.bronze
+  const nextLevel = level === 'bronze' ? 'silver' : level === 'silver' ? 'gold' : 'platinum'
+  const nextLevelName = levelConfig[nextLevel]?.shortName || 'nächstes Level'
 
   const getActionHref = (action: string) => {
     switch (action) {
@@ -334,122 +393,217 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
     }
   }
 
+  // Achievement icons (simplified)
+  const achievements = [
+    { id: 1, icon: '📦', label: 'Produkte', completed: completed_steps.some(s => s.includes('Produkt')) },
+    { id: 2, icon: '💡', label: 'Empfehlungen', completed: completed_steps.some(s => s.includes('Empfehlung')) },
+    { id: 3, icon: '✅', label: 'Umsetzung', completed: completed_steps.some(s => s.includes('Umsetzung')) },
+  ]
+
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-      <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <Trophy className="w-6 h-6 text-yellow-500" />
-        Deine Optimierungs-Reise
-      </h3>
-
-      <div className="mb-6">
-        <div className="text-lg font-semibold mb-3">
-          {config.name}
-        </div>
-
-        <div className="relative">
-          <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
-            <div 
-              className={`h-full bg-gradient-to-r ${config.color} transition-all duration-500`}
-              style={{ width: `${Math.min(progress, 100)}%` }}
-            />
+    <ModernCard variant="gradient" className="relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-32 h-32 bg-purple-400/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-40 h-40 bg-blue-400/10 rounded-full blur-3xl" />
+      
+      <div className="relative p-8 space-y-6">
+        {/* Header with trophy icon */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 shadow-lg">
+              <Trophy className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">
+                Deine Optimierungs-Reise
+              </h3>
+              <p className="text-sm text-gray-600">
+                {config.name}
+              </p>
+            </div>
           </div>
-          <div className="text-xs text-gray-600 mt-1">
-            {Math.round(progress)}% zum nächsten Level ({points}/{next_level_points} Punkte)
+          
+          {/* XP Display */}
+          <div className="text-right">
+            <p className="text-2xl font-bold text-gray-900">
+              {points}/{next_level_points}
+            </p>
+            <p className="text-xs text-gray-600">Punkte</p>
+          </div>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600">{Math.round(progress)}% zum nächsten Level</span>
             {points_needed && points_needed > 0 && (
-              <span className="text-gray-500 ml-2">
-                • Noch {points_needed} Punkte bis {levelConfig[level === 'bronze' ? 'silver' : level === 'silver' ? 'gold' : 'platinum']?.name.split(' - ')[1] || 'nächstes Level'}
-              </span>
+              <span className="font-semibold text-purple-600">Noch {points_needed} Punkte</span>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Abgeschlossene Schritte */}
-      {completed_steps.length > 0 && (
-        <div className="mb-4">
-          <div className="text-sm font-semibold text-gray-700 mb-2">Abgeschlossen:</div>
-          <div className="space-y-2">
-            {completed_steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-3 text-green-700">
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                <span className="text-sm">{step}</span>
-              </div>
-            ))}
+          
+          <div className="relative h-3 overflow-hidden rounded-full bg-gray-200">
+            {/* Animated gradient progress */}
+            <motion.div
+              className={`h-full bg-gradient-to-r ${config.color} animate-gradient`}
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(progress, 100)}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+            
+            {/* Shine effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
           </div>
         </div>
-      )}
-
-      {/* Fehlende Schritte */}
-      {pending_steps && pending_steps.length > 0 && (
-        <div className="border-t border-gray-200 pt-4 mt-4">
-          <div className="text-sm font-semibold text-gray-700 mb-2">
-            Noch zu erledigen (bis zum nächsten Level):
-          </div>
-          <div className="space-y-2">
-            {pending_steps.map((step, idx) => (
-              <Link key={idx} href={getActionHref(step.action)}>
-                <div className="flex items-center gap-3 text-gray-600 hover:text-blue-600 transition-colors cursor-pointer p-2 rounded hover:bg-gray-50">
-                  <div className="w-5 h-5 flex-shrink-0 flex items-center justify-center border-2 border-gray-300 rounded-full">
-                    <span className="text-xs font-bold">{step.points}</span>
+        
+        {/* Achievement Cards */}
+        <div className="grid grid-cols-3 gap-3">
+          {achievements.map((achievement, idx) => (
+            <motion.div
+              key={achievement.id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.1 }}
+              className={`relative flex flex-col items-center gap-2 rounded-xl p-4 transition-all hover:scale-105 ${
+                achievement.completed
+                  ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200"
+                  : "bg-gray-50 border-2 border-gray-200 opacity-60"
+              }`}
+            >
+              {achievement.completed && (
+                <div className="absolute -top-2 -right-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 shadow-lg">
+                    <CheckCircle className="h-4 w-4 text-white" />
                   </div>
-                  <span className="text-sm flex-1">{step.text}</span>
-                  <ArrowRight className="w-4 h-4 flex-shrink-0 opacity-50" />
                 </div>
-              </Link>
+              )}
+              
+              <div className={`text-3xl ${achievement.completed && "animate-bounce"}`}>
+                {achievement.icon}
+              </div>
+              <p className="text-xs text-center font-medium text-gray-700">
+                {achievement.label}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+        
+        {/* Next Steps */}
+        {pending_steps && pending_steps.length > 0 && (
+          <div className="space-y-3 pt-4 border-t border-gray-200">
+            <p className="text-sm font-medium text-gray-900">
+              Noch zu erledigen:
+            </p>
+            
+            {pending_steps.map((step, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                <Link href={getActionHref(step.action)}>
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-white border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all cursor-pointer">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-purple-600 font-semibold text-sm">
+                      {step.points}
+                    </div>
+                    <p className="flex-1 text-sm text-gray-700">{step.text}</p>
+                    <ArrowRight className="h-4 w-4 text-gray-400" />
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </ModernCard>
   )
 }
 
 function QuickActions({ stats }: { stats: DashboardStats }) {
   const actions = [
     {
-      icon: <Package className="w-8 h-8" />,
+      icon: Package,
       title: 'Produkte',
-      value: stats.products_count,  // ✅ Alle Produkte (20)
+      value: stats.products_count,
       description: 'synchronisiert',
       href: '/products',
-      color: 'from-blue-50 to-blue-100 border-blue-200 text-blue-700',
+      gradient: 'from-blue-500 to-blue-600',
+      bgGradient: 'from-blue-500/0 to-blue-600/0',
+      hoverBgGradient: 'from-blue-500/5 to-blue-600/10',
+      textColor: 'text-blue-600',
     },
     {
-      icon: <Lightbulb className="w-8 h-8" />,
+      icon: Lightbulb,
       title: 'Empfehlungen',
-      value: stats.recommendations_pending,  // ✅ Alle Recommendations (166)
+      value: stats.recommendations_pending,
       description: 'ausstehend',
       href: '/recommendations',
-      color: 'from-yellow-50 to-yellow-100 border-yellow-200 text-yellow-700',
+      gradient: 'from-yellow-500 to-orange-600',
+      bgGradient: 'from-yellow-500/0 to-orange-600/0',
+      hoverBgGradient: 'from-yellow-500/5 to-orange-600/10',
+      textColor: 'text-orange-600',
     },
     {
-      icon: <TrendingUp className="w-8 h-8" />,
+      icon: TrendingUp,
       title: 'Umgesetzt',
-      value: stats.recommendations_applied,  // ✅ Angewendete Recs
+      value: stats.recommendations_applied,
       description: 'Empfehlungen',
       href: '/recommendations',
-      color: 'from-green-50 to-green-100 border-green-200 text-green-700',
+      gradient: 'from-green-500 to-emerald-600',
+      bgGradient: 'from-green-500/0 to-emerald-600/0',
+      hoverBgGradient: 'from-green-500/5 to-emerald-600/10',
+      textColor: 'text-green-600',
     },
   ]
 
   return (
-    <div className="mb-6">
-      <h3 className="text-xl font-bold mb-4">⚡ Schnellaktionen</h3>
+    <div>
+      <h3 className="text-2xl font-bold mb-6 text-gray-900">⚡ Schnellaktionen</h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {actions.map((action, idx) => (
-          <Link key={idx} href={action.href}>
-            <div className={`bg-gradient-to-br ${action.color} border-2 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer`}>
-              <div className="mb-4">{action.icon}</div>
-              <h4 className="font-bold text-lg mb-1">{action.title}</h4>
-              {/* ✅ FIXED: Formatiere große Zahlen */}
-              <div className="text-3xl font-bold mb-2">
-                {formatNumber(action.value)}
-              </div>
-              <div className="text-sm opacity-80">{action.description}</div>
-            </div>
-          </Link>
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {actions.map((action, idx) => {
+          const IconComponent = action.icon
+          return (
+            <motion.div
+              key={idx}
+              whileHover={{ y: -4, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Link href={action.href}>
+                <ModernCard className={`relative overflow-hidden group`}>
+                  {/* Gradient background on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${action.bgGradient} group-hover:bg-gradient-to-br ${action.hoverBgGradient} transition-all duration-300`} />
+                  
+                  <div className="relative p-6 space-y-4">
+                    {/* Icon */}
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${action.gradient} shadow-lg group-hover:shadow-xl transition-shadow`}>
+                      <IconComponent className="h-7 w-7 text-white" />
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="space-y-2">
+                      <h4 className="text-2xl font-bold text-gray-900">
+                        {formatNumber(action.value)}
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        {action.title}
+                      </p>
+                      <div className="inline-flex items-center px-2 py-1 rounded-full bg-gray-100 text-xs text-gray-600">
+                        {action.description}
+                      </div>
+                    </div>
+                    
+                    {/* Hover Arrow */}
+                    <div className={`flex items-center gap-2 ${action.textColor} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                      <span className="text-sm font-medium">Alle anzeigen</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
+                  </div>
+                </ModernCard>
+              </Link>
+            </motion.div>
+          )
+        })}
       </div>
     </div>
   )
@@ -458,30 +612,89 @@ function QuickActions({ stats }: { stats: DashboardStats }) {
 function NextSteps({ stats }: { stats: DashboardStats }) {
   if (stats.next_steps.length === 0) return null
 
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
-      <h3 className="text-xl font-bold mb-4">📌 Nächste Schritte</h3>
+  const urgentStep = stats.next_steps.find(s => s.urgent)
+  const otherSteps = stats.next_steps.filter(s => !s.urgent)
 
-      <div className="space-y-3">
-        {stats.next_steps.map((step, idx) => (
-          <div 
-            key={idx}
-            className={`${step.urgent ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'} border-2 rounded-lg p-4`}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <div className="font-semibold mb-2">{step.title}</div>
-                <p className="text-sm text-gray-700 mb-3">{step.description}</p>
-                <Link href={step.href}>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                    {step.action} <ArrowRight className="w-4 h-4" />
-                  </button>
-                </Link>
-              </div>
-            </div>
+  return (
+    <ModernCard variant="glass" className="relative overflow-hidden">
+      {/* Header with icon */}
+      <div className="border-b border-gray-200 bg-gradient-to-r from-pink-50 to-purple-50 px-8 py-6">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
+            <Zap className="h-5 w-5 text-white" />
           </div>
-        ))}
+          <h3 className="text-xl font-bold text-gray-900">
+            Nächste Schritte
+          </h3>
+        </div>
       </div>
-    </div>
+      
+      {/* Content */}
+      <div className="p-8 space-y-4">
+        {/* Urgent CTA Box */}
+        {urgentStep && (
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 p-6"
+          >
+            {/* Glow effect */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-300/20 rounded-full blur-3xl" />
+            
+            <div className="relative space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 shadow-md">
+                  <Flame className="h-4 w-4 text-white animate-pulse" />
+                </div>
+                <p className="text-sm font-semibold text-orange-900">
+                  {urgentStep.title}
+                </p>
+              </div>
+              
+              <p className="text-sm text-orange-800">
+                {urgentStep.description}
+              </p>
+              
+              <Link href={urgentStep.href}>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                >
+                  {urgentStep.action}
+                  <ArrowRight className="h-4 w-4" />
+                </motion.button>
+              </Link>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Other Steps */}
+        {otherSteps.length > 0 && (
+          <div className="space-y-3">
+            {otherSteps.map((step, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                <Link href={step.href}>
+                  <div className="flex items-start justify-between gap-4 p-4 rounded-lg bg-blue-50 border-2 border-blue-200 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer">
+                    <div className="flex-1">
+                      <div className="font-semibold mb-1 text-gray-900">{step.title}</div>
+                      <p className="text-sm text-gray-700 mb-2">{step.description}</p>
+                      <div className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                        {step.action} <ArrowRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+    </ModernCard>
   )
 }
