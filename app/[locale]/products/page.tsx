@@ -1,24 +1,14 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { fetchProducts, syncProducts, generateRecommendation } from '@/lib/api'
+import { useState, useEffect } from 'react'
+import { fetchProducts, syncProducts } from '@/lib/api'
 import { ShopSwitcher } from '@/components/ShopSwitcher'
 import { useShop } from '@/hooks/useShop'
-import { ProductTable, Product } from '@/components/products/product-table'
-import { ProductFilters } from '@/components/products/product-filters'
-import { BulkActionsToolbar } from '@/components/products/bulk-actions-toolbar'
-import { CommandPalette } from '@/components/command/command-palette'
-import { Button } from '@/components/ui/button'
-import { Sparkles, RefreshCw, Plus, Download } from 'lucide-react'
 import { Link } from '@/navigation'
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
-  const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({})
-  const [activeFilter, setActiveFilter] = useState<string>("")
-  const [searchQuery, setSearchQuery] = useState("")
   const { currentShop, isDemoMode, refresh: refreshShop } = useShop()
 
   // Lade Produkte beim Shop-Wechsel
@@ -31,10 +21,11 @@ export default function ProductsPage() {
     loadProducts()
   }, [currentShop?.id, isDemoMode])
   
-  // Höre auf Shop-Wechsel Events
+  // Höre auf Shop-Wechsel Events (für sofortiges Reload)
   useEffect(() => {
     const handleShopSwitch = (event: CustomEvent) => {
       console.log('[ProductsPage] Shop switched event received:', event.detail)
+      // Kurze Verzögerung, damit Shop-Context aktualisiert ist
       setTimeout(() => {
         loadProducts()
       }, 300)
@@ -48,6 +39,7 @@ export default function ProductsPage() {
     setLoading(true)
     try {
       console.log('[ProductsPage] Loading products, currentShop:', currentShop?.name, 'isDemoMode:', isDemoMode)
+      // Nutze Shop-Context (kein shop_id mehr nötig)
       const data = await fetchProducts()
       console.log('[ProductsPage] Products loaded:', data.length, 'products')
       setProducts(data || [])
@@ -58,74 +50,6 @@ export default function ProductsPage() {
       setLoading(false)
     }
   }
-
-  // Transform products to table format
-  const transformedProducts = useMemo(() => {
-    return products.map((p: any) => {
-      const cost = p.cost || 0
-      const price = p.price || 0
-      const marginPct = cost && price ? ((price - cost) / price * 100) : 0
-      const inventory = p.inventory_quantity || p.inventory || 0
-      
-      const product: Product = {
-        id: p.id,
-        shopify_product_id: p.shopify_product_id || String(p.id),
-        title: p.title || 'Unbekanntes Produkt',
-        price: price,
-        cost: cost,
-        inventory_quantity: inventory,
-        inventory: inventory,
-        category: p.category,
-        vendor: p.vendor,
-        image_url: p.image_url,
-        recommended_price: p.recommended_price,
-        ml_confidence: (p.ml_confidence || 0) * 100, // Convert to percentage
-        margin_pct: marginPct,
-        inventory_level: inventory < 10 ? "critical" : inventory < 30 ? "low" : inventory < 100 ? "good" : "high",
-        has_recommendation: !!p.recommended_price,
-        sales_trend: p.sales_trend || "stable",
-        trend_value: p.trend_value || 0,
-        sales_7d: p.sales_7d || 0,
-      }
-      
-      return product
-    })
-  }, [products])
-
-  // Apply filters and search
-  useEffect(() => {
-    let filtered = [...transformedProducts]
-    
-    // Apply search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(p => 
-        p.title.toLowerCase().includes(query) ||
-        p.shopify_product_id.toLowerCase().includes(query) ||
-        p.category?.toLowerCase().includes(query)
-      )
-    }
-    
-    // Apply active filter
-    if (activeFilter) {
-      switch (activeFilter) {
-        case "ai":
-          filtered = filtered.filter(p => p.has_recommendation)
-          break
-        case "lowStock":
-          filtered = filtered.filter(p => p.inventory_level === "critical" || p.inventory_level === "low")
-          break
-        case "trending":
-          filtered = filtered.filter(p => p.sales_trend === "up")
-          break
-        case "lowMargin":
-          filtered = filtered.filter(p => (p.margin_pct || 0) < 20)
-          break
-      }
-    }
-    
-    setFilteredProducts(filtered)
-  }, [transformedProducts, searchQuery, activeFilter])
 
   const handleSync = async () => {
     if (isDemoMode) {
@@ -149,50 +73,6 @@ export default function ProductsPage() {
       setLoading(false)
     }
   }
-
-  // Bulk action handlers
-  const handleApplyAI = async () => {
-    const selectedCount = Object.keys(selectedRows).length
-    alert(`AI Preise werden auf ${selectedCount} Produkte angewendet...`)
-    // TODO: Implement bulk apply API call
-  }
-
-  const handleBulkEdit = () => {
-    alert('Bulk-Bearbeitung wird geöffnet...')
-    // TODO: Open bulk edit dialog
-  }
-
-  const handleApplyDiscount = () => {
-    alert('Rabatt-Dialog wird geöffnet...')
-    // TODO: Open discount dialog
-  }
-
-  const handleExport = () => {
-    alert('Export wird gestartet...')
-    // TODO: Implement export
-  }
-
-  const handleGenerateAll = async () => {
-    alert('Empfehlungen werden für alle Produkte generiert...')
-    // TODO: Implement bulk generate API call
-  }
-
-  // Count filters
-  const aiCount = transformedProducts.filter(p => p.has_recommendation).length
-  
-  const lowStockCount = products.filter((p: any) => {
-    const inv = p.inventory_quantity || p.inventory || 0
-    return inv < 30
-  }).length
-  
-  const trendingCount = 0 // TODO: Calculate from sales data
-  
-  const lowMarginCount = products.filter((p: any) => {
-    const cost = p.cost || 0
-    const price = p.price || 0
-    const margin = cost && price ? ((price - cost) / price * 100) : 0
-    return margin < 20 && margin > 0
-  }).length
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -238,88 +118,82 @@ export default function ProductsPage() {
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
-          {/* Command Palette */}
-          <CommandPalette />
-
-          {/* Page Header */}
-          <div className="flex flex-col gap-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">Produkte</h1>
-                <p className="text-gray-500 mt-1">
-                  {products.length} Produkte - {aiCount} mit AI Empfehlungen
-                </p>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900">Produkte</h1>
+          <div className="flex gap-4 items-center">
+            {currentShop && (
+              <div className="px-4 py-2 bg-gray-100 rounded text-gray-700 text-sm">
+                {currentShop.name} {isDemoMode && '(Demo)'}
               </div>
-
-              <div className="flex items-center gap-2">
-                {!isDemoMode && currentShop && currentShop.type === 'shopify' && (
-                  <Button variant="outline" onClick={handleSync} disabled={loading}>
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Shopify synchronisieren
-                  </Button>
-                )}
-                <Button 
-                  onClick={handleGenerateAll}
-                  className="gap-2 bg-purple-600 hover:bg-purple-700"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  Alle Empfehlungen generieren
-                </Button>
+            )}
+            {!isDemoMode && currentShop && currentShop.type === 'shopify' && (
+              <button
+                onClick={handleSync}
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                {loading ? 'Synchronisiere...' : 'Produkte synchronisieren'}
+              </button>
+            )}
+            {isDemoMode && (
+              <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded text-blue-700 text-sm">
+                Demo-Mode: Keine Synchronisation möglich
               </div>
-            </div>
-
-            {/* Filters */}
-            <ProductFilters
-              onFilterChange={setActiveFilter}
-              onSearchChange={setSearchQuery}
-              aiCount={aiCount}
-              lowStockCount={lowStockCount}
-              trendingCount={trendingCount}
-              lowMarginCount={lowMarginCount}
-            />
+            )}
+            <Link
+              href="/"
+              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+            >
+              Zurück
+            </Link>
           </div>
+        </div>
 
-          {/* Table */}
-          {loading && products.length === 0 ? (
-            <div className="flex items-center justify-center h-96">
-              <div className="text-gray-500">Lade Produkte...</div>
-            </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-12">
-              {isDemoMode ? (
-                <>
-                  <p className="text-gray-600 mb-4">
-                    Demo-Shop: Produkte werden automatisch geladen. Falls keine angezeigt werden, prüfe die Browser-Console.
-                  </p>
-                  <Button onClick={() => loadProducts()}>
-                    Produkte neu laden
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <p className="text-gray-600 mb-4">Keine Produkte gefunden. Synchronisiere zuerst deine Produkte.</p>
-                  <Button onClick={handleSync}>
-                    Produkte synchronisieren
-                  </Button>
-                </>
-              )}
-            </div>
-          ) : (
-            <ProductTable 
-              data={filteredProducts} 
-              onRowSelectionChange={setSelectedRows}
-            />
-          )}
-
-          {/* Bulk Actions Toolbar */}
-          <BulkActionsToolbar
-            selectedCount={Object.keys(selectedRows).length}
-            onClearSelection={() => setSelectedRows({})}
-            onApplyAI={handleApplyAI}
-            onBulkEdit={handleBulkEdit}
-            onApplyDiscount={handleApplyDiscount}
-            onExport={handleExport}
-          />
+        {loading && products.length === 0 ? (
+          <div className="text-center py-12 text-gray-600">Lade Produkte...</div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-12">
+            {isDemoMode ? (
+              <>
+                <p className="text-gray-600 mb-4">
+                  Demo-Shop: Produkte werden automatisch geladen. Falls keine angezeigt werden, prüfe die Browser-Console.
+                </p>
+                <button
+                  onClick={() => loadProducts()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
+                  Produkte neu laden
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-600 mb-4">Keine Produkte gefunden. Synchronisiere zuerst deine Produkte.</p>
+                <button
+                  onClick={handleSync}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
+                  Produkte synchronisieren
+                </button>
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map((product) => (
+              <div key={product.id} className="p-6 bg-white rounded-lg shadow border border-gray-200">
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">{product.title}</h3>
+                <p className="text-gray-600 mb-2">Preis: <span className="font-semibold text-gray-900">€{product.price.toFixed(2)}</span></p>
+                <p className="text-gray-600 mb-4">Lager: <span className="font-semibold text-gray-900">{product.inventory}</span></p>
+                <Link
+                  href={`/recommendations?product_id=${product.id}`}
+                  className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                >
+                  Preisempfehlungen anzeigen →
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
         </div>
       </main>
     </div>
