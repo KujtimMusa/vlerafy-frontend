@@ -296,13 +296,11 @@ function RecommendationsContent() {
                   
                   {openSections.margin && (
                     <div className="px-8 pb-6">
-                      <div className="bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
-                        <MarginDisplay 
-                          marginData={marginData || { has_cost_data: false }}
-                          onAddCosts={() => setShowCostModal(true)}
-                          onEditCosts={() => setShowCostModal(true)}
-                        />
-                      </div>
+                      <MarginDisplay 
+                        marginData={marginData || { has_cost_data: false }}
+                        onAddCosts={() => setShowCostModal(true)}
+                        onEditCosts={() => setShowCostModal(true)}
+                      />
                     </div>
                   )}
                 </div>

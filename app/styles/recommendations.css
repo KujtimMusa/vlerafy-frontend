@@ -367,6 +367,8 @@
 .margin-content {
   padding: 32px;
   background: linear-gradient(to bottom, #ffffff, #fafafa);
+  border-radius: 16px;
+  border: 2px solid #f3f4f6;
 }
 
 /* Header Row with Title & Success Badge */

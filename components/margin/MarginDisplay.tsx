@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, CheckCircle2, DollarSign, Edit2, Edit3 } from 'lucide-react'
+import '@/app/styles/recommendations.css'
 
 interface MarginDisplayProps {
   marginData: {
