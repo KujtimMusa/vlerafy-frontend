@@ -359,6 +359,370 @@
   margin: 4px 0;
 }
 
+/* ============================================
+   MARGEN-ANALYSE SECTION - EXPANDED VIEW
+   ============================================ */
+
+/* Content Area */
+.margin-content {
+  padding: 32px;
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
+}
+
+/* Header Row with Title & Success Badge */
+.margin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.margin-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.margin-title-icon {
+  width: 32px;
+  height: 32px;
+  color: #6b7280;
+}
+
+/* Success Badge - PROMINENT */
+.margin-success-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border: 2px solid #86efac;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
+}
+
+.margin-success-percentage {
+  font-size: 28px;
+  font-weight: 800;
+  color: #16a34a;
+  line-height: 1;
+}
+
+.margin-edit-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6366f1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.margin-edit-button:hover {
+  background: #f9fafb;
+  border-color: #6366f1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+}
+
+/* Price Grid */
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.price-box {
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.price-box:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.price-box-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.price-box-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.price-box-meta {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+/* Variable Costs Section */
+.variable-costs-section {
+  margin-bottom: 32px;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.costs-list {
+  background: white;
+  border: 2px solid #f3f4f6;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.cost-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.2s;
+}
+
+.cost-item:last-child {
+  border-bottom: none;
+}
+
+.cost-item:hover {
+  background: #f9fafb;
+}
+
+.cost-item-label {
+  font-size: 15px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cost-item-bullet {
+  width: 6px;
+  height: 6px;
+  background: #6366f1;
+  border-radius: 50%;
+}
+
+.cost-item-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Total Row - Emphasized */
+.cost-item.total-row {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-top: 2px solid #e5e7eb;
+  padding: 20px;
+}
+
+.cost-item.total-row .cost-item-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.cost-item.total-row .cost-item-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+}
+
+/* Contribution Margin Box - HERO ELEMENT */
+.contribution-margin-box {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border: 3px solid #6ee7b7;
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.contribution-margin-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.contribution-margin-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.contribution-check-icon {
+  width: 28px;
+  height: 28px;
+  color: #16a34a;
+}
+
+.contribution-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.contribution-amount {
+  font-size: 48px;
+  font-weight: 800;
+  color: #047857;
+  line-height: 1;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.contribution-percentage {
+  font-size: 20px;
+  font-weight: 700;
+  color: #059669;
+  position: relative;
+  z-index: 1;
+}
+
+/* Break-Even & Recommendation Grid */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.insight-box {
+  padding: 20px;
+  background: white;
+  border: 2px solid #f3f4f6;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.insight-box:hover {
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.insight-box.warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-color: #fbbf24;
+}
+
+.insight-box.success {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border-color: #6ee7b7;
+}
+
+.insight-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.insight-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.insight-icon.warning {
+  color: #f59e0b;
+}
+
+.insight-icon.success {
+  color: #16a34a;
+}
+
+.insight-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.insight-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+/* Health Banner - PROMINENT */
+.health-banner {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border: 3px solid #6ee7b7;
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+}
+
+.health-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: #16a34a;
+}
+
+.health-content {
+  flex: 1;
+}
+
+.health-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #047857;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.health-description {
+  font-size: 14px;
+  color: #065f46;
+  line-height: 1.4;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .recommendations-header {
@@ -392,6 +756,21 @@
   .info-tooltip-button .info-tooltip-content::after {
     left: 20px;
     transform: none;
+  }
+  
+  .price-grid,
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .margin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .contribution-amount {
+    font-size: 36px;
   }
 }
 
