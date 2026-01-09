@@ -5,8 +5,8 @@
 @import './styles/color-system.css';
 
 body {
-  color: #1f2937;
-  background: #f9fafb;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
   margin: 0;
   padding: 0;
 }
