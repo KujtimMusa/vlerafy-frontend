@@ -222,7 +222,7 @@ export function PriceRecommendationCard({
             </div>
             
             {/* Recommended Price */}
-            <div className={`rounded-lg p-4 border-2 ${
+            <div className={`p-4 border-2 ${
               isCriticalWarning ? 'bg-red-50 border-red-300' :
               hasMarginWarning ? 'bg-orange-50 border-orange-300' :
               'bg-green-50 border-green-300'
