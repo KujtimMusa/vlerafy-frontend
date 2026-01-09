@@ -165,285 +165,125 @@ export function PriceRecommendationCard({
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
       
-      {/* ==========================================
-          HERO SECTION - Main Decision
-          ========================================== */}
-      
-      <div className="p-6 pb-4 bg-gradient-to-br from-blue-50 to-white">
-        
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h2 className="text-xl font-semibold text-gray-900 mb-1">
-              {productTitle}
-            </h2>
-            <p className="text-xs text-gray-500">
-              {t('product_id')}: {recommendation.product_id}
-            </p>
-          </div>
+      {/* Story-basierte Erklärung: Warum empfehlen wir X€? */}
+      {recommendation.strategy_details && recommendation.strategy_details.length > 0 ? (
+        <PriceReasoningStory
+          recommendedPrice={displayedPrice}
+          currentPrice={recommendation.current_price}
+          strategyDetails={recommendation.strategy_details}
+          competitorData={recommendation.competitor_data}
+          productName={productTitle}
+          productId={recommendation.product_id}
+          confidence={recommendation.confidence}
+          onApply={onApply ? handleApply : undefined}
+          onDismiss={onDismiss}
+          onRefresh={onRefresh ? handleRefresh : undefined}
+          createdAt={timestamp}
+        />
+      ) : (
+        /* Fallback für alte Struktur wenn keine strategy_details */
+        <div className="p-6 pb-4 bg-gradient-to-br from-blue-50 to-white">
           
-          {/* Confidence Badge */}
-          <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">
-            {Math.round(recommendation.confidence * 100)}% {t('confidence')}
-          </span>
-        </div>
-        
-        {/* Headline */}
-        {recommendationTexts.headline && (
-          <div className="mb-6">
-            <p className="text-base font-medium text-gray-900">
-              {recommendationTexts.headline}
-            </p>
-          </div>
-        )}
-        
-        {/* Price Comparison */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-4">
-          
-          {/* Current Price */}
-          <div className="bg-white rounded-lg p-4 border border-gray-200">
-            <p className="text-sm text-gray-600 mb-1 font-medium">{t('current')}</p>
-            <p className="text-3xl font-bold text-gray-900">
-              {formatCurrency(recommendation.current_price)}
-            </p>
-          </div>
-          
-          {/* Recommended Price */}
-          <div className={`rounded-lg p-4 border-2 ${
-            isCriticalWarning ? 'bg-red-50 border-red-300' :
-            hasMarginWarning ? 'bg-orange-50 border-orange-300' :
-            'bg-green-50 border-green-300'
-          }`}>
-            <p className={`text-sm font-medium mb-1 ${
-              isCriticalWarning ? 'text-red-700' :
-              hasMarginWarning ? 'text-orange-700' :
-              'text-green-700'
-            }`}>
-              {t('recommended')}
-            </p>
-            <p className={`text-3xl font-bold ${
-              isCriticalWarning ? 'text-red-900' :
-              hasMarginWarning ? 'text-orange-900' :
-              'text-green-900'
-            }`}>
-              {formatCurrency(displayedPrice)}
-            </p>
-          </div>
-        </div>
-        
-        {/* Price Change Indicator */}
-        <div className="flex items-center justify-center mb-4">
-          {noChange ? (
-            <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full">
-              <span className="text-gray-600 font-medium">{t('no_change')}</span>
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h2 className="text-xl font-semibold text-gray-900 mb-1">
+                {productTitle}
+              </h2>
+              <p className="text-xs text-gray-500">
+                {t('product_id')}: {recommendation.product_id}
+              </p>
             </div>
-          ) : (
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-              priceIncrease ? 'bg-blue-100' : 'bg-orange-100'
-            }`}>
-              <span className="text-2xl">
-                {priceIncrease ? '📈' : '📉'}
-              </span>
-              <span className={`text-lg font-bold ${
-                priceIncrease ? 'text-blue-700' : 'text-orange-700'
-              }`}>
-                {priceChange > 0 ? '+' : ''}
-                {formatCurrency(priceChange)}
-              </span>
-              <span className={`text-lg font-semibold ${
-                priceIncrease ? 'text-blue-600' : 'text-orange-600'
-              }`}>
-                ({displayedPriceChangePct > 0 ? '+' : ''}
-                {formatPercentage(displayedPriceChangePct)})
-              </span>
+            
+            {/* Confidence Badge */}
+            <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">
+              {Math.round(recommendation.confidence * 100)}% {t('confidence')}
+            </span>
+          </div>
+          
+          {/* Headline */}
+          {recommendationTexts.headline && (
+            <div className="mb-6">
+              <p className="text-base font-medium text-gray-900">
+                {recommendationTexts.headline}
+              </p>
             </div>
           )}
-        </div>
-        
-        {/* ==========================================
-            CONFIDENCE BOX - DIREKT NACH DEM PRICE CHANGE INDICATOR
-            ========================================== */}
-        
-        <div className="mt-6 px-6">
-          <ConfidenceIndicator 
-            confidence={recommendation.confidence}
-            reasoning={recommendationTexts.confidence}
-            compact={false}
-            confidenceBasis={recommendation.confidence_basis}
-          />
-        </div>
-        
-        {/* NEW: Enhanced Calculation Breakdown Panel with Visual Weighting */}
-        {recommendation.strategy_details && recommendation.strategy_details.length > 0 && (
-          <div className="mt-6 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-300">
-            <h4 className="text-sm font-semibold text-indigo-900 mb-3 flex items-center gap-2">
-              <span>🧮</span>
-              Wie wird {priceChange > 0 ? '+' : ''}{formatCurrency(priceChange)} berechnet?
-            </h4>
+          
+          {/* Price Comparison */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-4">
             
-            {/* Explanation */}
-            <p className="text-xs text-indigo-800 mb-4 leading-relaxed">
-              Die Empfehlung ist ein <strong>gewichteter Durchschnitt</strong>, NICHT die Summe. 
-              Jede Strategie wird mit ihrer <strong>Datenqualität gewichtet</strong>.
-            </p>
-
-            {/* Helper function für Datenqualität-Label (einmal definiert, mehrfach verwendet) */}
-            {(() => {
-              const getDataQualityLabel = (score: number): string => {
-                const scorePct = score * 100
-                if (scorePct >= 90) return "Datenqualität: Exzellent"
-                if (scorePct >= 80) return "Datenqualität: Sehr gut"
-                if (scorePct >= 70) return "Datenqualität: Gut"
-                if (scorePct >= 60) return "Datenqualität: Ausreichend"
-                return "Datenqualität: Begrenzt"
-              }
-              
-              return (
-                <>
-                  {/* Step 1: Individual Strategy Prices */}
-                  <div className="mb-4">
-                    <p className="text-xs font-semibold text-indigo-900 mb-2">
-                      1️⃣ Einzelne Strategien-Empfehlungen:
-                    </p>
-                    <div className="space-y-1.5">
-                      {recommendation.strategy_details.map((strategy: any, idx: number) => {
-                        const impact = strategy.recommended_price - recommendation.current_price
-                        
-                        const icons: Record<string, string> = {
-                          'competitive': '🏪',
-                          'demand': '📊',
-                          'inventory': '📦',
-                          'cost': '💰'
-                        }
-                        
-                        return (
-                          <div key={idx} className="flex items-center justify-between text-xs py-1 px-3 bg-white/60 rounded">
-                            <span className="text-gray-700">
-                              {icons[strategy.strategy] || '⚖️'} {t(`strategy_${strategy.strategy}`)} ({getDataQualityLabel(strategy.confidence)})
-                            </span>
-                            <span className="font-mono font-bold text-gray-900">
-                              {impact > 0 ? '+' : ''}{formatCurrency(impact)}
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Step 2: Weighting Calculation with Visual Bars */}
-                  <div className="mb-4 p-3 bg-white/80 rounded-lg border border-indigo-200">
-                    <p className="text-xs font-semibold text-indigo-900 mb-3">
-                      2️⃣ Gewichtete Beiträge (Datenqualität × Basis-Gewicht):
-                    </p>
-                    <div className="space-y-2.5">
-                      {recommendation.strategy_details.map((strategy: any, idx: number) => {
-                        const baseWeights: Record<string, number> = {
-                          'competitive': 0.35,
-                          'demand': 0.40,
-                          'inventory': 0.25,
-                          'cost': 0.25
-                        }
-                        
-                        const baseWeight = baseWeights[strategy.strategy] || 0.1
-                        const effectiveWeight = baseWeight * strategy.confidence
-                        
-                        // Calculate total weight for normalization
-                        const totalWeight = (recommendation.strategy_details || []).reduce((sum: number, s: any) => {
-                          const bw = baseWeights[s.strategy] || 0.1
-                          return sum + (bw * s.confidence)
-                        }, 0)
-                        
-                        const normalizedWeight = effectiveWeight / totalWeight
-                        const impact = strategy.recommended_price - recommendation.current_price
-                        const weightedContribution = impact * normalizedWeight
-                        
-                        return (
-                          <div key={idx}>
-                            {/* Formula */}
-                            <div className="flex items-center justify-between text-[10px] mb-1">
-                              <span className="text-indigo-700 font-medium">
-                                {t(`strategy_${strategy.strategy}`)}:
-                              </span>
-                              <span className="font-mono text-indigo-900">
-                                {(baseWeight * 100).toFixed(0)}% × {getDataQualityLabel(strategy.confidence)} = 
-                                <strong className="ml-1 text-indigo-600">{(normalizedWeight * 100).toFixed(1)}%</strong>
-                              </span>
-                            </div>
-                            
-                            {/* Visual Bar + Result */}
-                            <div className="flex items-center gap-2">
-                              <div className="flex-1 h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-gradient-to-r from-indigo-400 to-indigo-600 transition-all duration-500"
-                                  style={{ width: `${normalizedWeight * 100}%` }}
-                                />
-                              </div>
-                              <span className="text-xs font-bold text-indigo-900 tabular-nums min-w-[70px] text-right">
-                                = {weightedContribution > 0 ? '+' : ''}{formatCurrency(weightedContribution)}
-                              </span>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </>
-              )
-            })()}
-
-            {/* Step 3: Final Sum */}
-            <div className="p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-indigo-100 rounded-xl border-2 border-indigo-400 shadow-sm">
-              <p className="text-xs font-semibold text-indigo-900 mb-2">
-                3️⃣ Finale Summe (Gewichteter Durchschnitt):
+            {/* Current Price */}
+            <div className="bg-white rounded-lg p-4 border border-gray-200">
+              <p className="text-sm text-gray-600 mb-1 font-medium">{t('current')}</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatCurrency(recommendation.current_price)}
               </p>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-indigo-800 font-medium">
-                  Summe aller gewichteten Beiträge
-                </span>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-indigo-900 tabular-nums">
-                    {priceChange > 0 ? '+' : ''}{formatCurrency(priceChange)}
-                  </div>
-                  <div className="text-xs text-indigo-700 mt-1">
-                    ({formatPercentage(displayedPriceChangePct)})
-                  </div>
-                </div>
-              </div>
             </div>
-
-            {/* Info Callout */}
-            <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-300">
-              <div className="flex items-start gap-2">
-                <span className="text-lg flex-shrink-0">💡</span>
-                <p className="text-xs text-yellow-900 leading-relaxed">
-                  <strong>Warum nicht die einfache Summe?</strong> Jede Strategie wird basierend auf ihrer Datenqualität unterschiedlich stark gewichtet. 
-                  Faktoren mit exzellenter Datenqualität (z.B. Wettbewerbspreise) haben mehr Einfluss 
-                  als Faktoren mit guter Datenqualität (z.B. Nachfrage-Trends). Die gewichtete Berechnung 
-                  stellt sicher, dass weniger zuverlässige Daten nicht zu starken Einfluss haben.
-                </p>
-              </div>
+            
+            {/* Recommended Price */}
+            <div className={`rounded-lg p-4 border-2 ${
+              isCriticalWarning ? 'bg-red-50 border-red-300' :
+              hasMarginWarning ? 'bg-orange-50 border-orange-300' :
+              'bg-green-50 border-green-300'
+            }`}>
+              <p className={`text-sm font-medium mb-1 ${
+                isCriticalWarning ? 'text-red-700' :
+                hasMarginWarning ? 'text-orange-700' :
+                'text-green-700'
+              }`}>
+                {t('recommended')}
+              </p>
+              <p className={`text-3xl font-bold ${
+                isCriticalWarning ? 'text-red-900' :
+                hasMarginWarning ? 'text-orange-900' :
+                'text-green-900'
+              }`}>
+                {formatCurrency(displayedPrice)}
+              </p>
             </div>
           </div>
-        )}
-
-        {/* Story-basierte Erklärung: Warum empfehlen wir X€? */}
-        {recommendation.strategy_details && recommendation.strategy_details.length > 0 && (
-          <div className="mt-6">
-            <PriceReasoningStory
-              recommendedPrice={displayedPrice}
-              currentPrice={recommendation.current_price}
-              strategyDetails={recommendation.strategy_details}
-              competitorData={recommendation.competitor_data}
-              productName={productTitle}
-              productId={recommendation.product_id}
+          
+          {/* Price Change Indicator */}
+          <div className="flex items-center justify-center mb-4">
+            {noChange ? (
+              <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full">
+                <span className="text-gray-600 font-medium">{t('no_change')}</span>
+              </div>
+            ) : (
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${
+                priceIncrease ? 'bg-blue-100' : 'bg-orange-100'
+              }`}>
+                <span className="text-2xl">
+                  {priceIncrease ? '📈' : '📉'}
+                </span>
+                <span className={`text-lg font-bold ${
+                  priceIncrease ? 'text-blue-700' : 'text-orange-700'
+                }`}>
+                  {priceChange > 0 ? '+' : ''}
+                  {formatCurrency(priceChange)}
+                </span>
+                <span className={`text-lg font-semibold ${
+                  priceIncrease ? 'text-blue-600' : 'text-orange-600'
+                }`}>
+                  ({displayedPriceChangePct > 0 ? '+' : ''}
+                  {formatPercentage(displayedPriceChangePct)})
+                </span>
+              </div>
+            )}
+          </div>
+          
+          {/* Confidence Box */}
+          <div className="mt-6 px-6">
+            <ConfidenceIndicator 
               confidence={recommendation.confidence}
-              onApply={onApply ? handleApply : undefined}
-              onDismiss={onDismiss}
-              onRefresh={onRefresh ? handleRefresh : undefined}
-              createdAt={timestamp}
+              reasoning={recommendationTexts.confidence}
+              compact={false}
+              confidenceBasis={recommendation.confidence_basis}
             />
           </div>
-        )}
+        </div>
+      )}
 
         {/* Action Buttons - Fallback wenn keine strategy_details */}
         {(!recommendation.strategy_details || recommendation.strategy_details.length === 0) && (onApply || onDismiss) && (
