@@ -109,7 +109,7 @@
 .product-price-display strong {
   font-size: 20px;
   font-weight: 700;
-  color: #111827;
+  color: #f1f5f9 !important;
   margin-left: 4px;
 }
 
@@ -127,11 +127,11 @@
 }
 
 .collapsible-card:hover {
-  border-color: #e5e7eb;
+  border-color: #64748b;
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 0, 0, 0.02);
-  transform: translateX(4px);
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(100, 116, 139, 0.2);
+  transform: none;
   z-index: 2;
 }
 
