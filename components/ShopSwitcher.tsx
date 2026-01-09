@@ -207,14 +207,14 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
         demoShop && (
           <div className="space-y-2">
             {/* Demo Banner */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <div className="border p-3" style={{ backgroundColor: '#1e293b', borderColor: '#475569' }}>
               <div className="flex items-start gap-2">
                 <span className="text-lg">🧪</span>
                 <div>
-                  <div className="font-semibold text-blue-900 text-sm">
+                  <div className="font-semibold text-sm" style={{ color: '#f1f5f9' }}>
                     Demo-Modus Aktiv
                   </div>
-                  <p className="text-xs text-blue-700 mt-1">
+                  <p className="text-xs mt-1" style={{ color: '#cbd5e1' }}>
                     Du testest mit 20 synthetischen Produkten. Wechsle zu Live um echte Shopify-Daten zu nutzen.
                   </p>
                 </div>

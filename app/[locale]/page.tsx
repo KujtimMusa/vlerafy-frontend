@@ -500,9 +500,9 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
   return (
     <ModernCard variant="glass" className="relative overflow-hidden">
       {/* Header with icon */}
-      <div className="border-b border-gray-200 bg-gradient-to-r from-pink-50 to-purple-50 px-8 py-6">
+      <div className="border-b px-8 py-6" style={{ borderColor: '#334155', background: 'linear-gradient(to right, #1e293b, #0f172a)' }}>
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
+          <div className="flex h-10 w-10 items-center justify-center bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
             <Zap className="h-5 w-5 text-white" />
           </div>
           <h3 className="text-xl font-bold" style={{ color: '#f1f5f9' }}>
@@ -515,7 +515,7 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
       <div className="p-8 space-y-4">
         {/* Urgent CTA Box */}
         {urgentStep && (
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 p-6 animate-fade-in">
+          <div className="relative overflow-hidden border-2 p-6 animate-fade-in" style={{ background: 'linear-gradient(to right, #1e293b, #0f172a)', borderColor: '#f59e0b' }}>
             {/* Glow effect */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-300/20 rounded-full blur-3xl" />
             
@@ -524,12 +524,12 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 shadow-md">
                   <Flame className="h-4 w-4 text-white animate-pulse" />
                 </div>
-                <p className="text-sm font-semibold text-orange-900">
+                <p className="text-sm font-semibold" style={{ color: '#f1f5f9' }}>
                   {urgentStep.title}
                 </p>
               </div>
               
-              <p className="text-sm text-orange-800">
+              <p className="text-sm" style={{ color: '#cbd5e1' }}>
                 {urgentStep.description}
               </p>
               
@@ -553,11 +553,11 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 <Link href={step.href}>
-                  <div className="flex items-start justify-between gap-4 p-4 rounded-lg bg-blue-50 border-2 border-blue-200 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer">
+                  <div className="flex items-start justify-between gap-4 p-4 border-2 hover:shadow-md transition-all cursor-pointer" style={{ backgroundColor: '#1e293b', borderColor: '#475569' }}>
                     <div className="flex-1">
                       <div className="font-semibold mb-1" style={{ color: '#f1f5f9' }}>{step.title}</div>
                       <p className="text-sm mb-2" style={{ color: '#cbd5e1' }}>{step.description}</p>
-                      <div className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                      <div className="text-sm font-medium flex items-center gap-1" style={{ color: '#60a5fa' }}>
                         {step.action} <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
