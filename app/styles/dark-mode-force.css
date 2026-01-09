@@ -584,3 +584,57 @@ header,
   border-bottom: 1px solid #334155 !important;
 }
 
+/* === OVERRIDE TAILWIND CLASSES === */
+
+/* Override Tailwind bg-white */
+.bg-white,
+[class*="bg-white"] {
+  background-color: #1e293b !important;
+}
+
+/* Override Tailwind bg-gray-50 */
+.bg-gray-50,
+[class*="bg-gray-50"] {
+  background-color: #0f172a !important;
+}
+
+/* Override Tailwind bg-gray-100 */
+.bg-gray-100,
+[class*="bg-gray-100"] {
+  background-color: #334155 !important;
+}
+
+/* Override Tailwind text-gray-700 */
+.text-gray-700,
+[class*="text-gray-700"] {
+  color: #cbd5e1 !important;
+}
+
+/* Override Tailwind text-gray-900 */
+.text-gray-900,
+[class*="text-gray-900"] {
+  color: #f1f5f9 !important;
+}
+
+/* Override Tailwind text-gray-600 */
+.text-gray-600,
+[class*="text-gray-600"] {
+  color: #94a3b8 !important;
+}
+
+/* Override Tailwind border-gray-200 */
+.border-gray-200,
+[class*="border-gray-200"] {
+  border-color: #475569 !important;
+}
+
+/* Force dark class on html */
+html {
+  background-color: #0f172a !important;
+}
+
+html.dark,
+html[class*="dark"] {
+  background-color: #0f172a !important;
+}
+
