@@ -839,3 +839,537 @@ main,
   /* Keep flex, but ensure children are dark */
 }
 
+/* ============================================
+   ROUNDED CORNERS - ALL PAGES & COMPONENTS
+   Smooth, modern look with consistent border-radius
+   ============================================ */
+
+/* === GLOBAL BORDER RADIUS SYSTEM === */
+
+/* Small elements (badges, pills, small buttons) */
+.badge,
+.pill,
+.tag,
+[class*="badge"],
+[class*="Badge"],
+[class*="pill"],
+[class*="tag"] {
+  border-radius: 8px !important;
+}
+
+/* Medium elements (buttons, inputs, small cards) */
+button,
+input,
+select,
+textarea,
+.btn,
+.button,
+.input,
+.select,
+[class*="btn"],
+[class*="button"],
+[class*="Button"] {
+  border-radius: 10px !important;
+}
+
+/* Large elements (cards, containers, sections) */
+.card,
+.box,
+.container,
+.section,
+.panel,
+[class*="card"],
+[class*="Card"],
+[class*="box"],
+[class*="Box"],
+[class*="container"],
+[class*="section"],
+[class*="panel"] {
+  border-radius: 16px !important;
+}
+
+/* Extra large elements (modals, hero sections) */
+.modal,
+.hero,
+.banner,
+[class*="modal"],
+[class*="Modal"],
+[class*="hero"],
+[class*="banner"] {
+  border-radius: 20px !important;
+}
+
+/* === SIDEBAR & NAVIGATION === */
+
+/* Main Sidebar */
+aside,
+nav,
+.sidebar,
+[class*="sidebar"],
+[class*="Sidebar"],
+[class*="navigation"] {
+  border-radius: 0 16px 16px 0 !important;
+}
+
+/* Navigation Items */
+aside a,
+aside button,
+nav a,
+nav button,
+.sidebar a,
+.sidebar button,
+.nav-item,
+[class*="nav-item"] {
+  border-radius: 10px !important;
+  margin: 4px 8px !important;
+}
+
+/* Active Tab (Live/Demo) */
+.tab,
+.tabs button,
+[class*="tab"],
+[class*="Tab"] {
+  border-radius: 10px !important;
+}
+
+/* Shop Selection Box (PriceIQ box in sidebar) */
+.shop-box,
+.active-shop,
+[class*="shop-box"],
+[class*="aktiver-shop"],
+[class*="active-shop"] {
+  border-radius: 12px !important;
+  padding: 16px !important;
+  margin: 12px !important;
+}
+
+/* Shop Logo/Icon in sidebar */
+.shop-logo,
+.shop-icon,
+[class*="shop-logo"],
+[class*="shop-icon"] {
+  border-radius: 8px !important;
+}
+
+/* === DASHBOARD PAGE === */
+
+/* Dashboard Container */
+.dashboard-container,
+.dashboard-page {
+  border-radius: 0 !important; /* Full page = no border */
+}
+
+/* Dashboard Header */
+.dashboard-header,
+.page-header,
+[class*="dashboard-header"],
+[class*="page-header"] {
+  border-radius: 16px !important;
+  margin-bottom: 20px !important;
+}
+
+/* Search Bar */
+.search-bar,
+.filter-bar,
+[class*="search"],
+[class*="Search"],
+[class*="filter"] {
+  border-radius: 12px !important;
+}
+
+.search-input,
+input[type="search"] {
+  border-radius: 10px !important;
+}
+
+/* Product Grid Cards */
+.products-grid {
+  gap: 20px !important;
+}
+
+.product-card {
+  border-radius: 16px !important;
+  overflow: hidden !important; /* Prevent content overflow */
+}
+
+/* Product Icons */
+.product-icon,
+.product-image {
+  border-radius: 12px !important;
+}
+
+/* Stat Boxes inside Product Cards */
+.stat-item,
+.stat-box,
+.product-stat-card {
+  border-radius: 10px !important;
+}
+
+/* Status Badges */
+.status-badge,
+.product-badge {
+  border-radius: 8px !important;
+}
+
+/* === PRODUCT DETAIL PAGE === */
+
+/* Product Detail Header */
+.product-detail-header {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+/* Product Image/Icon Large */
+.product-detail-image,
+.product-detail-icon {
+  border-radius: 16px !important;
+}
+
+/* Stats Grid */
+.product-stats-grid {
+  gap: 16px !important;
+}
+
+.product-stat-card {
+  border-radius: 12px !important;
+}
+
+/* Collapsible Sections */
+.collapsible-card {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  margin-bottom: 16px !important;
+}
+
+.collapsible-header {
+  border-radius: 16px 16px 0 0 !important;
+}
+
+.collapsible-content {
+  border-radius: 0 0 16px 16px !important;
+}
+
+/* Collapsible Icons */
+.collapsible-icon {
+  border-radius: 12px !important;
+}
+
+/* === RECOMMENDATIONS SECTION === */
+
+/* Main Recommendation Container */
+.recommendation-content,
+.margin-content,
+.competitor-content {
+  border-radius: 0 !important; /* Inside collapsible, no extra radius */
+}
+
+/* Price Boxes */
+.price-box,
+.price-box-current,
+.price-box-recommended {
+  border-radius: 16px !important;
+}
+
+/* Price Comparison Hero */
+.price-comparison-hero,
+.price-position-hero {
+  border-radius: 20px !important;
+}
+
+/* ML Confidence Section */
+.ml-confidence-section,
+.confidence-card {
+  border-radius: 16px !important;
+}
+
+.confidence-badge-large {
+  border-radius: 12px !important;
+}
+
+/* Progress Bars */
+.confidence-progress-bar-container,
+.weighted-bar-container {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.confidence-progress-bar,
+.weighted-bar-fill {
+  border-radius: 10px !important;
+}
+
+/* Strategy Cards */
+.strategy-card {
+  border-radius: 16px !important;
+}
+
+.strategy-icon-container {
+  border-radius: 12px !important;
+}
+
+.strategy-impact {
+  border-radius: 8px !important;
+}
+
+/* === MARGIN ANALYSE === */
+
+/* Variable Kosten Liste */
+.costs-list,
+.cost-items {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.cost-item:first-child {
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.cost-item:last-child {
+  border-radius: 0 0 12px 12px !important;
+}
+
+/* Contribution Margin Box */
+.contribution-margin-box,
+.deckungsbeitrag-box {
+  border-radius: 16px !important;
+}
+
+/* Break-Even Box */
+.break-even-box {
+  border-radius: 16px !important;
+}
+
+/* Min. Empfohlen Box */
+.min-recommended-box {
+  border-radius: 16px !important;
+}
+
+/* Gesunde Marge Banner */
+.healthy-margin-banner,
+.gesunde-marge {
+  border-radius: 12px !important;
+}
+
+/* Calculation Section */
+.calculation-section {
+  border-radius: 16px !important;
+}
+
+/* === COMPETITOR SECTION === */
+
+/* Competitor Cards */
+.competitor-card {
+  border-radius: 16px !important;
+}
+
+.competitor-icon-main,
+.competitor-avatar {
+  border-radius: 12px !important;
+}
+
+.competitor-rank {
+  border-radius: 8px !important;
+}
+
+.competitor-badge {
+  border-radius: 8px !important;
+}
+
+/* Price Scale */
+.price-scale-container {
+  border-radius: 12px !important;
+}
+
+.price-scale-bar {
+  border-radius: 10px !important;
+}
+
+.price-marker-pin {
+  border-radius: 50% !important; /* Circle */
+}
+
+.price-marker-label {
+  border-radius: 8px !important;
+}
+
+/* === WHY RECOMMEND SECTION === */
+
+.why-recommend-section {
+  border-radius: 16px !important;
+}
+
+.insight-box,
+.factor-item {
+  border-radius: 12px !important;
+}
+
+/* === MODALS & OVERLAYS === */
+
+.modal-content,
+.modal {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+.modal-header {
+  border-radius: 20px 20px 0 0 !important;
+}
+
+.modal-body {
+  border-radius: 0 0 20px 20px !important;
+}
+
+/* === TABLES === */
+
+table {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+thead tr:first-child th:first-child {
+  border-radius: 12px 0 0 0 !important;
+}
+
+thead tr:first-child th:last-child {
+  border-radius: 0 12px 0 0 !important;
+}
+
+tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 12px !important;
+}
+
+tbody tr:last-child td:last-child {
+  border-radius: 0 0 12px 0 !important;
+}
+
+/* === ALERTS & BANNERS === */
+
+[class*="alert"],
+[class*="Alert"],
+[class*="banner"],
+[class*="Banner"],
+[class*="notification"] {
+  border-radius: 12px !important;
+}
+
+/* === TOOLTIPS & POPOVERS === */
+
+.tooltip,
+.popover,
+[class*="tooltip"],
+[class*="Tooltip"],
+[class*="popover"] {
+  border-radius: 8px !important;
+}
+
+/* === DATA QUALITY FOOTER === */
+
+.data-quality-footer,
+.data-quality-section {
+  border-radius: 12px !important;
+}
+
+/* === IMAGES & MEDIA === */
+
+img {
+  border-radius: 8px !important;
+}
+
+.avatar {
+  border-radius: 50% !important; /* Circles for avatars */
+}
+
+/* === DIVIDERS === */
+
+hr {
+  border-radius: 2px !important;
+}
+
+/* === LAST UPDATED BADGE === */
+
+.last-updated,
+.timestamp {
+  border-radius: 8px !important;
+}
+
+/* === FILTERS & TABS === */
+
+.filter-tabs {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.filter-tab {
+  border-radius: 10px !important;
+  margin: 4px !important;
+}
+
+/* === ICON CONTAINERS (all icons) === */
+
+[class*="icon-container"],
+[class*="icon-wrapper"],
+[class*="Icon"] {
+  border-radius: 12px !important;
+}
+
+/* Small icons */
+svg[width="16"],
+svg[height="16"] {
+  /* SVG itself doesn't need border-radius */
+}
+
+/* === SPECIFIC ELEMENT FIXES === */
+
+/* Remove border-radius from inner elements that shouldn't have it */
+svg,
+path,
+circle,
+line {
+  border-radius: 0 !important;
+}
+
+/* === HOVER STATES === */
+
+/* Ensure hover states don't break border-radius */
+*:hover {
+  border-radius: inherit !important;
+}
+
+/* === FOCUS STATES === */
+
+*:focus {
+  border-radius: inherit !important;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+  /* Slightly smaller border-radius on mobile */
+  .card,
+  .box,
+  [class*="card"] {
+    border-radius: 12px !important;
+  }
+  
+  .modal {
+    border-radius: 16px !important;
+  }
+}
+
+/* === SCROLLBAR === */
+
+::-webkit-scrollbar-thumb {
+  border-radius: 6px !important;
+}
+
+/* === SUMMARY === */
+/*
+Border-Radius System:
+- 8px  → Small (badges, pills, tags)
+- 10px → Medium (buttons, inputs, tabs)
+- 12px → Large (small cards, icons)
+- 16px → Extra Large (main cards, sections)
+- 20px → Hero (modals, hero sections)
+- 50% → Circle (avatars, markers)
+*/
+
