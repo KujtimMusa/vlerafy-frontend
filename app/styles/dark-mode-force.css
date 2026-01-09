@@ -9,6 +9,59 @@
   box-sizing: border-box;
 }
 
+/* === REMOVE TEXT SELECTION/MARKING === */
+
+/* Disable text selection on interactive elements */
+button,
+.collapsible-header,
+.collapsible-card,
+[role="button"],
+[onclick],
+a {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Allow text selection only in content areas */
+p,
+span:not([role="button"]):not(button *),
+div:not(button):not([role="button"]):not(.collapsible-header):not(.collapsible-card) {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+/* Style text selection when it happens */
+::selection {
+  background-color: rgba(59, 130, 246, 0.3) !important;
+  color: #f1f5f9 !important;
+}
+
+::-moz-selection {
+  background-color: rgba(59, 130, 246, 0.3) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Remove all text decorations */
+a,
+button,
+.collapsible-header,
+.section-title,
+.section-subtitle,
+h1, h2, h3, h4, h5, h6 {
+  text-decoration: none !important;
+}
+
+/* Remove underline on hover */
+a:hover,
+button:hover,
+.collapsible-header:hover,
+.section-title:hover,
+.section-subtitle:hover {
+  text-decoration: none !important;
+}
+
 html {
   background-color: #0f172a !important;
 }
