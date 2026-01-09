@@ -11,7 +11,7 @@ import { MarginDisplay } from '@/components/margin/MarginDisplay'
 import { CostInputModal } from '@/components/margin/CostInputModal'
 import { fetchProducts, calculateMargin, saveProductCosts } from '@/lib/api'
 import { ChevronDown, ChevronUp, Info, Package, DollarSign, BarChart, ShoppingCart, ArrowLeft } from 'lucide-react'
-import '../styles/recommendations.css'
+import '../../styles/recommendations.css'
 
 function RecommendationsContent() {
   const searchParams = useSearchParams()
