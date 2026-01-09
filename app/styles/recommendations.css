@@ -458,17 +458,17 @@
   align-items: center;
   gap: 12px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, var(--color-primary-lightest) 0%, var(--color-primary-lighter) 100%);
-  border: 2px solid var(--color-primary-light);
-  border-radius: 16px;
-  box-shadow: var(--shadow-blue-sm);
-  color: var(--color-primary);
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  border: 2px solid #10b981;
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  color: #86efac;
 }
 
 .margin-success-percentage {
   font-size: 28px;
   font-weight: 800;
-  color: var(--color-primary);
+  color: #f1f5f9 !important;
   line-height: 1;
 }
 
@@ -746,21 +746,21 @@
 
 /* Health Banner - PROMINENT */
 .health-banner {
-  background: linear-gradient(135deg, var(--color-primary-lightest) 0%, var(--color-primary-lighter) 100%);
-  border: 3px solid var(--color-primary-lighter);
-  border-radius: 16px;
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  border: 3px solid #10b981;
+  border-radius: 0;
   padding: 20px 24px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: var(--shadow-blue-sm);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
 }
 
 .health-icon {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
-  color: var(--color-primary);
+  color: #86efac !important;
 }
 
 .health-content {
@@ -770,7 +770,7 @@
 .health-title {
   font-size: 18px;
   font-weight: 800;
-  color: var(--color-primary);
+  color: #86efac !important;
   margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -778,7 +778,7 @@
 
 .health-description {
   font-size: 14px;
-  color: var(--color-primary-dark);
+  color: #cbd5e1 !important;
   line-height: 1.4;
 }
 
