@@ -5,7 +5,6 @@ import { AlertTriangle, Clock, ChevronDown, ChevronUp, RefreshCw } from 'lucide-
 import { useTranslations } from 'next-intl'
 import { ConfidenceIndicator } from './ConfidenceIndicator'
 import { ActionButtons } from './ActionButtons'
-import { PriceReasoningStory } from './PriceReasoningStory'
 import { formatCurrency, formatPercentage, formatTimeAgo } from '@/lib/formatters'
 import { generateRecommendationTexts } from '@/lib/recommendationTexts'
 
@@ -428,13 +427,16 @@ export function PriceRecommendationCard({
 
         {/* Story-basierte Erklärung: Warum empfehlen wir X€? */}
         {recommendation.strategy_details && recommendation.strategy_details.length > 0 && (
-          <div className="mt-6">
-            <PriceReasoningStory
-              recommendedPrice={displayedPrice}
-              currentPrice={recommendation.current_price}
-              strategyDetails={recommendation.strategy_details}
-              competitorData={recommendation.competitor_data}
-            />
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h4 className="font-semibold text-gray-900 mb-2">Warum dieser Preis?</h4>
+            <div className="space-y-2 text-sm text-gray-700">
+              {recommendation.strategy_details.map((detail, idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                  <span className="font-medium">{detail.strategy}:</span>
+                  <span>{detail.reasoning}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
