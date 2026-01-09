@@ -638,3 +638,86 @@ html[class*="dark"] {
   background-color: #0f172a !important;
 }
 
+/* === OVERRIDE ALL TAILWIND UTILITY CLASSES === */
+
+/* Override ALL bg-white variations */
+.bg-white,
+[class*="bg-white"],
+[class^="bg-white"],
+[class$="bg-white"] {
+  background-color: #1e293b !important;
+}
+
+/* Override ALL bg-gray variations */
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-200,
+.bg-gray-300,
+[class*="bg-gray-50"],
+[class*="bg-gray-100"],
+[class*="bg-gray-200"],
+[class*="bg-gray-300"] {
+  background-color: #0f172a !important;
+}
+
+.bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+.bg-gray-100 {
+  background-color: #334155 !important;
+}
+
+.bg-gray-200 {
+  background-color: #475569 !important;
+}
+
+/* Override ALL text-gray variations */
+.text-gray-500,
+.text-gray-600,
+.text-gray-700,
+.text-gray-900,
+[class*="text-gray-500"],
+[class*="text-gray-600"],
+[class*="text-gray-700"],
+[class*="text-gray-900"] {
+  color: #cbd5e1 !important;
+}
+
+.text-gray-900 {
+  color: #f1f5f9 !important;
+}
+
+.text-gray-700 {
+  color: #cbd5e1 !important;
+}
+
+.text-gray-600 {
+  color: #94a3b8 !important;
+}
+
+.text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+/* Override border-gray variations */
+.border-gray-200,
+.border-gray-300,
+[class*="border-gray-200"],
+[class*="border-gray-300"] {
+  border-color: #475569 !important;
+}
+
+/* Override gradient backgrounds */
+[class*="from-white"],
+[class*="via-gray"],
+[class*="to-white"] {
+  background: linear-gradient(to bottom, #1e293b, #0f172a, #1e293b) !important;
+}
+
+/* Override specific gradient combinations */
+.bg-gradient-to-b.from-white.via-gray-50.to-white,
+[class*="from-white"][class*="via-gray"][class*="to-white"] {
+  background: linear-gradient(to bottom, #1e293b, #0f172a, #1e293b) !important;
+}
+
