@@ -10,7 +10,8 @@ import { CompetitorAnalysis } from '@/components/CompetitorAnalysis'
 import { MarginDisplay } from '@/components/margin/MarginDisplay'
 import { CostInputModal } from '@/components/margin/CostInputModal'
 import { fetchProducts, calculateMargin, saveProductCosts } from '@/lib/api'
-import { ChevronDown, ChevronUp, Info } from 'lucide-react'
+import { ChevronDown, ChevronUp, Info, Package, DollarSign, BarChart, ShoppingCart, ArrowLeft } from 'lucide-react'
+import '../styles/recommendations.css'
 
 function RecommendationsContent() {
   const searchParams = useSearchParams()
@@ -163,7 +164,7 @@ function RecommendationsContent() {
   }, [showInfoTooltip])
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex recommendations-page">
       {/* Sidebar mit Shop-Switcher */}
       <aside className="w-80 bg-gradient-to-b from-white via-gray-50 to-white border-r border-gray-200 p-6 overflow-y-auto shadow-sm">
         <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-200">
@@ -206,243 +207,243 @@ function RecommendationsContent() {
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
-        {/* Header mit schönem Design */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-3xl">📊</span>
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-1">Produkt-Analysen</h1>
-                <p className="text-gray-600 text-sm">Vollständige Analyse für optimale Preisentscheidungen</p>
-              </div>
+        {/* Page Header */}
+        <div className="recommendations-header">
+          <div className="header-icon-container">
+            <div className="header-main-icon">
+              <BarChart className="h-10 w-10 text-white" />
+            </div>
+            <div>
+              <h1 className="header-title">Produkt-Analysen</h1>
+              <p className="header-subtitle">
+                Vollständige Analyse für optimale Preisentscheidungen
+              </p>
+            </div>
+          </div>
+          
+          {/* Product Info Card */}
+          <div className="product-info-card">
+            <div className="product-icon">
+              <Package className="h-8 w-8 text-white" />
+            </div>
+            <div className="product-details">
+              <h2>{productTitle || `Produkt ${productId}`}</h2>
+              {currentPrice > 0 && (
+                <p className="product-price-display">
+                  Aktueller Preis: <strong>{currentPrice.toFixed(2)} €</strong>
+                </p>
+              )}
             </div>
             <Link
               href="/"
-              className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium shadow-sm hover:shadow-md"
+              className="back-button ml-auto"
             >
-              ← Zurück
+              <ArrowLeft className="h-4 w-4" />
+              Zurück
             </Link>
           </div>
         </div>
 
-              {/* Produktname - Schönes Design ohne Input */}
-              <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl">📦</span>
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-900">
-                      {productTitle || `Produkt ${productId}`}
-                    </h2>
-                    {currentPrice > 0 && (
-                      <p className="text-sm text-gray-600 mt-1">
-                        Aktueller Preis: <span className="font-semibold text-gray-900">{currentPrice.toFixed(2)} €</span>
+        {/* Collapsible Sections */}
+        <div className="space-y-4">
+          {/* ✅ SECTION 1: MARGIN ANALYSIS (Risk First!) */}
+          {currentPrice > 0 && marginData && (
+            <div className="collapsible-card">
+                  <div 
+                    className="collapsible-header"
+                    onClick={() => toggleSection('margin')}
+                  >
+                    <div className="section-icon icon-margin">
+                      <DollarSign className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="section-content">
+                      <h3 className="section-title">
+                        Margen-Analyse
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setShowInfoTooltip(prev => ({ ...prev, margin: !prev.margin }))
+                          }}
+                          className="relative info-tooltip-button"
+                        >
+                          <Info className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
+                          {showInfoTooltip.margin && (
+                            <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
+                              <div className="font-semibold mb-2">Was passiert hier?</div>
+                              <p className="mb-2">
+                                Die Margen-Analyse zeigt dir, ob dein aktueller Preis über deinen Kosten liegt und wie viel Gewinn du pro Verkauf machst.
+                              </p>
+                              <p className="mb-2">
+                                <strong>Wichtig:</strong> Bevor du Preise änderst, solltest du immer prüfen, dass du nicht unter deine Kosten verkaufst!
+                              </p>
+                              <p>
+                                Hier kannst du auch Kosten für dein Produkt hinterlegen (Einkaufspreis, Versand, Verpackung, etc.).
+                              </p>
+                              <div className="absolute bottom-0 left-4 transform translate-y-full">
+                                <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
+                              </div>
+                            </div>
+                          )}
+                        </button>
+                      </h3>
+                      <p className="section-subtitle">
+                        Prüfe deine Kosten und Margen vor Preisänderungen
                       </p>
+                    </div>
+                    {openSections.margin ? (
+                      <ChevronUp className="chevron-arrow" />
+                    ) : (
+                      <ChevronDown className="chevron-arrow" />
                     )}
-                  </div>
-                </div>
-              </div>
-
-              {/* ✅ SECTION 1: MARGIN ANALYSIS (Risk First!) */}
-              {currentPrice > 0 && marginData && (
-                <section className="mb-6">
-                  <div className="relative">
-                    <button
-                      onClick={() => toggleSection('margin')}
-                      className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
-                    >
-                      <div className="flex items-center gap-4">
-                        <span className="text-4xl">💰</span>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h2 className="text-2xl font-bold text-gray-900">Margen-Analyse</h2>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setShowInfoTooltip(prev => ({ ...prev, margin: !prev.margin }))
-                              }}
-                              className="relative info-tooltip-button"
-                            >
-                              <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 transition-colors" />
-                              {showInfoTooltip.margin && (
-                                <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
-                                  <div className="font-semibold mb-2">Was passiert hier?</div>
-                                  <p className="mb-2">
-                                    Die Margen-Analyse zeigt dir, ob dein aktueller Preis über deinen Kosten liegt und wie viel Gewinn du pro Verkauf machst.
-                                  </p>
-                                  <p className="mb-2">
-                                    <strong>Wichtig:</strong> Bevor du Preise änderst, solltest du immer prüfen, dass du nicht unter deine Kosten verkaufst!
-                                  </p>
-                                  <p>
-                                    Hier kannst du auch Kosten für dein Produkt hinterlegen (Einkaufspreis, Versand, Verpackung, etc.).
-                                  </p>
-                                  <div className="absolute bottom-0 left-4 transform translate-y-full">
-                                    <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
-                                  </div>
-                                </div>
-                              )}
-                            </button>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Prüfe deine Kosten und Margen vor Preisänderungen
-                          </p>
-                        </div>
-                      </div>
-                      {openSections.margin ? (
-                        <ChevronUp className="w-6 h-6 text-gray-500" />
-                      ) : (
-                        <ChevronDown className="w-6 h-6 text-gray-500" />
-                      )}
-                    </button>
                   </div>
                   
                   {openSections.margin && (
-                    <div className="mt-4 bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
-                      <MarginDisplay 
-                        marginData={marginData || { has_cost_data: false }}
-                        onAddCosts={() => setShowCostModal(true)}
-                        onEditCosts={() => setShowCostModal(true)}
-                      />
+                    <div className="px-8 pb-6">
+                      <div className="bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
+                        <MarginDisplay 
+                          marginData={marginData || { has_cost_data: false }}
+                          onAddCosts={() => setShowCostModal(true)}
+                          onEditCosts={() => setShowCostModal(true)}
+                        />
+                      </div>
                     </div>
                   )}
-                </section>
+                </div>
               )}
 
               {/* ✅ SECTION 2: PRICE RECOMMENDATION (Action!) */}
-              <section className="mb-6">
-                <div className="relative">
-                  <button
+              <div className="collapsible-card">
+                  <div 
+                    className="collapsible-header"
                     onClick={() => toggleSection('price')}
-                    className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
                   >
-                    <div className="flex items-center gap-4">
-                      <span className="text-4xl">💡</span>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h2 className="text-2xl font-bold text-gray-900">Preisempfehlung</h2>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setShowInfoTooltip(prev => ({ ...prev, price: !prev.price }))
-                            }}
-                            className="relative info-tooltip-button"
-                          >
-                            <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 transition-colors" />
-                            {showInfoTooltip.price && (
-                              <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
-                                <div className="font-semibold mb-2">Was passiert hier?</div>
-                                <p className="mb-2">
-                                  Unsere KI analysiert verschiedene Faktoren wie Nachfrage, Lagerbestand, Wettbewerbspreise und deine Kosten, um dir eine optimale Preisempfehlung zu geben.
-                                </p>
-                                  <p className="mb-2">
-                                    <strong>Die Empfehlung berücksichtigt:</strong>
-                                  </p>
-                                  <ul className="list-disc list-inside mb-2 space-y-1">
-                                    <li>Verkaufsdaten der letzten 30 Tage</li>
-                                    <li>Aktuelle Preise deiner Konkurrenten</li>
-                                    <li>Deine Lagerbestände</li>
-                                    <li>Deine Kosten und Margen</li>
-                                  </ul>
-                                  <p>
-                                    Du kannst die Empfehlung direkt anwenden oder erst die Details ansehen.
-                                  </p>
-                                  <div className="absolute bottom-0 left-4 transform translate-y-full">
-                                    <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
-                                  </div>
-                                </div>
-                              )}
-                            </button>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">
-                            KI-basierte Preisempfehlung basierend auf Marktdaten
-                          </p>
-                        </div>
-                      </div>
-                      {openSections.price ? (
-                        <ChevronUp className="w-6 h-6 text-gray-500" />
-                      ) : (
-                        <ChevronDown className="w-6 h-6 text-gray-500" />
-                      )}
-                    </button>
+                    <div className="section-icon icon-recommendation">
+                      <DollarSign className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="section-content">
+                      <h3 className="section-title">
+                        Preisempfehlung
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setShowInfoTooltip(prev => ({ ...prev, price: !prev.price }))
+                          }}
+                          className="relative info-tooltip-button"
+                        >
+                          <Info className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
+                          {showInfoTooltip.price && (
+                            <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
+                              <div className="font-semibold mb-2">Was passiert hier?</div>
+                              <p className="mb-2">
+                                Unsere KI analysiert verschiedene Faktoren wie Nachfrage, Lagerbestand, Wettbewerbspreise und deine Kosten, um dir eine optimale Preisempfehlung zu geben.
+                              </p>
+                              <p className="mb-2">
+                                <strong>Die Empfehlung berücksichtigt:</strong>
+                              </p>
+                              <ul className="list-disc list-inside mb-2 space-y-1">
+                                <li>Verkaufsdaten der letzten 30 Tage</li>
+                                <li>Aktuelle Preise deiner Konkurrenten</li>
+                                <li>Deine Lagerbestände</li>
+                                <li>Deine Kosten und Margen</li>
+                              </ul>
+                              <p>
+                                Du kannst die Empfehlung direkt anwenden oder erst die Details ansehen.
+                              </p>
+                              <div className="absolute bottom-0 left-4 transform translate-y-full">
+                                <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
+                              </div>
+                            </div>
+                          )}
+                        </button>
+                      </h3>
+                      <p className="section-subtitle">
+                        KI-basierte Preisempfehlung basierend auf Marktdaten
+                      </p>
+                    </div>
+                    {openSections.price ? (
+                      <ChevronUp className="chevron-arrow" />
+                    ) : (
+                      <ChevronDown className="chevron-arrow" />
+                    )}
                   </div>
                 
-                {openSections.price && (
-                  <div className="mt-4 bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
-                    <LatestRecommendation productId={productId} />
-                  </div>
-                )}
-              </section>
+                  {openSections.price && (
+                    <div className="px-8 pb-6">
+                      <div className="bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
+                        <LatestRecommendation productId={productId} />
+                      </div>
+                    </div>
+                  )}
+              </div>
 
               {/* ✅ SECTION 3: COMPETITOR ANALYSIS (Context Last!) */}
               {currentPrice > 0 && (
-                <section className="mb-6">
-                  <div className="relative">
-                    <button
+                <div className="collapsible-card">
+                    <div 
+                      className="collapsible-header"
                       onClick={() => toggleSection('competitor')}
-                      className="w-full flex items-center justify-between p-6 bg-white rounded-lg border-2 border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
                     >
-                      <div className="flex items-center gap-4">
-                        <span className="text-4xl">🏪</span>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h2 className="text-2xl font-bold text-gray-900">Wettbewerbsanalyse</h2>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setShowInfoTooltip(prev => ({ ...prev, competitor: !prev.competitor }))
-                              }}
-                              className="relative info-tooltip-button"
-                            >
-                              <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 transition-colors" />
-                              {showInfoTooltip.competitor && (
-                                <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
-                                  <div className="font-semibold mb-2">Was passiert hier?</div>
-                                  <p className="mb-2">
-                                    Die Wettbewerbsanalyse zeigt dir, wie dein Preis im Vergleich zu anderen Anbietern steht.
-                                  </p>
-                                  <p className="mb-2">
-                                    <strong>Du siehst:</strong>
-                                  </p>
-                                  <ul className="list-disc list-inside mb-2 space-y-1">
-                                    <li>Preise deiner Konkurrenten (Neuware, Gebraucht, etc.)</li>
-                                    <li>Deine Marktposition (günstigster, teuerster, Durchschnitt)</li>
-                                    <li>Durchschnittspreis und Preisspanne</li>
-                                    <li>Datenqualität der Analyse</li>
-                                  </ul>
-                                  <p>
-                                    Nutze diese Informationen, um deine Preise strategisch anzupassen.
-                                  </p>
-                                  <div className="absolute bottom-0 left-4 transform translate-y-full">
-                                    <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
-                                  </div>
+                      <div className="section-icon icon-competitor">
+                        <ShoppingCart className="h-8 w-8 text-white" />
+                      </div>
+                      <div className="section-content">
+                        <h3 className="section-title">
+                          Wettbewerbsanalyse
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setShowInfoTooltip(prev => ({ ...prev, competitor: !prev.competitor }))
+                            }}
+                            className="relative info-tooltip-button"
+                          >
+                            <Info className="w-4 h-4 text-gray-400 hover:text-blue-600 transition-colors" />
+                            {showInfoTooltip.competitor && (
+                              <div className="absolute left-0 bottom-full mb-2 w-80 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl z-50">
+                                <div className="font-semibold mb-2">Was passiert hier?</div>
+                                <p className="mb-2">
+                                  Die Wettbewerbsanalyse zeigt dir, wie dein Preis im Vergleich zu anderen Anbietern steht.
+                                </p>
+                                <p className="mb-2">
+                                  <strong>Du siehst:</strong>
+                                </p>
+                                <ul className="list-disc list-inside mb-2 space-y-1">
+                                  <li>Preise deiner Konkurrenten (Neuware, Gebraucht, etc.)</li>
+                                  <li>Deine Marktposition (günstigster, teuerster, Durchschnitt)</li>
+                                  <li>Durchschnittspreis und Preisspanne</li>
+                                  <li>Datenqualität der Analyse</li>
+                                </ul>
+                                <p>
+                                  Nutze diese Informationen, um deine Preise strategisch anzupassen.
+                                </p>
+                                <div className="absolute bottom-0 left-4 transform translate-y-full">
+                                  <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
                                 </div>
-                              )}
-                            </button>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Vergleiche deine Preise mit der Konkurrenz
-                          </p>
-                        </div>
+                              </div>
+                            )}
+                          </button>
+                        </h3>
+                        <p className="section-subtitle">
+                          Vergleiche deine Preise mit der Konkurrenz
+                        </p>
                       </div>
                       {openSections.competitor ? (
-                        <ChevronUp className="w-6 h-6 text-gray-500" />
+                        <ChevronUp className="chevron-arrow" />
                       ) : (
-                        <ChevronDown className="w-6 h-6 text-gray-500" />
+                        <ChevronDown className="chevron-arrow" />
                       )}
-                    </button>
-                  </div>
-                  
-                  {openSections.competitor && (
-                    <div className="mt-4 bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
-                      <CompetitorAnalysis productId={productId} currentPrice={currentPrice} />
                     </div>
-                  )}
-                </section>
-              )}
+                  
+                    {openSections.competitor && (
+                      <div className="px-8 pb-6">
+                        <div className="bg-white rounded-lg border border-gray-200 p-6 transition-all duration-300 ease-in-out">
+                          <CompetitorAnalysis productId={productId} currentPrice={currentPrice} />
+                        </div>
+                      </div>
+                    )}
+            </div>
+          )}
         </div>
+      </div>
       </main>
 
       {/* Cost Input Modal */}
