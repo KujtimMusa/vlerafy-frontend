@@ -285,17 +285,16 @@ export function PriceRecommendationCard({
         </div>
       )}
 
-        {/* Action Buttons - Fallback wenn keine strategy_details */}
-        {(!recommendation.strategy_details || recommendation.strategy_details.length === 0) && (onApply || onDismiss) && (
-          <ActionButtons
-            recommendedPrice={displayedPrice}
-            onApply={handleApply}
-            onDismiss={onDismiss || (() => {})}
-            isApplying={isApplying}
-            isDisabled={isCriticalWarning}
-            marginAnalysis={recommendation.margin_analysis}
-          />
-        )}
+      {/* Action Buttons - Fallback wenn keine strategy_details */}
+      {(!recommendation.strategy_details || recommendation.strategy_details.length === 0) && (onApply || onDismiss) && (
+        <ActionButtons
+          recommendedPrice={displayedPrice}
+          onApply={handleApply}
+          onDismiss={onDismiss || (() => {})}
+          isApplying={isApplying}
+          isDisabled={isCriticalWarning}
+          marginAnalysis={recommendation.margin_analysis}
+        />
       )}
       
       {/* ==========================================
@@ -317,8 +316,6 @@ export function PriceRecommendationCard({
           </div>
         </div>
       )}
-      
-      </div>
       
       {/* ==========================================
           FOOTER - Metadata
