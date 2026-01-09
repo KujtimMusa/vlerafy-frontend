@@ -12,6 +12,19 @@ export default function RootLayout({
 }) {
   return (
     <html className="dark">
+      <head>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            /* Nuclear border-radius override - inline fallback */
+            * { border-radius: 12px !important; }
+            div[class*="card"], div[class*="box"], div[class*="container"] { border-radius: 16px !important; }
+            button, input, select { border-radius: 10px !important; }
+            span[class*="badge"] { border-radius: 8px !important; }
+            svg, path { border-radius: 0 !important; }
+            html, body { border-radius: 0 !important; }
+          `
+        }} />
+      </head>
       <body>{children}</body>
     </html>
   )
