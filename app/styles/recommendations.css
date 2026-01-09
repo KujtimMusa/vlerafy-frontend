@@ -458,8 +458,8 @@
   align-items: center;
   gap: 12px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-  border: 2px solid #10b981;
+  background: #1e293b !important;
+  border: 2px solid #10b981 !important;
   border-radius: 0;
   box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
   color: #a7f3d0;
@@ -618,8 +618,8 @@
 
 /* Contribution Margin Box - HERO ELEMENT */
 .contribution-margin-box {
-  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-  border: 3px solid #10b981;
+  background: #1e293b !important;
+  border: 3px solid #10b981 !important;
   border-radius: 0;
   padding: 28px;
   margin-bottom: 24px;
@@ -746,8 +746,8 @@
 
 /* Health Banner - PROMINENT */
 .health-banner {
-  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-  border: 3px solid #10b981;
+  background: #1e293b !important;
+  border: 3px solid #10b981 !important;
   border-radius: 0;
   padding: 20px 24px;
   display: flex;
@@ -946,8 +946,8 @@
 }
 
 .price-box-recommended {
-  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-  border: 3px solid #10b981;
+  background: #1e293b !important;
+  border: 3px solid #10b981 !important;
   border-radius: 0;
   padding: 32px;
   position: relative;
