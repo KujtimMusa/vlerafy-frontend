@@ -1374,24 +1374,63 @@ Border-Radius System:
 */
 
 /* ============================================
-   FIX: REMOVE NESTED BORDERS & BACKGROUNDS
-   Prevent "boxes within boxes" effect
+   FIX: VISIBLE BORDERS WITHOUT NESTING
+   Cards should be visible but no double borders
    ============================================ */
 
-/* === GLOBAL FIX: Remove borders/backgrounds from nested elements === */
+/* === RESTORE BORDERS ON MAIN CONTAINERS === */
 
-/* Remove backgrounds and borders from ALL nested divs/spans */
+/* Main cards/boxes SHOULD have borders */
+.card,
+.box,
+.stat-box,
+.product-card,
+.collapsible-card,
+.price-box,
+.strategy-card,
+.competitor-card,
+[class*="card"],
+[class*="Card"],
+[class*="box"],
+[class*="Box"],
+[class*="section"]:not(.collapsible-content) {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Hover: Make border more visible */
+.card:hover,
+.box:hover,
+.product-card:hover,
+[class*="card"]:hover,
+[class*="box"]:hover {
+  border-color: #64748b !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* === INNER ELEMENTS - NO BORDERS === */
+
+/* Remove borders from nested divs */
+.card > div,
+.box > div,
 .card > div > div,
 .box > div > div,
-.price-box > div,
-.stat-box > div,
-[class*="card"] > div > div,
-[class*="box"] > div,
-[class*="Box"] > div {
-  background: none !important;
-  background-color: transparent !important;
+[class*="card"] > div,
+[class*="box"] > div {
   border: none !important;
-  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* But keep backgrounds for intentional inner boxes */
+.card .stat-item,
+.box .stat-item,
+.product-card .stat-item {
+  background-color: #334155 !important;
+  border: 1px solid #475569 !important;
+  border-radius: 10px !important;
 }
 
 /* === PRICE BOXES FIX === */
@@ -1401,25 +1440,20 @@ Border-Radius System:
 .verkaufspreis-box,
 .nettoerlos-box,
 [class*="price-box"],
-[class*="preis-box"] {
+[class*="preis-box"],
+[class*="Price"] {
   background-color: #1e293b !important;
   border: 2px solid #475569 !important;
-  border-radius: 12px !important;
+  border-radius: 16px !important;
   padding: 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
 }
 
-/* Inner elements - NO backgrounds or borders */
+/* Inner price elements - NO borders */
 .price-box > *,
 .price-box div,
-.price-box span,
-.price-box p {
-  background: none !important;
-  background-color: transparent !important;
+.price-box span {
+  background: transparent !important;
   border: none !important;
-  box-shadow: none !important;
 }
 
 /* Price labels - just text */
@@ -1527,11 +1561,12 @@ h1, h2, h3, h4, h5, h6 {
 .stat-box,
 .stat-item,
 .stat-card,
-[class*="stat-box"],
-[class*="stat-item"] {
-  background-color: #334155 !important;
+[class*="stat"],
+[class*="metric"],
+[class*="quick-stat"] {
+  background-color: #1e293b !important;
   border: 2px solid #475569 !important;
-  border-radius: 10px !important;
+  border-radius: 12px !important;
   padding: 12px !important;
 }
 
@@ -1569,6 +1604,12 @@ h1, h2, h3, h4, h5, h6 {
   border: 2px solid #475569 !important;
   border-radius: 16px !important;
   padding: 20px !important;
+  transition: all 0.3s ease !important;
+}
+
+.product-card:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35) !important;
 }
 
 /* ALL inner elements - NO backgrounds */
@@ -1590,75 +1631,61 @@ h1, h2, h3, h4, h5, h6 {
 
 /* === COLLAPSIBLE SECTIONS FIX === */
 
-/* Outer collapsible card */
 .collapsible-card {
   background-color: #1e293b !important;
   border: 2px solid #475569 !important;
   border-radius: 16px !important;
+  margin-bottom: 16px !important;
+  overflow: hidden !important;
 }
 
-/* Collapsible header - NO nested backgrounds */
-.collapsible-header,
-.collapsible-header > *,
-.collapsible-header div {
-  background: none !important;
+.collapsible-header {
   background-color: transparent !important;
-  border: none !important;
+  border-bottom: 1px solid #334155 !important;
+  padding: 20px 24px !important;
 }
 
-/* Collapsible content */
 .collapsible-content {
   background-color: #0f172a !important;
   border-top: 1px solid #334155 !important;
+  padding: 24px !important;
 }
 
 /* === MARGIN BOXES FIX === */
 
-/* Contribution margin box */
+/* Contribution margin - Green border */
 .contribution-margin-box,
-.deckungsbeitrag-box {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+[class*="deckungsbeitrag"],
+[class*="contribution"] {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
   border: 2px solid rgba(16, 185, 129, 0.4) !important;
   border-radius: 16px !important;
   padding: 24px !important;
 }
 
-/* Inner elements - NO backgrounds */
-.contribution-margin-box > *,
-.contribution-margin-box div,
-.deckungsbeitrag-box > *,
-.deckungsbeitrag-box div {
-  background: none !important;
-  background-color: transparent !important;
-  border: none !important;
-}
-
-/* === BREAK-EVEN BOX FIX === */
-
-.break-even-box {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+/* Break-even - Orange border */
+.break-even-box,
+[class*="break-even"] {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
   border: 2px solid rgba(245, 158, 11, 0.4) !important;
   border-radius: 16px !important;
   padding: 24px !important;
 }
 
-.break-even-box > *,
-.break-even-box div {
-  background: none !important;
-  background-color: transparent !important;
-  border: none !important;
-}
-
-/* === MIN RECOMMENDED BOX FIX === */
-
+/* Min recommended - Green border */
 .min-recommended-box,
 [class*="empfohlen"] {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
   border: 2px solid rgba(16, 185, 129, 0.4) !important;
   border-radius: 16px !important;
   padding: 24px !important;
 }
 
+/* Inner margin box elements - NO borders */
+.contribution-margin-box > *,
+.contribution-margin-box div,
+.break-even-box > *,
+.break-even-box div,
 .min-recommended-box > *,
 .min-recommended-box div {
   background: none !important;
@@ -1716,6 +1743,154 @@ span[class*="pill"] {
   border: 1px solid rgba(59, 130, 246, 0.4) !important;
 }
 
+/* === DASHBOARD SPECIFIC === */
+
+/* Schnellaktionen Cards */
+.dashboard-container [class*="schnell"] > div,
+.dashboard-container [class*="quick"] > div,
+main > section > div {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin-bottom: 16px !important;
+}
+
+/* Optimization Journey Boxes */
+[class*="journey"] > div,
+[class*="optimization"] > div,
+[class*="progress"] > div {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+}
+
+/* === SIDEBAR === */
+
+/* Sidebar sections */
+aside > div,
+nav > div,
+.sidebar > div {
+  background-color: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-radius: 10px !important;
+  margin: 8px !important;
+  padding: 12px !important;
+}
+
+/* === ALERT BANNERS === */
+
+/* Red alert banner */
+[class*="alert"],
+[class*="Banner"],
+[class*="warning"] {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%) !important;
+  border: 2px solid rgba(239, 68, 68, 0.4) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+}
+
+/* === STRATEGY CARDS === */
+
+.strategy-card {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+}
+
+/* === COMPETITOR CARDS === */
+
+.competitor-card {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+}
+
+/* === ENSURE SPACING BETWEEN CARDS === */
+
+/* Add margin between cards so they're clearly separate */
+.card,
+.box,
+[class*="card"],
+[class*="box"] {
+  margin-bottom: 16px !important;
+}
+
+/* Grid layouts should have gap */
+.products-grid,
+.stats-grid,
+[class*="grid"] {
+  gap: 20px !important;
+}
+
+/* Flex layouts should have gap */
+.flex,
+[class*="flex"] {
+  gap: 16px !important;
+}
+
+/* === INCREASE BORDER CONTRAST === */
+
+/* Make borders more visible */
+[class*="card"],
+[class*="box"],
+[class*="section"] {
+  border-width: 2px !important;
+  border-style: solid !important;
+}
+
+/* === SPECIFIC DASHBOARD ELEMENTS === */
+
+/* "Du verlierst Geld" Banner */
+main > div:first-child,
+[class*="alert-banner"] {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border: 2px solid #b91c1c !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin-bottom: 24px !important;
+}
+
+/* Optimization Journey Section */
+[class*="optimierung"],
+[class*="journey"],
+[class*="progress-section"] {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin-bottom: 24px !important;
+}
+
+/* Journey Step Boxes */
+[class*="journey"] > div > div,
+[class*="step"],
+[class*="milestone"] {
+  background-color: #334155 !important;
+  border: 2px solid #475569 !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+}
+
+/* Schnellaktionen Grid */
+[class*="schnellaktionen"],
+[class*="quick-actions"] {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+  margin-top: 24px !important;
+}
+
+[class*="schnellaktionen"] > div {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+}
+
 /* === PREVENT DOUBLE BORDERS === */
 
 /* Remove borders from ALL children of bordered elements */
@@ -1755,11 +1930,7 @@ button[class*="primary"] {
   border: none !important;
 }
 
-/* === FINAL CLEANUP === */
+/* === REMOVE CONFLICTING RULES === */
 
-/* If an element has NO class suggesting it should have a background, remove it */
-div:not([class*="card"]):not([class*="box"]):not([class*="container"]):not([class*="section"]):not([class*="button"]):not([class*="badge"]):not([class*="icon"]) {
-  background: transparent !important;
-  border: none !important;
-}
+/* Don't make everything transparent - only nested elements */
 
