@@ -220,3 +220,440 @@ main > section {
   border-color: initial !important;
 }
 
+/* ============================================
+   STATE-OF-THE-ART SIDEBAR DESIGN
+   Inspired by Linear, Notion, Vercel
+   ============================================ */
+
+/* === SIDEBAR CONTAINER === */
+
+aside,
+nav,
+[class*="sidebar"],
+[class*="Sidebar"] {
+  background-color: #0f172a !important;
+  width: 280px !important;
+  height: 100vh !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  border-right: 1px solid #1e293b !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+/* === SCROLLBAR === */
+
+aside::-webkit-scrollbar,
+nav::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+aside::-webkit-scrollbar-track,
+nav::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+aside::-webkit-scrollbar-thumb,
+nav::-webkit-scrollbar-thumb {
+  background: #334155 !important;
+  border-radius: 3px !important;
+}
+
+aside::-webkit-scrollbar-thumb:hover,
+nav::-webkit-scrollbar-thumb:hover {
+  background: #475569 !important;
+}
+
+/* === LOGO SECTION === */
+
+aside > div:first-child,
+nav > div:first-child,
+[class*="sidebar"] > div:first-child,
+[class*="logo"] {
+  padding: 24px 20px !important;
+  border-bottom: 1px solid #1e293b !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* Logo container */
+[class*="logo"],
+aside > div:first-child > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Logo icon */
+[class*="logo"] img,
+[class*="logo"] svg {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+}
+
+/* Logo text */
+[class*="logo"] span,
+[class*="logo"] h1,
+[class*="logo"] h2 {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #f1f5f9 !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* === AKTIVER SHOP SECTION === */
+
+[class*="aktiver-shop"],
+[class*="active-shop"],
+[class*="shop-selector"] {
+  padding: 16px 20px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+
+/* Shop selector heading */
+[class*="aktiver-shop"] > span:first-child,
+[class*="active-shop"] > span:first-child {
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #64748b !important;
+  margin-bottom: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* === LIVE/DEMO TABS === */
+
+[class*="tabs"],
+div:has(> button:contains("Live")),
+div:has(> button:contains("Demo")) {
+  display: flex !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+  background: #1e293b !important;
+  padding: 4px !important;
+  border-radius: 8px !important;
+  border: none !important;
+}
+
+/* Tab buttons */
+[class*="tabs"] > button,
+[class*="tab-button"] {
+  flex: 1 !important;
+  padding: 8px 12px !important;
+  background: transparent !important;
+  color: #94a3b8 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Active tab */
+[class*="tabs"] > button[class*="active"],
+[class*="tabs"] > button[aria-selected="true"] {
+  background: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Tab hover */
+[class*="tabs"] > button:hover {
+  background: rgba(51, 65, 85, 0.5) !important;
+  color: #cbd5e1 !important;
+}
+
+/* === DEMO SHOP CARD === */
+
+[class*="demo-shop"],
+[class*="shop-card"],
+[class*="aktiver-shop"] > div:last-child {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 10px !important;
+  padding: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin: 0 !important;
+}
+
+[class*="demo-shop"]:hover,
+[class*="shop-card"]:hover {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  transform: scale(1.02) !important;
+}
+
+/* Shop icon */
+[class*="demo-shop"] > div:first-child,
+[class*="shop-icon"] {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Shop info - NO vertical text! */
+[class*="demo-shop"] > div:last-child,
+[class*="shop-info"] {
+  flex: 1 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  align-items: flex-start !important;
+  /* FIX: NO ROTATION! */
+  transform: none !important;
+  writing-mode: horizontal-tb !important;
+}
+
+/* Shop name */
+[class*="shop-info"] > span:first-child,
+[class*="shop-name"] {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #f1f5f9 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  /* FIX: NO ROTATION! */
+  transform: none !important;
+  writing-mode: horizontal-tb !important;
+  display: block !important;
+}
+
+/* Shop subtitle */
+[class*="shop-info"] > span:last-child,
+[class*="shop-subtitle"] {
+  font-size: 12px !important;
+  color: #64748b !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  /* FIX: NO ROTATION! */
+  transform: none !important;
+  writing-mode: horizontal-tb !important;
+  display: block !important;
+}
+
+/* Active badge */
+[class*="aktiv"],
+[class*="active-badge"] {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  padding: 2px 8px !important;
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+
+/* === NAVIGATION SECTION === */
+
+[class*="navigation"],
+nav > div:not(:first-child),
+aside > div:has(> a[href]) {
+  padding: 8px 12px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+/* === NAVIGATION ITEMS === */
+
+/* Remove ALL nested boxes */
+aside a,
+aside button[class*="nav"],
+nav a,
+nav button[class*="nav"],
+[class*="nav-item"],
+[class*="navigation-item"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 12px !important;
+  background: transparent !important;
+  border: none !important;
+  border-left: 2px solid transparent !important;
+  border-radius: 8px !important;
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+/* Nav item hover */
+aside a:hover,
+aside button[class*="nav"]:hover,
+nav a:hover,
+nav button[class*="nav"]:hover {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+  border-left-color: #3b82f6 !important;
+}
+
+/* Nav item active */
+aside a[class*="active"],
+aside a[aria-current="page"],
+nav a[class*="active"],
+nav a[aria-current="page"] {
+  background: rgba(59, 130, 246, 0.1) !important;
+  color: #60a5fa !important;
+  border-left-color: #3b82f6 !important;
+}
+
+/* Nav icons */
+aside a svg,
+aside button svg,
+nav a svg,
+nav button svg {
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+/* === REMOVE ALL NESTED BORDERS === */
+
+/* NO boxes within sidebar sections */
+aside > div > div,
+aside > div > div > div,
+nav > div > div,
+nav > div > div > div,
+[class*="sidebar"] > div > div {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* === FIX TEXT ROTATION === */
+
+/* Force horizontal text everywhere */
+aside *,
+nav *,
+[class*="sidebar"] * {
+  writing-mode: horizontal-tb !important;
+  transform: none !important;
+  text-orientation: mixed !important;
+}
+
+/* === SECTION HEADINGS === */
+
+aside h3,
+aside h4,
+nav h3,
+nav h4,
+[class*="section-heading"] {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #64748b !important;
+  padding: 16px 12px 8px 12px !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+}
+
+/* === BOTTOM SECTION (Settings, etc.) === */
+
+aside > div:last-child,
+nav > div:last-child {
+  margin-top: auto !important;
+  border-top: 1px solid #1e293b !important;
+  padding: 16px 12px !important;
+  background: transparent !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+  aside,
+  nav,
+  [class*="sidebar"] {
+    width: 240px !important;
+  }
+}
+
+/* === DEMO MODE INDICATOR === */
+
+[class*="demo-modus"],
+[class*="demo-mode"] {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 12px !important;
+  margin: 8px 12px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+}
+
+[class*="demo-modus"] svg,
+[class*="demo-mode"] svg {
+  color: #f59e0b !important;
+  flex-shrink: 0 !important;
+}
+
+[class*="demo-modus"] span,
+[class*="demo-mode"] span,
+[class*="demo-modus"] p,
+[class*="demo-mode"] p {
+  font-size: 12px !important;
+  color: #cbd5e1 !important;
+  line-height: 1.5 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
