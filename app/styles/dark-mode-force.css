@@ -1,0 +1,586 @@
+/* ============================================
+   DARK MODE - FORCE APPLY WITH !important
+   Complete Fix for All Pages
+   ============================================ */
+
+/* === GLOBAL RESETS === */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #0f172a !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0f172a !important;
+  color: #cbd5e1 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* === ROOT ELEMENTS === */
+
+#root,
+#app,
+[id*="root"],
+[id*="app"] {
+  background-color: #0f172a !important;
+  min-height: 100vh;
+}
+
+/* === CONTAINERS === */
+
+.dashboard-container,
+.products-page,
+.product-detail-container,
+.main-content,
+.content,
+.page,
+.container,
+[class*="container"],
+[class*="Container"],
+[class*="page"],
+[class*="Page"],
+[class*="wrapper"],
+[class*="Wrapper"] {
+  background-color: #0f172a !important;
+  color: #cbd5e1 !important;
+}
+
+/* === CARDS === */
+
+.product-card,
+.card,
+.stat-box,
+.stat-card,
+.strategy-card,
+.competitor-card,
+.insight-box,
+.collapsible-card,
+.page-header,
+.dashboard-header,
+.product-detail-header,
+.search-bar,
+.filter-bar,
+[class*="card"],
+[class*="Card"],
+[class*="box"],
+[class*="Box"] {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Card Hover States */
+.product-card:hover,
+.card:hover,
+.strategy-card:hover,
+.competitor-card:hover,
+[class*="card"]:hover {
+  background-color: #334155 !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* === TYPOGRAPHY === */
+
+h1, h2, h3, h4, h5, h6 {
+  color: #f1f5f9 !important;
+  margin: 0;
+  font-weight: 700;
+}
+
+p {
+  color: #cbd5e1 !important;
+}
+
+span {
+  color: inherit;
+}
+
+/* Specific Text Elements */
+.product-title,
+.page-title,
+.dashboard-title,
+.section-title,
+.competitor-name,
+.strategy-title,
+[class*="title"],
+[class*="Title"],
+[class*="heading"],
+[class*="Heading"] {
+  color: #f1f5f9 !important;
+}
+
+.product-meta,
+.page-subtitle,
+.stat-label,
+.product-sku,
+[class*="meta"],
+[class*="subtitle"],
+[class*="label"],
+[class*="muted"] {
+  color: #94a3b8 !important;
+}
+
+/* === BUTTONS === */
+
+/* Reset ALL buttons */
+button,
+[type="button"],
+[type="submit"],
+.btn,
+.button,
+[class*="btn"],
+[class*="Btn"],
+[class*="button"],
+[class*="Button"] {
+  background-color: #334155 !important;
+  color: #cbd5e1 !important;
+  border: 2px solid #475569 !important;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Button Hover - Default */
+button:hover,
+[class*="btn"]:hover {
+  background-color: #475569 !important;
+  color: #60a5fa !important;
+  border-color: #3b82f6 !important;
+}
+
+/* PRIMARY BUTTONS - BLUE */
+button[class*="primary"],
+button[class*="Primary"],
+button[class*="action"],
+button[class*="Action"],
+.btn-primary,
+.button-primary,
+.action-button-primary,
+button[class*="Preisempfehlungen"],
+button[class*="anzeigen"] {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25) !important;
+}
+
+button[class*="primary"]:hover,
+.btn-primary:hover {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+  color: white !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35) !important;
+  transform: translateY(-2px) !important;
+  border: none !important;
+}
+
+/* SECONDARY BUTTONS - DARK GRAY */
+button[class*="secondary"],
+button[class*="Secondary"],
+.btn-secondary,
+.button-secondary {
+  background-color: #334155 !important;
+  color: #cbd5e1 !important;
+  border: 2px solid #475569 !important;
+}
+
+button[class*="secondary"]:hover,
+.btn-secondary:hover {
+  background-color: #475569 !important;
+  color: #60a5fa !important;
+  border-color: #3b82f6 !important;
+}
+
+/* SUCCESS/GREEN BUTTONS */
+button[class*="anwenden"],
+button[class*="apply"],
+button[class*="success"],
+button[class*="Success"],
+button[class*="confirm"] {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+}
+
+button[class*="anwenden"]:hover,
+button[class*="apply"]:hover {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
+  color: white !important;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35) !important;
+}
+
+/* DANGER/RED BUTTONS */
+button[class*="delete"],
+button[class*="Delete"],
+button[class*="remove"],
+button[class*="danger"],
+button[class*="Danger"],
+button[class*="verwerfen"] {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  color: #ef4444 !important;
+  border: 2px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+button[class*="delete"]:hover,
+button[class*="danger"]:hover {
+  background-color: #ef4444 !important;
+  color: white !important;
+  border-color: #ef4444 !important;
+}
+
+/* ICON BUTTONS */
+button[class*="icon"],
+.icon-button,
+button[class*="Icon"] {
+  background-color: #334155 !important;
+  color: #cbd5e1 !important;
+  border: 2px solid #475569 !important;
+  padding: 8px !important;
+  min-width: auto !important;
+}
+
+button[class*="icon"]:hover {
+  background-color: #475569 !important;
+  color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Zurück/Back Button */
+button[class*="zurück"],
+button[class*="Zurück"],
+button[class*="back"],
+button[class*="Back"] {
+  background-color: #334155 !important;
+  color: #cbd5e1 !important;
+  border: 2px solid #475569 !important;
+}
+
+button[class*="zurück"]:hover {
+  background-color: #475569 !important;
+  color: #60a5fa !important;
+  border-color: #3b82f6 !important;
+}
+
+/* === INPUTS === */
+
+input,
+textarea,
+select,
+[type="text"],
+[type="email"],
+[type="number"],
+[type="search"] {
+  background-color: #334155 !important;
+  border: 2px solid #475569 !important;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #f1f5f9 !important;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* === BADGES === */
+
+.status-badge,
+.badge,
+[class*="badge"],
+[class*="Badge"] {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Success Badge - Green */
+.status-badge.success,
+[class*="success"],
+button[class*="success"] span {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  color: #10b981 !important;
+}
+
+/* Warning Badge - Orange */
+.status-badge.warning,
+[class*="warning"] {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  color: #f59e0b !important;
+}
+
+/* Error/Danger Badge - Red */
+.status-badge.error,
+.status-badge.danger,
+[class*="error"],
+[class*="danger"] {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  color: #ef4444 !important;
+}
+
+/* Neutral Badge */
+.status-badge.neutral,
+[class*="neutral"],
+[class*="info"] {
+  background-color: #334155 !important;
+  border: 1px solid #475569 !important;
+  color: #94a3b8 !important;
+}
+
+/* === STATS / NUMBERS === */
+
+.stat-value,
+.product-price,
+.price-amount,
+.stat-box-value,
+[class*="value"],
+[class*="Value"],
+[class*="price"],
+[class*="Price"] {
+  color: #f1f5f9 !important;
+  font-weight: 700;
+}
+
+.stat-label,
+.stat-box-label,
+[class*="stat-label"] {
+  color: #94a3b8 !important;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* === ICONS === */
+
+.product-icon,
+.collapsible-icon,
+[class*="icon-container"],
+[class*="Icon"] svg,
+[class*="icon"] svg {
+  color: white;
+}
+
+[class*="icon-container"],
+.product-icon,
+.collapsible-icon {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* === COLLAPSIBLE SECTIONS === */
+
+.collapsible-header {
+  background-color: #1e293b !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+.collapsible-header:hover {
+  background-color: #334155 !important;
+}
+
+.collapsible-content {
+  background-color: #0f172a !important;
+  border-top: 1px solid #334155 !important;
+}
+
+/* === RECOMMENDATION SECTIONS === */
+
+.recommendation-content,
+.margin-content,
+.competitor-content {
+  padding: 32px;
+  background-color: #0f172a !important;
+}
+
+/* Price Boxes */
+.price-box,
+.price-box-current,
+.price-box-recommended {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+}
+
+.price-box:hover {
+  background-color: #334155 !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Hero Sections */
+.ml-confidence-section,
+.contribution-margin-box,
+.price-position-hero,
+.calculation-section {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+}
+
+/* Progress Bars */
+.confidence-progress-bar-container,
+.weighted-bar-container {
+  background-color: #334155 !important;
+  border: 2px solid #475569 !important;
+}
+
+.confidence-progress-bar,
+.weighted-bar-fill {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%) !important;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* === TABLES === */
+
+table {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+}
+
+thead {
+  background-color: #334155 !important;
+}
+
+th {
+  color: #f1f5f9 !important;
+  border-bottom: 2px solid #475569 !important;
+}
+
+td {
+  color: #cbd5e1 !important;
+  border-top: 1px solid #334155 !important;
+}
+
+tr:hover td {
+  background-color: #334155 !important;
+}
+
+/* === MODALS === */
+
+.modal-overlay,
+[class*="overlay"] {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content,
+.modal,
+[class*="modal"] {
+  background-color: #1e293b !important;
+  border: 2px solid #475569 !important;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.6) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid #334155 !important;
+}
+
+/* === ALERTS / BANNERS === */
+
+[class*="alert"],
+[class*="Alert"],
+[class*="banner"],
+[class*="Banner"],
+[class*="notification"] {
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+/* Red Alert/Banner */
+[class*="alert-error"],
+[class*="alert-danger"],
+[style*="background-color: rgb(220, 38, 38)"],
+[style*="background: rgb(220, 38, 38)"] {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border: 2px solid rgba(239, 68, 68, 0.3) !important;
+  color: #ef4444 !important;
+}
+
+/* === SCROLLBAR === */
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 6px;
+  border: 2px solid #0f172a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+  .products-grid,
+  .product-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === FORCE DARK ON SPECIFIC SHOPIFY/DEMO ELEMENTS === */
+
+[class*="Demo"],
+[class*="demo"],
+[class*="Shop"],
+[class*="shop"] {
+  background-color: #0f172a !important;
+}
+
+/* === FIX SPECIFIC ISSUE ELEMENTS === */
+
+/* Fix white sidebar if exists */
+aside,
+nav,
+[class*="sidebar"],
+[class*="Sidebar"],
+[class*="navigation"] {
+  background-color: #1e293b !important;
+  border-right: 1px solid #334155 !important;
+}
+
+/* Fix white header if exists */
+header,
+[class*="header"],
+[class*="Header"] {
+  background-color: #1e293b !important;
+  border-bottom: 1px solid #334155 !important;
+}
+

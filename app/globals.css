@@ -1,3 +1,6 @@
+/* WICHTIG: Als ALLERERSTES importieren! VOR ALLEM ANDEREN! */
+@import './styles/dark-mode-force.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
