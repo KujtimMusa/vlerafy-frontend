@@ -54,7 +54,7 @@ export function MarginDisplay({ marginData, compact = false, onAddCosts, onEditC
             {onAddCosts && (
               <button 
                 onClick={onAddCosts}
-                className="text-xs font-medium underline transition" style={{ color: '#60a5fa' }}
+                className="text-xs font-medium transition" style={{ color: '#60a5fa', textDecoration: 'none' }}
               >
                 Kosten hinterlegen (optional)
               </button>
