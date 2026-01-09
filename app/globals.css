@@ -1,3 +1,6 @@
+/* ⚠️ WICHTIG: ALS ALLERERSTES IMPORTIEREN! VOR ALLEM ANDEREN! */
+@import './styles/border-radius-override.css';
+
 /* WICHTIG: Als ALLERERSTES importieren! VOR ALLEM ANDEREN! */
 @import './styles/dark-mode-force.css';
 

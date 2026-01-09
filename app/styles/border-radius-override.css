@@ -1,0 +1,262 @@
+/* ============================================
+   NUCLEAR BORDER-RADIUS FIX
+   Force rounded corners on EVERYTHING
+   ============================================ */
+
+/* === FORCE BORDER-RADIUS ON ALL ELEMENTS === */
+
+* {
+  border-radius: 12px !important;
+}
+
+/* Override for specific sizes */
+
+/* Large cards, sections, containers */
+div[class*="card"],
+div[class*="Card"],
+div[class*="box"],
+div[class*="Box"],
+div[class*="container"],
+div[class*="Container"],
+div[class*="section"],
+div[class*="Section"],
+div[class*="panel"],
+div[class*="banner"],
+div[class*="Banner"],
+section,
+article,
+main {
+  border-radius: 16px !important;
+}
+
+/* Buttons, inputs, tabs */
+button,
+input,
+select,
+textarea,
+a[class*="button"],
+a[class*="Button"],
+[type="button"],
+[type="submit"],
+[role="button"],
+[class*="btn"],
+[class*="Btn"],
+[class*="tab"],
+[class*="Tab"] {
+  border-radius: 10px !important;
+}
+
+/* Small elements (badges, pills) */
+span[class*="badge"],
+span[class*="Badge"],
+span[class*="pill"],
+span[class*="tag"],
+[class*="badge"],
+[class*="Badge"] {
+  border-radius: 8px !important;
+}
+
+/* Icons (rounded squares) */
+div[class*="icon"],
+div[class*="Icon"],
+span[class*="icon"],
+[class*="icon-container"],
+[class*="avatar"] {
+  border-radius: 12px !important;
+}
+
+/* Progress bars */
+div[class*="progress"],
+div[class*="Progress"],
+div[class*="bar"] {
+  border-radius: 10px !important;
+}
+
+/* Modals */
+div[class*="modal"],
+div[class*="Modal"],
+div[class*="dialog"],
+[role="dialog"] {
+  border-radius: 20px !important;
+}
+
+/* Tables */
+table {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Specific dashboard elements */
+div[class*="dashboard"],
+div[class*="Dashboard"] {
+  border-radius: 16px !important;
+}
+
+/* Specific sidebar elements */
+aside,
+nav,
+div[class*="sidebar"],
+div[class*="Sidebar"] {
+  border-radius: 0 16px 16px 0 !important;
+}
+
+aside div,
+aside button,
+aside a,
+nav div,
+nav button,
+nav a {
+  border-radius: 10px !important;
+}
+
+/* Alert/Warning banners */
+div[class*="alert"],
+div[class*="Alert"],
+div[class*="warning"],
+div[class*="notification"] {
+  border-radius: 12px !important;
+}
+
+/* Stats boxes in dashboard */
+div[class*="stat"],
+div[class*="Stat"],
+div[class*="metric"] {
+  border-radius: 12px !important;
+}
+
+/* Product cards */
+div[class*="product"],
+div[class*="Product"] {
+  border-radius: 16px !important;
+}
+
+/* Price boxes */
+div[class*="price"],
+div[class*="Price"] {
+  border-radius: 16px !important;
+}
+
+/* Collapsible sections */
+div[class*="collapsible"],
+div[class*="Collapsible"],
+div[class*="accordion"] {
+  border-radius: 16px !important;
+}
+
+/* Recommendation cards */
+div[class*="recommendation"],
+div[class*="Recommendation"],
+div[class*="strategy"],
+div[class*="Strategy"] {
+  border-radius: 16px !important;
+}
+
+/* Competitor cards */
+div[class*="competitor"],
+div[class*="Competitor"] {
+  border-radius: 16px !important;
+}
+
+/* Margin analysis boxes */
+div[class*="margin"],
+div[class*="Margin"],
+div[class*="contribution"],
+div[class*="break-even"] {
+  border-radius: 16px !important;
+}
+
+/* === EXCEPTIONS (should NOT be rounded) === */
+
+/* SVG elements */
+svg,
+path,
+circle,
+line,
+polyline,
+polygon {
+  border-radius: 0 !important;
+}
+
+/* Images that should stay square */
+img[class*="logo"] {
+  border-radius: 8px !important;
+}
+
+/* Full circles (avatars, markers) */
+[class*="avatar"],
+[class*="Avatar"],
+div[class*="marker-pin"],
+div[class*="circular"] {
+  border-radius: 50% !important;
+}
+
+/* Full page elements (no border needed) */
+html,
+body,
+#root,
+#app {
+  border-radius: 0 !important;
+}
+
+/* === INLINE STYLES OVERRIDE === */
+
+/* Override any inline styles */
+[style*="border-radius: 0"] {
+  border-radius: 12px !important;
+}
+
+[style*="border-radius:0"] {
+  border-radius: 12px !important;
+}
+
+/* === ADDITIONAL SPECIFIC FIXES === */
+
+/* Live/Demo tabs */
+button[class*="tab-"],
+button[class*="Tab-"],
+div[class*="tab-"] {
+  border-radius: 10px !important;
+}
+
+/* Shop selector in sidebar */
+div[class*="shop"],
+div[class*="Shop"] {
+  border-radius: 12px !important;
+}
+
+/* Navigation items */
+a[href*="dashboard"],
+a[href*="produkte"],
+a[href*="empfehlungen"],
+button[class*="nav"] {
+  border-radius: 10px !important;
+}
+
+/* Optimization journey boxes */
+div[class*="journey"],
+div[class*="optimization"],
+div[class*="Optimierung"] {
+  border-radius: 16px !important;
+}
+
+div[class*="journey"] div,
+div[class*="optimization"] div {
+  border-radius: 12px !important;
+}
+
+/* Quick action cards (Schnellaktionen) */
+div[class*="quick"],
+div[class*="Quick"],
+div[class*="schnell"],
+div[class*="Schnell"] {
+  border-radius: 16px !important;
+}
+
+/* === HOVER & FOCUS STATES === */
+
+*:hover,
+*:focus,
+*:active {
+  border-radius: inherit !important;
+}
+
