@@ -166,8 +166,8 @@ function RecommendationsContent() {
   return (
     <div className="min-h-screen flex recommendations-page" style={{ backgroundColor: '#0f172a' }}>
       {/* Sidebar mit Shop-Switcher */}
-      <aside className="w-80 bg-gradient-to-b from-white via-gray-50 to-white border-r border-gray-200 p-6 overflow-y-auto shadow-sm">
-        <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-200">
+      <aside className="w-80 border-r p-6 overflow-y-auto shadow-sm" style={{ background: 'linear-gradient(to bottom, #1e293b, #0f172a, #1e293b)', borderColor: '#334155' }}>
+        <div className="flex items-center gap-3 mb-8 pb-6 border-b" style={{ borderColor: '#334155' }}>
           <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
             <span className="text-2xl">💡</span>
           </div>
