@@ -568,7 +568,10 @@ html {
 div.min-h-screen.flex,
 .min-h-screen.flex,
 [class*="recommendations-page"] {
-  padding-left: 280px !important;
+  padding-left: calc(280px + 24px) !important; /* Sidebar width + gap */
+  padding-right: 24px !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;

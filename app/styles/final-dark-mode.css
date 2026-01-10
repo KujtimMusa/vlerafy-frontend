@@ -229,7 +229,8 @@ aside:not([role="navigation"]):not([class*="header"]),
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
-  border-right: 1px solid #1e293b !important;
+  border-right: 1px solid rgba(71, 85, 105, 0.3) !important;
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2) !important;
   padding: 1.5rem !important; /* 24px padding */
   margin: 0 !important;
   overflow-y: auto !important;
@@ -237,6 +238,26 @@ aside:not([role="navigation"]):not([class*="header"]),
   flex-direction: column !important;
   gap: 0 !important;
   z-index: 1000 !important;
+}
+
+/* Sidebar Border Gradient (eleganter) */
+aside:not([role="navigation"]):not([class*="header"])::after,
+[class*="sidebar"]:not([role="navigation"])::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(71, 85, 105, 0.3) 10%,
+    rgba(71, 85, 105, 0.3) 90%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Layout nav (Header) NICHT als Sidebar behandeln */

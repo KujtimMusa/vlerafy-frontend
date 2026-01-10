@@ -420,7 +420,8 @@ export default function ProductsPage() {
               )
             })}
           </div>
-        )}
+          )}
+          </div>
         </div>
       </main>
     </div>
