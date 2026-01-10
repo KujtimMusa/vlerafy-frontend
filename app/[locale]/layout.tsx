@@ -40,7 +40,7 @@ export default async function LocaleLayout({
         </nav>
         
         {/* Main Content */}
-        <main>{children}</main>
+        <main style={{ backgroundColor: '#0f172a' }}>{children}</main>
       </NextIntlClientProvider>
     </ErrorBoundaryWrapper>
   );

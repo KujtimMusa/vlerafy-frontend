@@ -82,7 +82,7 @@ export default function ProductsPage() {
   ).length
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex">
+    <div className="min-h-screen flex" style={{ backgroundColor: '#0f172a' }}>
       {/* Background Pattern */}
       <div 
         className="fixed inset-0 opacity-[0.02] pointer-events-none"
