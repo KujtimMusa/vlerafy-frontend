@@ -397,10 +397,10 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
               <Trophy className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold" style={{ color: '#f1f5f9' }}>
+              <h3 className="text-xl font-bold text-slate-100">
                 Deine Optimierungs-Reise
               </h3>
-              <p className="text-sm" style={{ color: '#94a3b8' }}>
+              <p className="text-sm text-slate-400">
                 {config.name}
               </p>
             </div>
