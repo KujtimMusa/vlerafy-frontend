@@ -324,11 +324,14 @@ div[class*="recommendations-page"] > main,
   min-width: 0 !important; /* Verhindert Overflow */
 }
 
-/* Direkte main Elemente unter body (Layout) - nur wenn keine Sidebar im Container */
-body > main:not(.min-h-screen.flex > main):not(div.min-h-screen.flex > main) {
-  margin-left: 280px !important;
-  width: calc(100% - 280px) !important;
-  max-width: calc(100% - 280px) !important;
+/* Layout main Element (wrappt alle Pages) - transparent, kein Offset nötig */
+/* Pages haben ihren eigenen Container mit padding-left */
+body > main:not(.min-h-screen.flex > main):not(div.min-h-screen.flex > main),
+main:not(.min-h-screen.flex > main):not(div.min-h-screen.flex > main) {
+  background-color: transparent !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  width: 100% !important;
   box-sizing: border-box !important;
 }
 
