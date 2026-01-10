@@ -303,17 +303,13 @@ export default function ProductsPage() {
         </div>
 
         {loading && products.length === 0 ? (
-          <div className="products-grid">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="skeleton-card">
-                <div className="skeleton-image" />
-                <div className="skeleton-content">
-                  <div className="skeleton-line" style={{ width: '80%', height: '20px' }} />
-                  <div className="skeleton-line" style={{ width: '60%', height: '16px', marginTop: '16px' }} />
-                  <div className="skeleton-line" style={{ width: '40%', height: '32px', marginTop: '20px' }} />
-                  <div className="skeleton-line" style={{ width: '50%', height: '14px', marginTop: '16px' }} />
-                  <div className="skeleton-line" style={{ width: '100%', height: '48px', marginTop: '20px', borderRadius: '12px' }} />
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="rounded-2xl bg-slate-800/50 border border-slate-700/50 p-6 animate-pulse">
+                <div className="aspect-[4/3] rounded-xl bg-slate-700/50 mb-5" />
+                <div className="h-6 bg-slate-700/50 rounded mb-4" />
+                <div className="h-8 bg-slate-700/50 rounded mb-3" />
+                <div className="h-10 bg-slate-700/50 rounded" />
               </div>
             ))}
           </div>
