@@ -515,6 +515,7 @@ function RecommendationsContent() {
                     )}
             </div>
           )}
+        </div>
           </div>
         </div>
       </main>
