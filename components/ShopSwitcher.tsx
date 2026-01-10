@@ -166,18 +166,18 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
         </div>
         
         {/* Live/Demo Toggle Buttons */}
-        <div className="flex gap-2 p-1" style={{ backgroundColor: '#334155' }}>
+        <div className="flex gap-2 p-1 bg-slate-800 border border-gray-700 rounded-lg">
           {/* Live Button */}
           <button
             onClick={handleLiveMode}
             disabled={loading}
-            className={`flex-1 px-4 py-2 font-medium transition-all ${
+            className={`flex-1 px-4 py-2 font-medium transition-all rounded ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
+            } ${
+              !isDemoMode 
+                ? 'bg-slate-700 text-blue-400' 
+                : 'text-gray-400 hover:text-gray-200'
             }`}
-            style={{
-              backgroundColor: !isDemoMode ? '#475569' : 'transparent',
-              color: !isDemoMode ? '#60a5fa' : '#cbd5e1'
-            }}
           >
             Live
           </button>
@@ -186,13 +186,13 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
           <button
             onClick={handleDemoMode}
             disabled={loading || !demoShop}
-            className={`flex-1 px-4 py-2 font-medium transition-all ${
+            className={`flex-1 px-4 py-2 font-medium transition-all rounded ${
               loading || !demoShop ? 'opacity-50 cursor-not-allowed' : ''
+            } ${
+              isDemoMode 
+                ? 'bg-slate-700 text-blue-400' 
+                : 'text-gray-400 hover:text-gray-200'
             }`}
-            style={{
-              backgroundColor: isDemoMode ? '#475569' : 'transparent',
-              color: isDemoMode ? '#60a5fa' : '#cbd5e1'
-            }}
           >
             Demo
           </button>

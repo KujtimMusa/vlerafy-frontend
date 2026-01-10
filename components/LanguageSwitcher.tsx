@@ -31,14 +31,14 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-1 shadow-sm">
+    <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-slate-800 p-1 shadow-sm">
       <button
         onClick={() => switchLanguage('de')}
         disabled={isPending || locale === 'de'}
         className={`px-3 py-1.5 text-sm font-medium rounded transition-all ${
           locale === 'de' 
             ? 'bg-blue-600 text-white shadow-sm' 
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
+            : 'text-gray-400 hover:text-gray-200 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed'
         }`}
         aria-label="Sprache auf Deutsch wechseln"
       >
@@ -50,7 +50,7 @@ export function LanguageSwitcher() {
         className={`px-3 py-1.5 text-sm font-medium rounded transition-all ${
           locale === 'en' 
             ? 'bg-blue-600 text-white shadow-sm' 
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
+            : 'text-gray-400 hover:text-gray-200 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed'
         }`}
         aria-label="Switch language to English"
       >

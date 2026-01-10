@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Package, ArrowRight, ArrowLeft, Sparkles, RefreshCw } from 'lucide-react'
+import { Package, ArrowRight, ArrowLeft, Sparkles, RefreshCw, LayoutDashboard, Lightbulb } from 'lucide-react'
 import { fetchProducts, syncProducts } from '@/lib/api'
 import { ShopSwitcher } from '@/components/ShopSwitcher'
 import { useShop } from '@/hooks/useShop'
 import { Link } from '@/navigation'
+import { usePathname } from 'next/navigation'
 
 export default function ProductsPage() {
+  const pathname = usePathname()
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const { currentShop, isDemoMode, refresh: refreshShop } = useShop()
@@ -92,11 +94,11 @@ export default function ProductsPage() {
       />
       {/* Sidebar mit Shop-Switcher */}
       <aside className="w-80 border-r p-6 overflow-y-auto shadow-sm" style={{ background: 'linear-gradient(to bottom, #1e293b, #0f172a, #1e293b)', borderColor: '#334155' }}>
-        <div className="flex items-center gap-3 mb-8 pb-6 border-b" style={{ borderColor: '#334155' }}>
+        <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-700">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
             <span className="text-2xl">💡</span>
           </div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
             PriceIQ
           </h2>
         </div>
@@ -107,33 +109,53 @@ export default function ProductsPage() {
         </div>
         
         {/* Navigation */}
-        <nav className="space-y-2">
+        <nav className="space-y-1 px-3">
           <Link 
             href="/" 
-            className="block px-4 py-2 rounded-lg transition-colors"
-            style={{ color: '#cbd5e1' }}
+            className={`
+              flex items-center gap-3 px-4 py-3 rounded-lg transition-all group
+              ${pathname === '/' || pathname === '/de' || pathname === '/en'
+                ? 'bg-slate-800 text-blue-400 border-l-4 border-blue-500 shadow-sm' 
+                : 'text-gray-400 hover:bg-slate-800/50 hover:text-gray-200 border-l-4 border-transparent'
+              }
+            `}
           >
-            Dashboard
+            <LayoutDashboard className="w-5 h-5" />
+            <span className="font-medium">Dashboard</span>
           </Link>
+          
           <Link 
             href="/products" 
-            className="block px-4 py-2 rounded-lg transition-colors"
-            style={{ color: '#cbd5e1', backgroundColor: '#334155' }}
+            className={`
+              flex items-center gap-3 px-4 py-3 rounded-lg transition-all group
+              ${pathname?.includes('/products')
+                ? 'bg-slate-800 text-blue-400 border-l-4 border-blue-500 shadow-sm' 
+                : 'text-gray-400 hover:bg-slate-800/50 hover:text-gray-200 border-l-4 border-transparent'
+              }
+            `}
           >
-            Produkte
+            <Package className="w-5 h-5" />
+            <span className="font-medium">Produkte</span>
           </Link>
+          
           <Link 
             href="/recommendations" 
-            className="block px-4 py-2 rounded-lg transition-colors"
-            style={{ color: '#cbd5e1' }}
+            className={`
+              flex items-center gap-3 px-4 py-3 rounded-lg transition-all group
+              ${pathname?.includes('/recommendations')
+                ? 'bg-slate-800 text-blue-400 border-l-4 border-blue-500 shadow-sm' 
+                : 'text-gray-400 hover:bg-slate-800/50 hover:text-gray-200 border-l-4 border-transparent'
+              }
+            `}
           >
-            Empfehlungen
+            <Lightbulb className="w-5 h-5" />
+            <span className="font-medium">Empfehlungen</span>
           </Link>
         </nav>
       </aside>
       
       {/* Main Content */}
-      <main className="flex-1 pl-12 pr-8 py-8 overflow-y-auto">
+      <main className="flex-1 pl-6 pr-8 py-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
         {/* Page Header - Enhanced */}
         <div className="mb-10">
