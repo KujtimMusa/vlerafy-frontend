@@ -408,23 +408,23 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
           
           {/* XP Display */}
           <div className="text-right">
-            <p className="text-2xl font-bold" style={{ color: '#f1f5f9' }}>
+            <p className="text-2xl font-bold text-slate-100">
               {points}/{next_level_points}
             </p>
-            <p className="text-xs" style={{ color: '#94a3b8' }}>Punkte</p>
+            <p className="text-xs text-slate-400">Punkte</p>
           </div>
         </div>
         
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span style={{ color: '#94a3b8' }}>{Math.round(progress)}% zum nächsten Level</span>
+            <span className="text-slate-400">{Math.round(progress)}% zum nächsten Level</span>
             {points_needed && points_needed > 0 && (
               <span className="font-semibold text-purple-600">Noch {points_needed} Punkte</span>
             )}
           </div>
           
-          <div className="relative h-3 overflow-hidden rounded-full" style={{ backgroundColor: '#475569' }}>
+          <div className="relative h-3 overflow-hidden rounded-full bg-slate-700">
             {/* Animated gradient progress */}
             <div
               className={`h-full bg-gradient-to-r ${config.color} animate-gradient`}
@@ -443,8 +443,8 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
               key={achievement.id}
               className={`relative flex flex-col items-center gap-2 rounded-xl p-4 transition-all hover:scale-105 animate-fade-in ${
                 achievement.completed
-                  ? "border-2 opacity-100"
-                  : "border-2 opacity-60"
+                  ? "border-2 border-gray-700 bg-slate-800/50 opacity-100"
+                  : "border-2 border-gray-800 bg-slate-900/30 opacity-60"
               }`}
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
@@ -459,7 +459,7 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
               <div className={`text-3xl ${achievement.completed && "animate-bounce"}`}>
                 {achievement.icon}
               </div>
-              <p className="text-xs text-center font-medium" style={{ color: '#cbd5e1' }}>
+              <p className="text-xs text-center font-medium text-slate-300">
                 {achievement.label}
               </p>
             </div>
@@ -468,8 +468,8 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
         
         {/* Next Steps */}
         {pending_steps && pending_steps.length > 0 && (
-          <div className="space-y-3 pt-4 border-t" style={{ borderColor: '#334155' }}>
-            <p className="text-sm font-medium" style={{ color: '#f1f5f9' }}>
+          <div className="space-y-3 pt-4 border-t border-slate-700">
+            <p className="text-sm font-medium text-slate-100">
               Noch zu erledigen:
             </p>
             
@@ -480,12 +480,12 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 <Link href={getActionHref(step.action)}>
-                  <div className="flex items-center gap-3 p-3 rounded-lg border hover:border-purple-300 hover:shadow-md transition-all cursor-pointer" style={{ backgroundColor: '#1e293b', borderColor: '#475569' }}>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full font-semibold text-sm" style={{ backgroundColor: '#7c3aed', color: '#fff' }}>
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-gray-700 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-500/10 hover:-translate-y-0.5 transition-all cursor-pointer bg-slate-800/50 hover:bg-slate-800">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full font-semibold text-sm bg-purple-600 text-white">
                       {step.points}
                     </div>
-                    <p className="flex-1 text-sm" style={{ color: '#cbd5e1' }}>{step.text}</p>
-                    <ArrowRight className="h-4 w-4" style={{ color: '#94a3b8' }} />
+                    <p className="flex-1 text-sm text-slate-300">{step.text}</p>
+                    <ArrowRight className="h-4 w-4 text-slate-400" />
                   </div>
                 </Link>
               </div>
@@ -536,7 +536,7 @@ const QuickActions = ({ stats }: { stats: DashboardStats }) => {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold mb-6" style={{ color: '#f1f5f9' }}>⚡ Schnellaktionen</h3>
+      <h3 className="text-2xl font-bold mb-6 text-slate-100">⚡ Schnellaktionen</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {actions.map((action, idx) => {
@@ -544,10 +544,10 @@ const QuickActions = ({ stats }: { stats: DashboardStats }) => {
           return (
             <div
               key={idx}
-              className="hover:-translate-y-1 hover:scale-105 transition-all duration-300"
+              className="hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300"
             >
               <Link href={action.href}>
-                <ModernCard className={`relative overflow-hidden group`}>
+                <ModernCard className={`relative overflow-hidden group shadow-lg hover:shadow-2xl`}>
                   {/* Gradient background on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${action.bgGradient} group-hover:bg-gradient-to-br ${action.hoverBgGradient} transition-all duration-300`} />
                   
@@ -559,13 +559,13 @@ const QuickActions = ({ stats }: { stats: DashboardStats }) => {
                     
                     {/* Content */}
                     <div className="space-y-2">
-                      <h4 className="text-2xl font-bold" style={{ color: '#f1f5f9' }}>
+                      <h4 className="text-2xl font-bold text-slate-100">
                         {formatNumber(action.value)}
                       </h4>
-                      <p className="text-sm" style={{ color: '#94a3b8' }}>
+                      <p className="text-sm text-slate-400">
                         {action.title}
                       </p>
-                      <div className="inline-flex items-center px-2 py-1 rounded-full text-xs" style={{ backgroundColor: '#334155', color: '#94a3b8' }}>
+                      <div className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-slate-700 text-slate-400">
                         {action.description}
                       </div>
                     </div>
@@ -595,12 +595,12 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
   return (
     <ModernCard variant="glass" className="relative overflow-hidden">
       {/* Header with icon */}
-      <div className="border-b px-8 py-6" style={{ borderColor: '#334155', background: 'linear-gradient(to right, #1e293b, #0f172a)' }}>
+      <div className="border-b border-slate-700 px-8 py-6 bg-gradient-to-r from-slate-800 to-slate-900">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg">
             <Zap className="h-5 w-5 text-white" />
           </div>
-          <h3 className="text-xl font-bold" style={{ color: '#f1f5f9' }}>
+          <h3 className="text-xl font-bold text-slate-100">
             Nächste Schritte
           </h3>
         </div>
@@ -610,7 +610,7 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
       <div className="p-8 space-y-4">
         {/* Urgent CTA Box */}
         {urgentStep && (
-          <div className="relative overflow-hidden border-2 p-6 animate-fade-in" style={{ background: 'linear-gradient(to right, #1e293b, #0f172a)', borderColor: '#f59e0b', borderRadius: '0' }}>
+          <div className="relative overflow-hidden border-2 p-6 animate-fade-in rounded-2xl shadow-lg shadow-orange-500/20" style={{ background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%)', borderColor: '#f59e0b' }}>
             {/* Glow effect */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-300/20 rounded-full blur-3xl" />
             
@@ -619,17 +619,17 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 shadow-md">
                   <Flame className="h-4 w-4 text-white animate-pulse" />
                 </div>
-                <p className="text-sm font-semibold" style={{ color: '#f1f5f9' }}>
+                <p className="text-sm font-semibold text-slate-100">
                   {urgentStep.title}
                 </p>
               </div>
               
-              <p className="text-sm" style={{ color: '#cbd5e1' }}>
+              <p className="text-sm text-slate-300">
                 {urgentStep.description}
               </p>
               
               <Link href={urgentStep.href}>
-                <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-6 shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95" style={{ borderRadius: '0' }}>
+                <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/50 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]">
                   {urgentStep.action}
                   <ArrowRight className="h-4 w-4" />
                 </button>
@@ -648,11 +648,11 @@ function NextSteps({ stats }: { stats: DashboardStats }) {
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 <Link href={step.href}>
-                  <div className="flex items-start justify-between gap-4 p-4 border-2 hover:shadow-md transition-all cursor-pointer" style={{ backgroundColor: '#1e293b', borderColor: '#475569' }}>
+                  <div className="flex items-start justify-between gap-4 p-4 border-2 border-slate-600 hover:shadow-md hover:border-slate-500 transition-all cursor-pointer bg-slate-800 hover:bg-slate-800/80">
                     <div className="flex-1">
-                      <div className="font-semibold mb-1" style={{ color: '#f1f5f9' }}>{step.title}</div>
-                      <p className="text-sm mb-2" style={{ color: '#cbd5e1' }}>{step.description}</p>
-                      <div className="text-sm font-medium flex items-center gap-1" style={{ color: '#60a5fa' }}>
+                      <div className="font-semibold mb-1 text-slate-100">{step.title}</div>
+                      <p className="text-sm mb-2 text-slate-300">{step.description}</p>
+                      <div className="text-sm font-medium flex items-center gap-1 text-blue-400">
                         {step.action} <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
