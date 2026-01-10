@@ -347,6 +347,7 @@ export default function Home() {
               Fehler beim Laden der Dashboard-Daten
             </div>
           )}
+          </div>
         </div>
       </main>
     </div>

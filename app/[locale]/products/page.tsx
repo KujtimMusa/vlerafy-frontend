@@ -214,8 +214,9 @@ export default function ProductsPage() {
       </aside>
       
       {/* Main Content */}
-      <main className="flex-1 pl-12 pr-8 py-8 overflow-y-auto border-l border-gray-800/30">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-7xl mx-auto px-8 py-8">
+          <div className="space-y-8">
         {/* Page Header - Enhanced */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-8">
