@@ -31,30 +31,39 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-slate-800 p-1 shadow-sm">
+    <div className="flex items-center gap-1">
       <button
         onClick={() => switchLanguage('de')}
         disabled={isPending || locale === 'de'}
-        className={`px-3 py-1.5 text-sm font-medium rounded transition-all ${
-          locale === 'de' 
-            ? 'bg-blue-600 text-white shadow-sm' 
-            : 'text-gray-400 hover:text-gray-200 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed'
-        }`}
+        className={`
+          px-2.5 py-1.5 text-xs font-semibold rounded-md transition-all
+          ${locale === 'de' 
+            ? 'bg-blue-600/20 text-blue-400 ring-1 ring-blue-500/50' 
+            : 'text-gray-500 hover:text-gray-300 hover:bg-slate-800/50'
+          }
+          ${isPending ? 'opacity-50 cursor-not-allowed' : ''}
+        `}
         aria-label="Sprache auf Deutsch wechseln"
       >
-        🇩🇪 DE
+        DE
       </button>
+      
+      <div className="w-px h-4 bg-gray-700" />
+      
       <button
         onClick={() => switchLanguage('en')}
         disabled={isPending || locale === 'en'}
-        className={`px-3 py-1.5 text-sm font-medium rounded transition-all ${
-          locale === 'en' 
-            ? 'bg-blue-600 text-white shadow-sm' 
-            : 'text-gray-400 hover:text-gray-200 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed'
-        }`}
+        className={`
+          px-2.5 py-1.5 text-xs font-semibold rounded-md transition-all
+          ${locale === 'en' 
+            ? 'bg-blue-600/20 text-blue-400 ring-1 ring-blue-500/50' 
+            : 'text-gray-500 hover:text-gray-300 hover:bg-slate-800/50'
+          }
+          ${isPending ? 'opacity-50 cursor-not-allowed' : ''}
+        `}
         aria-label="Switch language to English"
       >
-        🇬🇧 EN
+        EN
       </button>
     </div>
   );

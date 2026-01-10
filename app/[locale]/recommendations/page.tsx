@@ -229,7 +229,7 @@ function RecommendationsContent() {
       </aside>
       
       {/* Main Content */}
-      <main className="flex-1 pl-6 pr-8 py-8 overflow-y-auto">
+      <main className="flex-1 pl-8 pr-8 py-8 overflow-y-auto border-l border-gray-800/30">
         <div className="max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="recommendations-header">

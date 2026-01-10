@@ -33,9 +33,16 @@ export default async function LocaleLayout({
     <ErrorBoundaryWrapper>
       <NextIntlClientProvider messages={messages}>
         {/* Header/Navbar */}
-        <nav className="flex items-center justify-between p-4 border-b" style={{ backgroundColor: '#1e293b', borderColor: '#334155' }}>
-          <div className="flex items-center gap-4">
+        <nav 
+          className="flex items-center justify-between px-8 py-3 border-b border-gray-800"
+          style={{ backgroundColor: '#1e293b' }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-gray-400">
+              {/* Optional: Seitentitel oder Breadcrumb */}
+            </span>
           </div>
+          
           <LanguageSwitcher />
         </nav>
         
