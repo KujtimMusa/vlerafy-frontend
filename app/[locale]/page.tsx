@@ -232,7 +232,7 @@ export default function Home() {
       </aside>
       
       {/* Main Content */}
-      <main className="flex-1 pl-8 pr-8 py-8 overflow-y-auto border-l border-gray-800/30" style={{ background: 'linear-gradient(to bottom right, #0f172a, #1e293b)' }}>
+      <main className="flex-1 pl-12 pr-8 py-8 overflow-y-auto border-l border-gray-800/30" style={{ background: 'linear-gradient(to bottom right, #0f172a, #1e293b)' }}>
         <div className="max-w-7xl mx-auto space-y-8">
           {loading || shopLoading ? (
             <div className="text-center py-12" style={{ color: '#94a3b8' }}>Lade Dashboard...</div>
