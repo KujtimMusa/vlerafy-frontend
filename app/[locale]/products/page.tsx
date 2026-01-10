@@ -97,20 +97,20 @@ export default function ProductsPage() {
         <div className="mb-6 px-2">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-800/50">
-            <div className="relative">
+            <div className="relative group">
               {/* Icon Container mit Glow */}
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-xl">💡</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-blue-500/40 group-hover:scale-105">
+                <span className="text-2xl">💡</span>
               </div>
-              {/* Subtiler Glow-Effekt */}
-              <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full -z-10"></div>
             </div>
             
-            <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-white tracking-tight mb-0.5">
                 PriceIQ
               </h2>
-              <p className="text-xs text-gray-500">Pricing Intelligence</p>
+              <p className="text-xs font-medium text-slate-400 tracking-wide uppercase">
+                Pricing Intelligence
+              </p>
             </div>
           </div>
           

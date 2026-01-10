@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { useShop, Shop } from '@/hooks/useShop';
 import { API_URL } from '@/lib/api';
+import { Store, Check } from 'lucide-react';
 
 interface ShopSwitcherProps {
   className?: string;
@@ -266,35 +267,42 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
                   await handleSwitch(shop, false);
                 }}
               >
-                <div className="flex items-start gap-3">
-                  <div className="text-2xl">🏪</div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-semibold" style={{ color: '#f1f5f9' }}>
-                          {shop.name || shop.shop_url || 'Shopify Shop'}
-                        </div>
-                        {shop.shop_url && (
-                          <div className="text-xs mt-0.5" style={{ color: '#94a3b8' }}>
-                            {shop.shop_url}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className={`font-medium text-sm ${
-                          shop.is_active ? 'text-green-600' : 'text-gray-500'
-                        }`}>
-                          {shop.is_active ? 'Aktiv' : 'Verfügbar'}
-                        </span>
-                        {shop.is_active && (
-                          <span className="text-green-600">✓</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-sm mt-2" style={{ color: '#94a3b8' }}>
-                      {shop.product_count || 0} Produkte • Verbunden via Shopify
+                <div className="flex items-center gap-3">
+                  {/* Shop Icon */}
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+                      <Store className="w-5 h-5 text-white" />
                     </div>
                   </div>
+                  
+                  {/* Shop Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-slate-100 truncate">
+                        {shop.name || 'Shopify Shop'}
+                      </p>
+                      {shop.is_active && (
+                        <span className="px-2 py-0.5 rounded-md bg-green-500/10 border border-green-500/20 flex-shrink-0">
+                          <span className="text-xs font-medium text-green-400">Aktiv</span>
+                        </span>
+                      )}
+                    </div>
+                    {shop.shop_url && (
+                      <p className="text-xs text-slate-400 truncate mt-0.5">
+                        {shop.shop_url}
+                      </p>
+                    )}
+                    <p className="text-xs text-slate-500 mt-1">
+                      {shop.product_count || 0} Produkte • Verbunden via Shopify
+                    </p>
+                  </div>
+                  
+                  {/* Status Check */}
+                  {shop.is_active && (
+                    <div className="flex-shrink-0">
+                      <Check className="w-4 h-4 text-green-400" />
+                    </div>
+                  )}
                 </div>
               </div>
               ))

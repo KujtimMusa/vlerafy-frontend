@@ -174,20 +174,20 @@ export default function Home() {
         <div className="mb-6 px-2">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-800/50">
-            <div className="relative">
+            <div className="relative group">
               {/* Icon Container mit Glow */}
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-xl">💡</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-blue-500/40 group-hover:scale-105">
+                <span className="text-2xl">💡</span>
               </div>
-              {/* Subtiler Glow-Effekt */}
-              <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full -z-10"></div>
             </div>
             
-            <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-white tracking-tight mb-0.5">
                 PriceIQ
               </h2>
-              <p className="text-xs text-gray-500">Pricing Intelligence</p>
+              <p className="text-xs font-medium text-slate-400 tracking-wide uppercase">
+                Pricing Intelligence
+              </p>
             </div>
           </div>
           
@@ -301,24 +301,28 @@ export default function Home() {
               <div className="mb-8 animate-fade-in">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs text-gray-500">PriceIQ</span>
-                  <span className="text-gray-700">/</span>
-                  <span className="text-xs text-gray-400">Dashboard</span>
+                  <span className="text-xs text-slate-500 font-medium">PriceIQ</span>
+                  <span className="text-slate-700">/</span>
+                  <span className="text-xs text-slate-400 font-medium">Dashboard</span>
                 </div>
                 
-                {/* Title mit Accent */}
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold text-white tracking-tight">
+                {/* Title mit Badge */}
+                <div className="flex items-center gap-3 mb-3">
+                  <h1 className="text-4xl font-bold text-white tracking-tight">
                     Dashboard
                   </h1>
-                  <div className="px-2 py-1 rounded-md bg-blue-500/10 border border-blue-500/20">
-                    <span className="text-xs font-medium text-blue-400">Live</span>
+                  <div className="px-3 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                    <span className="text-sm font-semibold text-blue-400">Live</span>
                   </div>
                 </div>
                 
-                <p className="text-gray-400 text-sm">
-                  Willkommen zurück! Hier ist deine Übersicht.
-                </p>
+                {/* Subtitle mit Icon */}
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
+                  <p className="text-slate-400">
+                    Willkommen zurück! Dein Shop läuft gerade.
+                  </p>
+                </div>
               </div>
 
               {/* 1. MISSED REVENUE HERO */}
@@ -417,22 +421,37 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
         
         {/* Progress Bar */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-400">{Math.round(progress)}% zum nächsten Level</span>
+          <div className="flex items-center justify-between text-sm mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-gradient-to-r from-gray-300 to-gray-500"></div>
+              <span className="font-medium text-slate-300">
+                {Math.round(progress)}% zum nächsten Level
+              </span>
+            </div>
             {points_needed && points_needed > 0 && (
-              <span className="font-semibold text-purple-600">Noch {points_needed} Punkte</span>
+              <div className="px-2 py-1 rounded-md bg-purple-500/10 border border-purple-500/20">
+                <span className="text-xs font-semibold text-purple-400">
+                  +{points_needed} XP benötigt
+                </span>
+              </div>
             )}
           </div>
           
-          <div className="relative h-3 overflow-hidden rounded-full bg-slate-700">
-            {/* Animated gradient progress */}
+          <div className="relative h-3 overflow-hidden rounded-full bg-slate-700/50 border border-slate-600">
+            {/* Progress Fill */}
             <div
-              className={`h-full bg-gradient-to-r ${config.color} animate-gradient`}
-              style={{ width: `${Math.min(progress, 100)}%` }}
+              className={`h-full bg-gradient-to-r ${config.color} transition-all duration-500 ease-out`}
+              style={{ 
+                width: `${Math.min(Math.max(progress, 0), 100)}%`,
+                maxWidth: '100%'
+              }}
             />
             
-            {/* Shine effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+            {/* Shine Effect */}
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer pointer-events-none"
+              style={{ maxWidth: '100%' }}
+            />
           </div>
         </div>
         

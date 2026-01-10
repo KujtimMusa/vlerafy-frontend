@@ -14,7 +14,7 @@ export default function MissedRevenueHero({
   onOptimizeClick
 }: MissedRevenueHeroProps) {
   return (
-    <div className="relative overflow-hidden rounded-2xl p-8 shadow-2xl border border-red-500/20" style={{ background: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%)' }}>
+    <div className="relative overflow-hidden rounded-2xl p-8 shadow-2xl border border-red-400/20" style={{ background: 'linear-gradient(135deg, #b91c1c 0%, #dc2626 50%, #b91c1c 100%)' }}>
       <div className="relative flex items-start gap-6">
         {/* Icon */}
         <div className="flex-shrink-0">
