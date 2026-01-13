@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { AlertTriangle, Clock, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react'
+import { AlertTriangle, Clock, ChevronDown, ChevronUp, RefreshCw, CheckCircle2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { ConfidenceIndicator } from './ConfidenceIndicator'
 import { ActionButtons } from './ActionButtons'
@@ -181,7 +181,7 @@ export function PriceRecommendationCard({
           createdAt={timestamp}
         />
       ) : (
-        /* Fallback für alte Struktur wenn keine strategy_details */
+        /* Fallback für alte Struktur wenn keine strategy_details - MIT "KI ist X% sicher" Anzeige */
         <div className="p-6 pb-4" style={{ background: 'linear-gradient(to bottom right, #1e293b, #0f172a)' }}>
           
           {/* Header */}
@@ -194,11 +194,6 @@ export function PriceRecommendationCard({
                 {t('product_id')}: {recommendation.product_id}
               </p>
             </div>
-            
-            {/* Confidence Badge */}
-            <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">
-              {Math.round(recommendation.confidence * 100)}% {t('confidence')}
-            </span>
           </div>
           
           {/* Headline */}
@@ -209,6 +204,74 @@ export function PriceRecommendationCard({
               </p>
             </div>
           )}
+          
+          {/* ✅ "KI ist X% sicher" Section (wie in PriceReasoningStory) */}
+          <div className="mb-6" style={{ backgroundColor: '#0f172a', borderRadius: '12px', padding: '20px', border: '1px solid #334155' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <div style={{ 
+                width: '48px', 
+                height: '48px', 
+                borderRadius: '12px', 
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+              }}>
+                <CheckCircle2 className="h-6 w-6 text-white" />
+              </div>
+              <h3 style={{ 
+                fontSize: '20px', 
+                fontWeight: '700', 
+                color: '#f1f5f9',
+                margin: 0
+              }}>
+                Unsere KI ist {Math.round(recommendation.confidence * 100)}% sicher
+              </h3>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="mb-4">
+              <div className="flex justify-between items-center mb-2">
+                <span style={{ fontSize: '14px', fontWeight: '500', color: '#94a3b8' }}>Sicherheitswert</span>
+                <span style={{ fontSize: '18px', fontWeight: '600', color: '#10b981' }}>
+                  {Math.round(recommendation.confidence * 100)}%
+                </span>
+              </div>
+              <div style={{ 
+                width: '100%', 
+                height: '8px', 
+                backgroundColor: '#1e293b', 
+                borderRadius: '4px',
+                overflow: 'hidden'
+              }}>
+                <div 
+                  style={{ 
+                    width: `${recommendation.confidence * 100}%`,
+                    height: '100%',
+                    background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
+                    borderRadius: '4px',
+                    transition: 'width 0.3s ease'
+                  }}
+                />
+              </div>
+            </div>
+            
+            {/* Reasoning Text */}
+            {reasoningText && (
+              <div style={{ 
+                marginTop: '16px',
+                padding: '12px',
+                backgroundColor: '#1e293b',
+                borderRadius: '8px',
+                border: '1px solid #334155'
+              }}>
+                <p style={{ fontSize: '14px', color: '#cbd5e1', lineHeight: '1.6', margin: 0 }}>
+                  {typeof reasoningText === 'string' ? reasoningText : JSON.stringify(reasoningText)}
+                </p>
+              </div>
+            )}
+          </div>
           
           {/* Price Comparison */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-4">
