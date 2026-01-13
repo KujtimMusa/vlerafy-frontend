@@ -9,8 +9,8 @@
 
 /* Page Header */
 .recommendations-header {
-  background: linear-gradient(135deg, #dbeafe 0%, #0f172a 100%);
-  border: 2px solid #93c5fd;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(71, 85, 105, 0.3);
   border-radius: 20px;
   padding: 40px;
   margin-bottom: 32px;
@@ -632,12 +632,14 @@
 .contribution-margin-box::before {
   content: '';
   position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  top: -20px;
+  right: -20px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
   border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .contribution-margin-header {
@@ -656,9 +658,11 @@
 }
 
 .contribution-label {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #a7f3d0 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .contribution-amount {
@@ -970,13 +974,15 @@
   right: -20%;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
   border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .price-label {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1035,12 +1041,15 @@
 .ml-confidence-section::before {
   content: '';
   position: absolute;
-  top: -30%;
-  left: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
   border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .confidence-header {
@@ -1084,14 +1093,14 @@
 }
 
 .confidence-progress-label {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   color: #3b82f6;
 }
 
 .confidence-progress-value {
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 600;
   color: #2563eb;
 }
 
@@ -1846,12 +1855,15 @@
 .price-position-hero::before {
   content: '';
   position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
   border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.3;
 }
 
 .price-position-header {

@@ -17,7 +17,9 @@ import {
   AlertCircle,
   Flame,
   CheckCircle2,
-  Lightbulb
+  Lightbulb,
+  ArrowUpDown,
+  Info
 } from 'lucide-react'
 
 interface CompetitorAnalysisProps {
@@ -366,36 +368,59 @@ export function CompetitorAnalysis({ productId, currentPrice }: CompetitorAnalys
 
       {/* Market Stats Grid */}
       <div className="market-stats-grid">
-        <div className="stat-box competitors">
-          <div className="stat-box-label">
-            <Users className="stat-box-icon" />
-            <span>Gefundene Anbieter</span>
+        {/* Gefundene Anbieter */}
+        <div className="group relative overflow-hidden rounded-xl bg-slate-800/80 border border-slate-700/50 p-6 hover:border-blue-500/50 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+              <Users className="w-5 h-5 text-blue-400" />
+            </div>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Gefundene Anbieter
+            </span>
           </div>
-          <div className="stat-box-value">{metrics.competitorCount}</div>
+          <span className="text-3xl font-bold text-white">{metrics.competitorCount}</span>
         </div>
         
-        <div className="stat-box average-price">
-          <div className="stat-box-label">
-            <DollarSign className="stat-box-icon" />
-            <span>Ø-Preis</span>
+        {/* Durchschnittspreis */}
+        <div className="group relative overflow-hidden rounded-xl bg-slate-800/80 border border-slate-700/50 p-6 hover:border-green-500/50 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-green-400" />
+            </div>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Durchschnittspreis
+            </span>
           </div>
-          <div className="stat-box-value">{formatCurrency(metrics.avgPrice)}</div>
+          <span className="text-3xl font-bold text-white">{formatCurrency(metrics.avgPrice)}</span>
         </div>
         
-        <div className="stat-box price-range">
-          <div className="stat-box-label">
-            <TrendingUp className="stat-box-icon" />
-            <span>Preis-Spanne</span>
+        {/* Preisspanne */}
+        <div className="group relative overflow-hidden rounded-xl bg-slate-800/80 border border-slate-700/50 p-6 hover:border-purple-500/50 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+              <ArrowUpDown className="w-5 h-5 text-purple-400" />
+            </div>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Preisspanne
+            </span>
           </div>
-          <div className="stat-box-value">{formatCurrency(metrics.priceSpread)}</div>
+          <span className="text-3xl font-bold text-white">{formatCurrency(metrics.priceSpread)}</span>
         </div>
         
-        <div className="stat-box your-position">
-          <div className="stat-box-label">
-            <AlertCircle className="stat-box-icon" />
-            <span>Du vs Ø teurer</span>
+        {/* Abweichung vom Durchschnitt */}
+        <div className="group relative overflow-hidden rounded-xl bg-slate-800/80 border border-slate-700/50 p-6 hover:border-orange-500/50 transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+              <AlertCircle className="w-5 h-5 text-orange-400" />
+            </div>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Abweichung
+            </span>
           </div>
-          <div className="stat-box-value">+{formatCurrency(metrics.yourPriceDiff)}</div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold text-orange-400">+{formatCurrency(metrics.yourPriceDiff)}</span>
+            <span className="text-sm text-slate-400">teurer</span>
+          </div>
         </div>
       </div>
 
@@ -479,14 +504,21 @@ export function CompetitorAnalysis({ productId, currentPrice }: CompetitorAnalys
               }`} />
               
               {/* Rank Badge - Prominenter */}
-              <div className={`absolute top-4 left-4 w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg shadow-lg ${
-                isCheapest 
-                  ? 'bg-green-500/20 border-2 border-green-500/50 text-green-400' 
-                  : isExpensive 
-                  ? 'bg-red-500/20 border-2 border-red-500/50 text-red-400'
-                  : 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-400'
-              }`}>
-                {isCheapest ? '#1' : isExpensive ? 'TEUER' : `#${idx + 1}`}
+              <div className="absolute top-4 left-4 flex items-center gap-2">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg shadow-lg ${
+                  isCheapest 
+                    ? 'bg-green-500/20 border-2 border-green-500/50 text-green-400' 
+                    : isExpensive 
+                    ? 'bg-red-500/20 border-2 border-red-500/50 text-red-400'
+                    : 'bg-blue-500/20 border-2 border-blue-500/50 text-blue-400'
+                }`}>
+                  #{idx + 1}
+                </div>
+                {isExpensive && (
+                  <span className="px-2 py-0.5 rounded-md bg-red-500/20 border border-red-500/30 text-xs font-semibold text-red-400">
+                    Teuerster
+                  </span>
+                )}
               </div>
               
               {/* Card Content */}
@@ -564,32 +596,98 @@ export function CompetitorAnalysis({ productId, currentPrice }: CompetitorAnalys
       </div>
 
       {/* Data Quality Footer */}
-      <div className="data-quality-footer">
-        <div className="data-quality-icon">
-          <CheckCircle2 className="h-5 w-5 text-white" />
+      <div className="rounded-xl bg-slate-800/50 border border-slate-700/50 p-6">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+            dataQuality.label === 'Eingeschränkt zuverlässig' 
+              ? 'bg-yellow-500/10 border border-yellow-500/20' 
+              : 'bg-green-500/10 border border-green-500/20'
+          }`}>
+            {dataQuality.label === 'Eingeschränkt zuverlässig' ? (
+              <AlertCircle className="w-5 h-5 text-yellow-400" />
+            ) : (
+              <CheckCircle2 className="w-5 h-5 text-green-400" />
+            )}
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-white">Datenqualität & Aktualität</h3>
+            <p className="text-sm text-slate-400">
+              {dataQuality.label === 'Eingeschränkt zuverlässig' ? '⚠️ Eingeschränkt zuverlässig' : '✅ Zuverlässig'} - Heute aktualisiert
+            </p>
+          </div>
         </div>
         
-        <div className="data-quality-content">
-          <div className="data-quality-title">
-            📊 DATENQUALITÄT & AKTUALITÄT
+        {/* Quality Score Badge */}
+        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg mb-4 ${
+          dataQuality.label === 'Eingeschränkt zuverlässig'
+            ? 'bg-yellow-500/10 border border-yellow-500/20'
+            : 'bg-green-500/10 border border-green-500/20'
+        }`}>
+          <div className="flex items-center gap-1">
+            {dataQuality.label === 'Eingeschränkt zuverlässig' ? (
+              <>
+                <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                <div className="w-2 h-2 rounded-full bg-slate-600" />
+              </>
+            ) : (
+              <>
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+              </>
+            )}
           </div>
-          <div className="data-quality-text">
-            <strong>{dataQuality.label === 'Eingeschränkt zuverlässig' ? '⚠️ ' : '✅ '}{dataQuality.label}</strong> | 
-            Diese Daten sind <strong>heute</strong> aktualisiert worden, zeigen aber {dataQuality.explanation || 'eine normale Preisstreuung'}.
-            <br />
-            <strong>Das bedeutet:</strong>
-          </div>
-          <ul style={{ fontSize: '13px', color: '#1e3a8a', marginTop: '8px', paddingLeft: '20px' }}>
-            <li>Die Produkte könnten unterschiedliche Varianten sein</li>
-            <li>Einige Angebote könnten nicht mehr verfügbar sein</li>
-            <li>Preise können sich schnell ändern</li>
-          </ul>
+          <span className={`text-sm font-bold ${
+            dataQuality.label === 'Eingeschränkt zuverlässig' ? 'text-yellow-400' : 'text-green-400'
+          }`}>
+            Qualität: {dataQuality.label === 'Eingeschränkt zuverlässig' ? 'Mittel' : 'Hoch'}
+          </span>
         </div>
         
-        <div className="data-quality-tip">
-          <Lightbulb className="tip-icon" />
-          <span>Nutze "Aktualisieren" um die neuesten Preise zu laden. Die Daten werden automatisch alle 24h erneuert.</span>
+        {/* Strukturierte Liste */}
+        <div className="space-y-3 mb-4">
+          <div className="flex items-start gap-3">
+            <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-slate-300">
+              Die Produkte könnten unterschiedliche Varianten sein
+            </p>
+          </div>
+          
+          <div className="flex items-start gap-3">
+            <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-slate-300">
+              Einige Angebote könnten nicht mehr verfügbar sein
+            </p>
+          </div>
+          
+          <div className="flex items-start gap-3">
+            <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-slate-300">
+              Preise können sich schnell ändern
+            </p>
+          </div>
         </div>
+        
+        {/* Was das bedeutet */}
+        <div className="px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-700/30 mb-4">
+          <p className="text-sm text-slate-400">
+            <span className="font-semibold text-slate-300">Das bedeutet:</span> {dataQuality.explanation 
+              ? `Die Preise zeigen ${dataQuality.explanation}. Sie geben einen guten Überblick, sollten aber vor finalen Entscheidungen verifiziert werden.`
+              : 'Die Preise geben einen guten Überblick und können für Preisentscheidungen verwendet werden.'}
+          </p>
+        </div>
+        
+        {/* CTA Button */}
+        <button 
+          onClick={() => handleSearch(true)}
+          disabled={loading}
+          className="w-full px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <span>Daten jetzt aktualisieren</span>
+        </button>
       </div>
 
     </div>

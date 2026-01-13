@@ -335,7 +335,7 @@ export function PriceReasoningStory({
         {/* Progress Bar */}
         <div className="confidence-progress-wrapper">
           <div className="confidence-progress-header">
-            <span className="confidence-progress-label">Confidence Score</span>
+            <span className="confidence-progress-label">Sicherheitswert</span>
             <span className="confidence-progress-value">{Math.round(confidence * 100)}%</span>
           </div>
           <div className="confidence-progress-bar-container">
