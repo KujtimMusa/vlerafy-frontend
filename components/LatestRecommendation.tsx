@@ -9,6 +9,8 @@ import { EmptyAnalysisState } from './EmptyAnalysisState'
 import { useShop } from '@/hooks/useShop'
 import { Recommendation } from '@/lib/types'
 
+import { FeatureConfidence } from '@/lib/types/confidence'
+
 interface RecommendationData extends Partial<Recommendation> {
   id: number
   product_id: number
@@ -52,6 +54,9 @@ interface RecommendationData extends Partial<Recommendation> {
   ml_confidence?: number
   base_confidence?: number
   applied_price?: number | null
+  
+  // Feature Confidence (NEW)
+  feature_confidence?: FeatureConfidence
 }
 
 interface LatestRecommendationProps {
@@ -109,6 +114,11 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
           }
         }
         rec.reasoning = reasoningParsed
+        
+        // ✅ NEW: Add feature_confidence from response
+        if (data.confidence) {
+          rec.feature_confidence = data.confidence
+        }
         
         // ✅ BEHALTE ALLE Backend-Fields:
         // status, ml_confidence, base_confidence, applied_at, applied_price werden automatisch übernommen

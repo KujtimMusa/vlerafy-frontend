@@ -8,6 +8,9 @@ import { formatRelativeTime, formatStrategyName, getConfidenceColor, getConfiden
 import { ConfidenceExplanation } from './ConfidenceExplanation'
 import { Recommendation } from '@/lib/types'
 import { acceptRecommendation, rejectRecommendation } from '@/lib/api'
+import { FeatureConfidence } from '@/lib/types/confidence'
+import { ConfidenceBadge } from './confidence/ConfidenceBadge'
+import { ConfidenceBreakdown } from './confidence/ConfidenceBreakdown'
 
 interface RecommendationData extends Partial<Recommendation> {
   id: number
@@ -32,6 +35,9 @@ interface RecommendationData extends Partial<Recommendation> {
   ml_confidence?: number
   base_confidence?: number
   applied_price?: number | null
+  
+  // Feature Confidence (NEW)
+  feature_confidence?: FeatureConfidence
 }
 
 interface RecommendationCardProps {
@@ -50,6 +56,7 @@ export default function RecommendationCard({
   onUpdate
 }: RecommendationCardProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [showConfidenceDetails, setShowConfidenceDetails] = useState(false)
   
   const priceChange = data.recommended_price - data.current_price
   const priceChangePct = data.price_change_pct || ((priceChange / data.current_price) * 100)
@@ -139,10 +146,22 @@ export default function RecommendationCard({
         </div>
         
         <div className="flex flex-col gap-2 items-end">
-          {/* Confidence Badge */}
-          <div className={`px-4 py-2 rounded-lg border font-semibold text-sm ${confidenceColors[confidenceLevel]}`}>
-            {Math.round(data.confidence * 100)}% Confidence
-          </div>
+          {/* Feature Confidence Badge (NEW) */}
+          {data.feature_confidence && (
+            <ConfidenceBadge
+              confidence={data.feature_confidence.overall_confidence}
+              status={getConfidenceStatusFromPercentage(data.feature_confidence.overall_confidence)}
+              onClick={() => setShowConfidenceDetails(!showConfidenceDetails)}
+              expanded={showConfidenceDetails}
+            />
+          )}
+          
+          {/* Legacy Confidence Badge (fallback) */}
+          {!data.feature_confidence && (
+            <div className={`px-4 py-2 rounded-lg border font-semibold text-sm ${confidenceColors[confidenceLevel]}`}>
+              {Math.round(data.confidence * 100)}% Confidence
+            </div>
+          )}
           
           {/* NEW: Status Badge */}
           {data.status && (
@@ -294,14 +313,23 @@ export default function RecommendationCard({
         </p>
       </div>
 
-      {/* Confidence Explanation */}
-      <div className="mb-6">
-        <ConfidenceExplanation
-          confidence={data.confidence}
-          competitorCount={data.competitor_avg_price ? 1 : 0}
-          salesDataDays={data.sales_7d ? 7 : 0}
-        />
-      </div>
+      {/* Feature Confidence Breakdown (NEW) */}
+      {data.feature_confidence && showConfidenceDetails && (
+        <div className="mb-6">
+          <ConfidenceBreakdown data={data.feature_confidence} />
+        </div>
+      )}
+
+      {/* Legacy Confidence Explanation (fallback) */}
+      {!data.feature_confidence && (
+        <div className="mb-6">
+          <ConfidenceExplanation
+            confidence={data.confidence}
+            competitorCount={data.competitor_avg_price ? 1 : 0}
+            salesDataDays={data.sales_7d ? 7 : 0}
+          />
+        </div>
+      )}
 
       {/* NEW: Sales Prediction Display */}
       {salesPrediction && (
@@ -458,3 +486,10 @@ function getStrategyIcon(strategy: string): string {
   return icons[strategy] || '📊'
 }
 
+function getConfidenceStatusFromPercentage(percentage: number): 'excellent' | 'good' | 'ok' | 'low' | 'critical' {
+  if (percentage >= 80) return 'excellent'
+  if (percentage >= 70) return 'good'
+  if (percentage >= 50) return 'ok'
+  if (percentage >= 30) return 'low'
+  return 'critical'
+}

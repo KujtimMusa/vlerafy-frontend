@@ -184,6 +184,7 @@ export async function generateRecommendation(productId: number) {
   const data = await response.json();
   // ✅ Return komplettes Recommendation-Object (alle Fields!)
   // Enthält jetzt: confidence, strategy, status, reasoning, ml_confidence, etc.
+  // NEW: Enthält auch feature_confidence für Feature Confidence Breakdown
   return data;
 }
 
