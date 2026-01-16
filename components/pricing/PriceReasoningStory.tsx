@@ -52,7 +52,7 @@ export function PriceReasoningStory({
   competitorData,
   productName = 'Produkt',
   productId,
-  confidence = 0.96,
+  confidence,
   onApply,
   onDismiss,
   onRefresh,
@@ -338,20 +338,20 @@ export function PriceReasoningStory({
           <div className="confidence-icon">
             <CheckCircle2 className="h-6 w-6 text-white" />
           </div>
-          <h3 className="confidence-title">Unsere KI ist {Math.round(confidence * 100)}% sicher</h3>
+          <h3 className="confidence-title">Unsere KI ist {Math.round(validConfidence * 100)}% sicher</h3>
         </div>
         
         {/* Progress Bar */}
         <div className="confidence-progress-wrapper">
           <div className="confidence-progress-header">
             <span className="confidence-progress-label">Sicherheitswert</span>
-            <span className="confidence-progress-value">{Math.round(confidence * 100)}%</span>
+            <span className="confidence-progress-value">{Math.round(validConfidence * 100)}%</span>
           </div>
           <div className="confidence-progress-bar-container" style={{ maxWidth: '100%', overflow: 'hidden' }}>
             <div 
               className="confidence-progress-bar"
               style={{ 
-                width: `${Math.min(Math.max(confidence * 100, 0), 100)}%`,
+                width: `${Math.min(Math.max(validConfidence * 100, 0), 100)}%`,
                 maxWidth: '100%'
               }}
             />
