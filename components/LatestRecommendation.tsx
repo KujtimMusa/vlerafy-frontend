@@ -6,8 +6,9 @@ import { applyRecommendedPrice } from '@/lib/shopifyService'
 import { PriceRecommendationCard } from './pricing/PriceRecommendationCard'
 import { EmptyAnalysisState } from './EmptyAnalysisState'
 import { useShop } from '@/hooks/useShop'
+import { Recommendation } from '@/lib/types'
 
-interface RecommendationData {
+interface RecommendationData extends Partial<Recommendation> {
   id: number
   product_id: number
   product_name: string
@@ -16,7 +17,7 @@ interface RecommendationData {
   price_change_pct: number
   strategy: string
   confidence: number
-  reasoning: string
+  reasoning: string | any
   
   // Metrics
   demand_growth?: number | null
@@ -46,6 +47,10 @@ interface RecommendationData {
   
   created_at: string
   applied_at?: string | null
+  status?: 'pending' | 'accepted' | 'rejected' | 'applied'
+  ml_confidence?: number
+  base_confidence?: number
+  applied_price?: number | null
 }
 
 interface LatestRecommendationProps {
@@ -86,7 +91,7 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         
         // Stelle sicher, dass alle erforderlichen Felder vorhanden sind
         if (!rec.product_name) {
-          rec.product_name = data.product_name || `Product ${rec.product_id}`
+          rec.product_name = data.product_name || rec.product?.title || rec.product_title || `Product ${rec.product_id}`
         }
         if (!rec.current_price && data.current_price) {
           rec.current_price = data.current_price
@@ -104,7 +109,11 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         }
         rec.reasoning = reasoningParsed
         
-        console.log('[LatestRecommendation] ✅ Setting fresh recommendation:', rec)
+        // ✅ BEHALTE ALLE Backend-Fields:
+        // status, ml_confidence, base_confidence, applied_at, applied_price werden automatisch übernommen
+        // (keine selective extraction mehr!)
+        
+        console.log('[LatestRecommendation] ✅ Setting fresh recommendation with all fields:', rec)
         setRecommendation(rec)
       } else {
         console.log('[LatestRecommendation] No recommendation in response')
@@ -305,7 +314,15 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     strategy_details: strategyDetails.length > 0 ? strategyDetails : undefined,
     competitor_data: competitorData,
     created_at: recommendation.created_at,
-    generated_at: recommendation.created_at
+    generated_at: recommendation.created_at,
+    // ✅ NEU: Alle Backend-Fields hinzufügen
+    id: recommendation.id,
+    status: recommendation.status,
+    strategy: recommendation.strategy,
+    ml_confidence: recommendation.ml_confidence,
+    base_confidence: recommendation.base_confidence,
+    applied_at: recommendation.applied_at,
+    applied_price: recommendation.applied_price
   }
 
   return (

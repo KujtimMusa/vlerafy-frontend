@@ -1,11 +1,14 @@
 'use client'
 
-import { ArrowUp, ArrowDown, RefreshCw, Clock, CheckCircle2, AlertCircle } from 'lucide-react'
+import { useState } from 'react'
+import { ArrowUp, ArrowDown, RefreshCw, Clock, CheckCircle2, AlertCircle, X } from 'lucide-react'
 import MetricCard from './MetricCard'
 import { formatRelativeTime, formatStrategyName, getConfidenceColor, getConfidenceMessage } from '@/lib/recommendationUtils'
 import { ConfidenceExplanation } from './ConfidenceExplanation'
+import { Recommendation } from '@/lib/types'
+import { acceptRecommendation, rejectRecommendation } from '@/lib/api'
 
-interface RecommendationData {
+interface RecommendationData extends Partial<Recommendation> {
   id: number
   product_id: number
   product_name: string
@@ -14,7 +17,7 @@ interface RecommendationData {
   price_change_pct: number
   strategy: string
   confidence: number
-  reasoning: string
+  reasoning: string | any
   
   // Metrics
   demand_growth?: number | null
@@ -24,6 +27,10 @@ interface RecommendationData {
   
   created_at: string
   applied_at?: string | null
+  status?: 'pending' | 'accepted' | 'rejected' | 'applied'
+  ml_confidence?: number
+  base_confidence?: number
+  applied_price?: number | null
 }
 
 interface RecommendationCardProps {
@@ -31,14 +38,17 @@ interface RecommendationCardProps {
   onRegenerate: () => void
   generating?: boolean
   onApply?: () => void
+  onUpdate?: (updated: RecommendationData) => void
 }
 
 export default function RecommendationCard({ 
   data, 
   onRegenerate, 
   generating = false,
-  onApply 
+  onApply,
+  onUpdate
 }: RecommendationCardProps) {
+  const [isLoading, setIsLoading] = useState(false)
   
   const priceChange = data.recommended_price - data.current_price
   const priceChangePct = data.price_change_pct || ((priceChange / data.current_price) * 100)
@@ -50,22 +60,102 @@ export default function RecommendationCard({
     medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
     low: 'bg-red-100 text-red-800 border-red-200'
   }
+  
+  // Status colors
+  const statusColors = {
+    pending: 'bg-blue-100 text-blue-800 border-blue-200',
+    accepted: 'bg-green-100 text-green-800 border-green-200',
+    rejected: 'bg-red-100 text-red-800 border-red-200',
+    applied: 'bg-purple-100 text-purple-800 border-purple-200'
+  }
+  
+  const statusLabels = {
+    pending: 'Ausstehend',
+    accepted: 'Akzeptiert',
+    rejected: 'Abgelehnt',
+    applied: 'Angewendet'
+  }
+  
+  // Parse reasoning
+  const reasoningObj = typeof data.reasoning === 'string' 
+    ? (() => { try { return JSON.parse(data.reasoning) } catch { return {} } })()
+    : (data.reasoning || {})
+  
+  // Sales prediction
+  const salesPrediction = reasoningObj?.sales_prediction 
+    ? ((reasoningObj.sales_prediction - 1) * 100).toFixed(1)
+    : null
+  
+  // Handlers
+  const handleAccept = async () => {
+    setIsLoading(true)
+    try {
+      await acceptRecommendation(data.id)
+      if (onUpdate) {
+        onUpdate({ ...data, status: 'accepted' })
+      }
+      // Show success message
+      if (typeof window !== 'undefined' && (window as any).toast) {
+        (window as any).toast.success('Recommendation akzeptiert')
+      }
+    } catch (error: any) {
+      console.error('Failed to accept recommendation:', error)
+      if (typeof window !== 'undefined' && (window as any).toast) {
+        (window as any).toast.error(error.message || 'Fehler beim Akzeptieren')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
+  const handleReject = async () => {
+    setIsLoading(true)
+    try {
+      await rejectRecommendation(data.id)
+      if (onUpdate) {
+        onUpdate({ ...data, status: 'rejected' })
+      }
+      // Show success message
+      if (typeof window !== 'undefined' && (window as any).toast) {
+        (window as any).toast.success('Recommendation abgelehnt')
+      }
+    } catch (error: any) {
+      console.error('Failed to reject recommendation:', error)
+      if (typeof window !== 'undefined' && (window as any).toast) {
+        (window as any).toast.error(error.message || 'Fehler beim Ablehnen')
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 max-w-4xl">
       
-      {/* Header: Produkt-Info & Confidence Badge */}
+      {/* Header: Produkt-Info & Badges */}
       <div className="flex justify-between items-start mb-6">
         <div className="flex-1">
           <h3 className="text-2xl font-bold text-gray-900 mb-1">{data.product_name}</h3>
           <p className="text-sm text-gray-600">Product ID: {data.product_id}</p>
         </div>
         
-        {/* Confidence Badge */}
-        <div className={`px-4 py-2 rounded-lg border font-semibold text-sm ${confidenceColors[confidenceLevel]}`}>
-          {confidenceLevel === 'high' && '✓ High Confidence'}
-          {confidenceLevel === 'medium' && '⚠️ Medium Confidence'}
-          {confidenceLevel === 'low' && '❌ Low Confidence'}
+        <div className="flex flex-col gap-2 items-end">
+          {/* Confidence Badge */}
+          <div className={`px-4 py-2 rounded-lg border font-semibold text-sm ${confidenceColors[confidenceLevel]}`}>
+            {Math.round(data.confidence * 100)}% Confidence
+          </div>
+          
+          {/* NEW: Status Badge */}
+          {data.status && (
+            <div className={`px-3 py-1 rounded-lg border text-xs font-semibold ${statusColors[data.status] || 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+              {statusLabels[data.status] || data.status}
+            </div>
+          )}
+          
+          {/* NEW: Strategy Tag */}
+          <div className="px-3 py-1 rounded-lg border text-xs font-medium bg-gray-50 text-gray-700 border-gray-200">
+            {formatStrategyName(data.strategy)}
+          </div>
         </div>
       </div>
 
@@ -214,9 +304,107 @@ export default function RecommendationCard({
         />
       </div>
 
+      {/* NEW: Sales Prediction Display */}
+      {salesPrediction && (
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-sm font-medium text-blue-900">
+            Erwartete Verkaufsänderung: {parseFloat(salesPrediction) > 0 ? '+' : ''}{salesPrediction}%
+          </p>
+          <p className="text-xs text-blue-700 mt-1">
+            Basierend auf {reasoningObj?.top_features?.length || 0} ML-Features
+          </p>
+        </div>
+      )}
+      
+      {/* NEW: Warnings (if any) */}
+      {reasoningObj?.warnings && Array.isArray(reasoningObj.warnings) && reasoningObj.warnings.length > 0 && (
+        <div className="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+          <p className="text-sm font-medium text-yellow-900 mb-2">⚠️ Warnungen:</p>
+          <ul className="text-xs text-yellow-700 space-y-1">
+            {reasoningObj.warnings.map((warning: string, idx: number) => (
+              <li key={idx}>• {warning}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      {/* NEW: ML Confidence Breakdown */}
+      {(data.ml_confidence !== undefined || data.base_confidence !== undefined) && (
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <p className="text-sm font-medium text-gray-900 mb-2">Confidence Breakdown:</p>
+          <div className="space-y-1 text-xs text-gray-700">
+            {data.ml_confidence !== undefined && (
+              <p>ML Confidence: {Math.round(data.ml_confidence * 100)}%</p>
+            )}
+            {data.base_confidence !== undefined && (
+              <p>Base Confidence: {Math.round(data.base_confidence * 100)}%</p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Actions */}
       <div className="flex gap-3 mb-4">
-        {onApply && (
+        {/* NEW: Accept/Reject Buttons (nur wenn status = pending) */}
+        {data.status === 'pending' && (
+          <>
+            <button
+              onClick={handleAccept}
+              disabled={isLoading}
+              className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold flex items-center justify-center gap-2"
+            >
+              <CheckCircle2 size={18} />
+              {isLoading ? 'Lädt...' : 'Akzeptieren'}
+            </button>
+            <button
+              onClick={handleReject}
+              disabled={isLoading}
+              className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold flex items-center justify-center gap-2"
+            >
+              <X size={18} />
+              {isLoading ? 'Lädt...' : 'Ablehnen'}
+            </button>
+          </>
+        )}
+        
+        {/* Status: Accepted */}
+        {data.status === 'accepted' && (
+          <button
+            disabled
+            className="flex-1 px-6 py-3 bg-green-100 text-green-800 rounded-lg border border-green-200 font-semibold flex items-center justify-center gap-2"
+          >
+            <CheckCircle2 size={18} />
+            ✓ Akzeptiert
+          </button>
+        )}
+        
+        {/* Status: Rejected */}
+        {data.status === 'rejected' && (
+          <button
+            disabled
+            className="flex-1 px-6 py-3 bg-red-100 text-red-800 rounded-lg border border-red-200 font-semibold flex items-center justify-center gap-2"
+          >
+            <X size={18} />
+            ✗ Abgelehnt
+          </button>
+        )}
+        
+        {/* Status: Applied */}
+        {data.status === 'applied' && (
+          <div className="flex-1 text-center p-3 bg-purple-50 rounded-lg border border-purple-200">
+            <p className="text-sm font-medium text-purple-900">
+              ✓ Angewendet am {data.applied_at ? new Date(data.applied_at).toLocaleDateString('de-DE') : 'N/A'}
+            </p>
+            {data.applied_price && (
+              <p className="text-xs text-purple-700 mt-1">
+                Preis: €{data.applied_price.toFixed(2)}
+              </p>
+            )}
+          </div>
+        )}
+        
+        {/* Apply Button (nur wenn nicht pending) */}
+        {onApply && data.status !== 'pending' && (
           <button
             onClick={onApply}
             disabled={data.confidence < 0.5}
@@ -240,11 +428,17 @@ export default function RecommendationCard({
       {/* Timestamp */}
       <div className="flex items-center gap-2 text-sm text-gray-500 pt-4 border-t border-gray-200">
         <Clock size={14} />
-        <span>Generated {formatRelativeTime(data.created_at)}</span>
+        <span>Erstellt {formatRelativeTime(data.created_at)}</span>
         {data.applied_at && (
           <>
             <span>•</span>
-            <span>Applied {formatRelativeTime(data.applied_at)}</span>
+            <span>Angewendet {formatRelativeTime(data.applied_at)}</span>
+            {data.applied_price && (
+              <>
+                <span>•</span>
+                <span>Preis: €{data.applied_price.toFixed(2)}</span>
+              </>
+            )}
           </>
         )}
       </div>

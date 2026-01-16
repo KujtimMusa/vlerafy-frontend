@@ -77,7 +77,65 @@ export async function getRecommendations(productId: number) {
     const error = await response.json();
     throw new Error(error.detail || 'Fehler beim Laden der Empfehlungen');
   }
+  const data = await response.json();
+  // ✅ Return komplettes Response-Object (alle Fields!)
+  return data;
+}
+
+/**
+ * ✅ NEW: Accept Recommendation
+ * 
+ * Marks a recommendation as "accepted"
+ * Backend Endpoint: PATCH /recommendations/{id}/accept
+ */
+export async function acceptRecommendation(recommendationId: number) {
+  const response = await fetch(`${API_URL}/recommendations/${recommendationId}/accept`, {
+    method: 'PATCH',
+    headers: getHeaders(),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Fehler beim Akzeptieren der Empfehlung');
+  }
   return response.json();
+}
+
+/**
+ * ✅ NEW: Reject Recommendation
+ * 
+ * Marks a recommendation as "rejected"
+ * Backend Endpoint: PATCH /recommendations/{id}/reject
+ */
+export async function rejectRecommendation(recommendationId: number, reason?: string) {
+  const response = await fetch(`${API_URL}/recommendations/${recommendationId}/reject`, {
+    method: 'PATCH',
+    headers: getHeaders(),
+    body: JSON.stringify({ reason }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Fehler beim Ablehnen der Empfehlung');
+  }
+  return response.json();
+}
+
+/**
+ * ✅ NEW: Get Recommendation by ID
+ * 
+ * Fetches a single recommendation with all details
+ * Backend Endpoint: GET /recommendations/{id}
+ */
+export async function getRecommendation(recommendationId: number) {
+  const response = await fetch(`${API_URL}/recommendations/${recommendationId}`, {
+    headers: getHeaders(),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Fehler beim Laden der Empfehlung');
+  }
+  const data = await response.json();
+  // ✅ Return komplettes Recommendation-Object
+  return data;
 }
 
 /**
@@ -111,6 +169,8 @@ export async function getLatestRecommendation(productId: number) {
  * Never uses cached/stale recommendations.
  * 
  * Performance: ~1-2 seconds (acceptable for pricing use case)
+ * 
+ * Returns: Complete Recommendation object with ALL Backend-Fields
  */
 export async function generateRecommendation(productId: number) {
   const response = await fetch(`${API_URL}/recommendations/generate/${productId}`, {
@@ -121,7 +181,10 @@ export async function generateRecommendation(productId: number) {
     const error = await response.json();
     throw new Error(error.detail || 'Fehler beim Generieren der Empfehlung');
   }
-  return response.json();
+  const data = await response.json();
+  // ✅ Return komplettes Recommendation-Object (alle Fields!)
+  // Enthält jetzt: confidence, strategy, status, reasoning, ml_confidence, etc.
+  return data;
 }
 
 // Competitor Analysis API (automatische Suche mit Serper)

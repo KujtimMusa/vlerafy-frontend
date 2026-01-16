@@ -1,16 +1,17 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { AlertTriangle, Clock, ChevronDown, ChevronUp, RefreshCw, CheckCircle2 } from 'lucide-react'
+import { AlertTriangle, Clock, ChevronDown, ChevronUp, RefreshCw, CheckCircle2, Lightbulb, Calculator } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { ConfidenceIndicator } from './ConfidenceIndicator'
 import { ActionButtons } from './ActionButtons'
 import { PriceReasoningStory } from './PriceReasoningStory'
 import { formatCurrency, formatPercentage, formatTimeAgo } from '@/lib/formatters'
 import { generateRecommendationTexts } from '@/lib/recommendationTexts'
+import { Recommendation } from '@/lib/types'
 
 interface PriceRecommendationCardProps {
-  recommendation: {
+  recommendation: Partial<Recommendation> & {
     product_id: string | number
     product_title?: string
     product_name?: string
@@ -81,6 +82,15 @@ interface PriceRecommendationCardProps {
     
     // Competitor Count (NEW)
     competitor_count?: number
+    
+    // NEW: Backend Fields
+    id?: number
+    status?: 'pending' | 'accepted' | 'rejected' | 'applied'
+    strategy?: string
+    ml_confidence?: number
+    base_confidence?: number
+    applied_at?: string | null
+    applied_price?: number | null
   }
   
   onApply?: (price: number) => Promise<void>
@@ -271,6 +281,126 @@ export function PriceRecommendationCard({
                 </p>
               </div>
             )}
+          </div>
+          
+          {/* ✅ "Wieso dieser Preis?" Section */}
+          <div className="mb-6" style={{ backgroundColor: '#0f172a', borderRadius: '12px', padding: '20px', border: '1px solid #334155' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <div style={{ 
+                width: '48px', 
+                height: '48px', 
+                borderRadius: '12px', 
+                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+              }}>
+                <Lightbulb className="h-6 w-6 text-white" />
+              </div>
+              <h3 style={{ 
+                fontSize: '20px', 
+                fontWeight: '700', 
+                color: '#f1f5f9',
+                margin: 0
+              }}>
+                💡 Warum empfehlen wir {formatCurrency(displayedPrice)}?
+              </h3>
+            </div>
+            
+            <p style={{ fontSize: '14px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '16px' }}>
+              {recommendationTexts.headline || recommendationTexts.confidence || 'Unsere KI hat mehrere Marktfaktoren analysiert, um diesen Preis zu empfehlen.'}
+            </p>
+            
+            {/* Was analysiert wurde */}
+            <div style={{ 
+              marginTop: '16px',
+              padding: '12px',
+              backgroundColor: '#1e293b',
+              borderRadius: '8px',
+              border: '1px solid #334155'
+            }}>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#94a3b8', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                📊 Was analysiert unsere KI?
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <li style={{ fontSize: '13px', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+                  <span>Echte Verkaufsdaten aus deinem Shopify-Shop</span>
+                </li>
+                <li style={{ fontSize: '13px', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+                  <span>Aktuelle Preise deiner 5-10 wichtigsten Konkurrenten</span>
+                </li>
+                <li style={{ fontSize: '13px', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+                  <span>4 spezialisierte Machine-Learning-Modelle</span>
+                </li>
+                <li style={{ fontSize: '13px', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+                  <span>Deine eingetragenen Kosten und bisherigen Margen</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          {/* ✅ "Wie ergibt sich der Preis?" Section */}
+          <div className="mb-6" style={{ backgroundColor: '#0f172a', borderRadius: '12px', padding: '20px', border: '1px solid #334155' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <div style={{ 
+                width: '48px', 
+                height: '48px', 
+                borderRadius: '12px', 
+                background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)'
+              }}>
+                <Calculator className="h-6 w-6 text-white" />
+              </div>
+              <h3 style={{ 
+                fontSize: '20px', 
+                fontWeight: '700', 
+                color: '#f1f5f9',
+                margin: 0
+              }}>
+                🧮 Wie wird {priceChange > 0 ? '+' : ''}{formatCurrency(Math.abs(priceChange))} berechnet?
+              </h3>
+            </div>
+            
+            <p style={{ fontSize: '14px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '16px' }}>
+              Der empfohlene Preis basiert auf einer gewichteten Analyse mehrerer Faktoren. Jeder Faktor wird basierend auf seiner Datenqualität unterschiedlich stark gewichtet.
+            </p>
+            
+            {/* Preisberechnung Details */}
+            <div style={{ 
+              marginTop: '16px',
+              padding: '12px',
+              backgroundColor: '#1e293b',
+              borderRadius: '8px',
+              border: '1px solid #334155'
+            }}>
+              <div style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                <div style={{ marginBottom: '12px' }}>
+                  <strong style={{ color: '#f1f5f9' }}>Aktueller Preis:</strong> {formatCurrency(recommendation.current_price)}
+                </div>
+                <div style={{ marginBottom: '12px' }}>
+                  <strong style={{ color: '#f1f5f9' }}>Empfohlener Preis:</strong> {formatCurrency(displayedPrice)}
+                </div>
+                <div style={{ marginBottom: '12px' }}>
+                  <strong style={{ color: '#f1f5f9' }}>Preisänderung:</strong> 
+                  <span style={{ color: priceChange > 0 ? '#10b981' : '#f59e0b', marginLeft: '8px' }}>
+                    {priceChange > 0 ? '+' : ''}{formatCurrency(priceChange)} ({priceChange > 0 ? '+' : ''}{Math.abs(displayedPriceChangePct).toFixed(1)}%)
+                  </span>
+                </div>
+                {recommendation.strategy && (
+                  <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #334155' }}>
+                    <strong style={{ color: '#f1f5f9' }}>Hauptstrategie:</strong> {recommendation.strategy}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           
           {/* Price Comparison */}
