@@ -444,16 +444,17 @@ function TrustLadder({ stats }: { stats: DashboardStats }) {
             )}
           </div>
           
-          {/* Progress Bar Container */}
-          <div className="relative w-full">
+          {/* Progress Bar Container - ✅ FIX: Overflow verhindern */}
+          <div className="relative w-full max-w-full">
             {/* Background Track */}
             <div className="h-3 w-full rounded-full bg-slate-800/80 border border-slate-700/50 overflow-hidden">
-              {/* Progress Fill - MIT OVERFLOW-FIX */}
+              {/* Progress Fill - ✅ FIX: Math.min verhindert >100%, overflow-hidden verhindert Überschießen */}
               <div
-                className={`h-full bg-gradient-to-r ${config.color} transition-all duration-700 ease-out relative overflow-hidden`}
+                className={`h-full bg-gradient-to-r ${config.color} transition-all duration-700 ease-out relative`}
                 style={{ 
                   width: `${Math.min(Math.max(progress, 0), 100)}%`,
-                  maxWidth: '100%'
+                  maxWidth: '100%',
+                  overflow: 'hidden' // ✅ Zusätzlicher Overflow-Schutz
                 }}
               >
                 {/* Shine Effect innerhalb Fill */}

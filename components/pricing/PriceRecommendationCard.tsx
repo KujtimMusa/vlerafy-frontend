@@ -403,34 +403,58 @@ export function PriceRecommendationCard({
             </div>
           </div>
           
-          {/* Price Comparison */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-4">
+          {/* Price Comparison - ✅ FIX: Gleiche Größe mit grid */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
             
             {/* Current Price */}
-            <div className="p-4 border" style={{ backgroundColor: '#0f172a', borderColor: '#475569' }}>
-              <p className="text-sm mb-1 font-medium" style={{ color: '#94a3b8' }}>{t('current')}</p>
+            <div className="flex flex-col justify-between p-4 border rounded-lg" style={{ 
+              backgroundColor: '#0f172a', 
+              borderColor: '#475569',
+              minHeight: '120px' // ✅ Gleiche Höhe
+            }}>
+              <p className="text-xs uppercase tracking-wide mb-2 font-medium" style={{ color: '#94a3b8' }}>
+                {t('current')}
+              </p>
               <p className="text-3xl font-bold" style={{ color: '#f1f5f9' }}>
                 {formatCurrency(recommendation.current_price)}
               </p>
             </div>
             
             {/* Recommended Price */}
-            <div className="p-4 border-2" style={{
+            <div className="flex flex-col justify-between p-4 border-2 rounded-lg" style={{
               backgroundColor: isCriticalWarning ? '#7f1d1d' : hasMarginWarning ? '#78350f' : '#064e3b',
-              borderColor: isCriticalWarning ? '#ef4444' : hasMarginWarning ? '#f59e0b' : '#10b981'
+              borderColor: isCriticalWarning ? '#ef4444' : hasMarginWarning ? '#f59e0b' : '#10b981',
+              minHeight: '120px' // ✅ Gleiche Höhe
             }}>
-              <p className="text-sm font-medium mb-1" style={{
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs uppercase tracking-wide font-medium" style={{
+                  color: isCriticalWarning ? '#fca5a5' : hasMarginWarning ? '#fbbf24' : '#86efac'
+                }}>
+                  {t('recommended')}
+                </p>
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{
+                  backgroundColor: isCriticalWarning ? 'rgba(252, 165, 165, 0.2)' : 
+                                   hasMarginWarning ? 'rgba(251, 191, 36, 0.2)' : 
+                                   'rgba(16, 185, 129, 0.2)',
+                  color: isCriticalWarning ? '#fca5a5' : hasMarginWarning ? '#fbbf24' : '#86efac'
+                }}>
+                  ⭐ EMPFOHLEN
+                </span>
+              </div>
+              <p className="text-3xl font-bold" style={{
                 color: isCriticalWarning ? '#fca5a5' : hasMarginWarning ? '#fbbf24' : '#86efac'
               }}>
-                {t('recommended')}
-              </p>
-              <p className={`text-3xl font-bold ${
-                isCriticalWarning ? 'text-red-900' :
-                hasMarginWarning ? 'text-orange-900' :
-                'text-green-900'
-              }`}>
                 {formatCurrency(displayedPrice)}
               </p>
+              {/* Price Change */}
+              <div className="mt-2 flex items-center gap-2">
+                <span className="text-sm font-medium" style={{
+                  color: priceChange > 0 ? '#10b981' : priceChange < 0 ? '#f59e0b' : '#94a3b8'
+                }}>
+                  {priceChange > 0 ? '↑' : priceChange < 0 ? '↓' : '='} {formatCurrency(Math.abs(priceChange))} 
+                  ({priceChange > 0 ? '+' : ''}{Math.abs(displayedPriceChangePct).toFixed(1)}%)
+                </span>
+              </div>
             </div>
           </div>
           

@@ -267,57 +267,66 @@ export function PriceReasoningStory({
       )}
 
       {/* ========== 3. PRICE COMPARISON - PREMIUM ========== */}
-      <div className="price-comparison-hero">
+      {/* ✅ FIX: Price Comparison - Gleiche Größe mit grid */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
         {/* CURRENT PRICE CARD */}
-        <div className="price-box-current">
-          <div className="space-y-4">
-            {/* Label */}
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-slate-500" />
-              <div className="price-label">Aktueller Preis</div>
-            </div>
-            
-            {/* Price */}
-            <div className="space-y-2">
-              <div className="price-amount">{formatCurrency(currentPrice)}</div>
-            </div>
+        <div className="flex flex-col justify-between p-6 border-2 rounded-xl" style={{ 
+          backgroundColor: '#0f172a', 
+          borderColor: '#475569',
+          minHeight: '140px' // ✅ Gleiche Höhe
+        }}>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-3 h-3 rounded-full bg-slate-500" />
+            <div className="price-label" style={{ color: '#94a3b8' }}>Aktueller Preis</div>
+          </div>
+          
+          {/* Price - ✅ Gleiche Schriftgröße */}
+          <div className="price-amount" style={{ fontSize: '36px', color: '#f1f5f9' }}>
+            {formatCurrency(currentPrice)}
           </div>
         </div>
         
-        {/* RECOMMENDED PRICE CARD - HIGHLIGHTED */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600/20 to-indigo-600/20 border-2 border-blue-500/50 p-8 shadow-2xl shadow-blue-500/20">
-          {/* Animated Glow */}
-          <div className="absolute -top-20 -right-20 w-60 h-60 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-          
+        {/* RECOMMENDED PRICE CARD - ✅ FIX: Dark Theme statt Blau */}
+        <div className="relative overflow-hidden rounded-xl border-2 p-6 flex flex-col justify-between" style={{
+          backgroundColor: '#064e3b',
+          borderColor: '#10b981',
+          minHeight: '140px' // ✅ Gleiche Höhe
+        }}>
           {/* Recommended Badge */}
           <div className="absolute top-4 right-4">
-            <div className="px-3 py-1.5 rounded-lg bg-blue-500/20 border border-blue-500/50 backdrop-blur-sm">
-              <span className="text-xs font-bold text-blue-300">⭐ EMPFOHLEN</span>
+            <div className="px-3 py-1.5 rounded-lg" style={{
+              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+              border: '1px solid rgba(16, 185, 129, 0.5)'
+            }}>
+              <span className="text-xs font-bold" style={{ color: '#86efac' }}>⭐ EMPFOHLEN</span>
             </div>
           </div>
           
-          <div className="relative z-10 space-y-4">
+          <div className="relative z-10 flex flex-col justify-between h-full">
             {/* Label */}
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-blue-400 animate-pulse" />
-              <div className="price-label price-label-recommended">Empfohlener Preis</div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-3 h-3 rounded-full bg-green-400" />
+              <div className="price-label" style={{ color: '#86efac' }}>Empfohlener Preis</div>
             </div>
             
-            {/* Price */}
-            <div className="space-y-2">
-              <div className="price-amount price-amount-recommended">{formatCurrency(recommendedPrice)}</div>
-              
-              {/* Price Change Indicator */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-500/20 border border-green-500/30">
-                {priceChange > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-green-400" />
-                ) : (
-                  <TrendingDown className="w-4 h-4 text-green-400" />
-                )}
-                <span className="text-sm font-bold text-green-400">
-                  {priceChange > 0 ? '+' : ''}{formatCurrency(Math.abs(priceChange))} ({priceChange > 0 ? '+' : ''}{Math.abs(priceChangePct).toFixed(1)}%)
-                </span>
-              </div>
+            {/* Price - ✅ Gleiche Schriftgröße */}
+            <div className="price-amount" style={{ fontSize: '36px', color: '#86efac' }}>
+              {formatCurrency(recommendedPrice)}
+            </div>
+            
+            {/* Price Change Indicator */}
+            <div className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{
+              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+              border: '1px solid rgba(16, 185, 129, 0.3)'
+            }}>
+              {priceChange > 0 ? (
+                <TrendingUp className="w-4 h-4" style={{ color: '#86efac' }} />
+              ) : (
+                <TrendingDown className="w-4 h-4" style={{ color: '#86efac' }} />
+              )}
+              <span className="text-sm font-bold" style={{ color: '#86efac' }}>
+                {priceChange > 0 ? '+' : ''}{formatCurrency(Math.abs(priceChange))} ({priceChange > 0 ? '+' : ''}{Math.abs(priceChangePct).toFixed(1)}%)
+              </span>
             </div>
           </div>
         </div>
@@ -338,10 +347,13 @@ export function PriceReasoningStory({
             <span className="confidence-progress-label">Sicherheitswert</span>
             <span className="confidence-progress-value">{Math.round(confidence * 100)}%</span>
           </div>
-          <div className="confidence-progress-bar-container">
+          <div className="confidence-progress-bar-container" style={{ maxWidth: '100%', overflow: 'hidden' }}>
             <div 
               className="confidence-progress-bar"
-              style={{ width: `${confidence * 100}%` }}
+              style={{ 
+                width: `${Math.min(Math.max(confidence * 100, 0), 100)}%`,
+                maxWidth: '100%'
+              }}
             />
           </div>
         </div>

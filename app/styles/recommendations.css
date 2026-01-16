@@ -1075,7 +1075,8 @@
 .confidence-title {
   font-size: 28px;
   font-weight: 800;
-  color: #3b82f6;
+  /* ✅ FIX: Grün statt Blau für Dark Theme */
+  color: #10b981;
 }
 
 /* Progress Bar */
@@ -1095,29 +1096,35 @@
 .confidence-progress-label {
   font-size: 16px;
   font-weight: 500;
-  color: #3b82f6;
+  /* ✅ FIX: Grau statt Blau für Dark Theme */
+  color: #94a3b8;
 }
 
 .confidence-progress-value {
   font-size: 18px;
   font-weight: 600;
-  color: #2563eb;
+  /* ✅ FIX: Grün statt Blau für Dark Theme */
+  color: #10b981;
 }
 
 .confidence-progress-bar-container {
   height: 16px;
-  background: rgba(255, 255, 255, 0.6);
+  /* ✅ FIX: Dark Theme Farben statt blau */
+  background: #1e293b;
   border-radius: 999px;
   overflow: hidden;
-  border: 2px solid rgba(59, 130, 246, 0.3);
+  border: 2px solid #334155;
 }
 
 .confidence-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  /* ✅ FIX: Grün statt Blau für Dark Theme */
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
   border-radius: 999px;
   transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  /* ✅ FIX: Verhindere Overflow */
+  max-width: 100%;
 }
 
 /* What we analyzed */
