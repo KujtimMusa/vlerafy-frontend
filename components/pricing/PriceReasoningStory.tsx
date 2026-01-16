@@ -58,6 +58,9 @@ export function PriceReasoningStory({
   onRefresh,
   createdAt
 }: PriceReasoningStoryProps) {
+  // ✅ FIX: Ensure confidence is always valid (0-1 range)
+  const validConfidence = Math.max(0, Math.min(1, confidence || 0.5))
+  
   const [showDetails, setShowDetails] = useState<Record<number, boolean>>({})
   
   const priceChange = recommendedPrice - currentPrice
@@ -65,7 +68,7 @@ export function PriceReasoningStory({
   
   // Datenqualität Badge Funktion
   const getQualityBadge = (confidence: number) => {
-    const scorePct = confidence * 100
+    const scorePct = validConfidence * 100
     if (scorePct >= 90) {
       return <span className="strategy-badge excellent">Datenqualität: Exzellent</span>
     }
@@ -212,7 +215,7 @@ export function PriceReasoningStory({
           </div>
           <div className="confidence-badge-large">
             <CheckCircle2 className="h-6 w-6" />
-            <span>{Math.round(confidence * 100)}% Sicherheit</span>
+            <span>{Math.round(validConfidence * 100)}% Sicherheit</span>
           </div>
         </div>
         <p className="recommendation-text">
@@ -385,7 +388,7 @@ export function PriceReasoningStory({
           {/* Why confidence % */}
           <div className="confidence-explanation">
             <div className="confidence-explanation-title">
-              💡 Warum genau {Math.round(confidence * 100)}% Sicherheit?
+              💡 Warum genau {Math.round(validConfidence * 100)}% Sicherheit?
             </div>
             <p className="confidence-explanation-text">
               Deine Produkte verkaufen sich bei diesem Preis sehr gut. 
