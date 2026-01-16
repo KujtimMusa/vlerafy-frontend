@@ -3,6 +3,6 @@
   "/api/pricing/apply/route": "app/api/pricing/apply/route.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/[locale]/products/page": "app/[locale]/products/page.js",
-  "/[locale]/page": "app/[locale]/page.js",
-  "/[locale]/recommendations/page": "app/[locale]/recommendations/page.js"
+  "/[locale]/recommendations/page": "app/[locale]/recommendations/page.js",
+  "/[locale]/page": "app/[locale]/page.js"
 }
