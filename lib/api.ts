@@ -219,6 +219,7 @@ export async function switchShop(shopId: number, useDemo: boolean) {
   const response = await fetch(`${API_URL}/shops/switch`, {
     method: 'POST',
     headers: getHeaders(),
+    credentials: 'include',  // WICHTIG: Cookies mit senden und empfangen
     body: JSON.stringify({ shop_id: shopId, use_demo: useDemo }),
   });
   if (!response.ok) {
