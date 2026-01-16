@@ -1,5 +1,15 @@
 import * as Sentry from "@sentry/nextjs";
 
+// Debug: Log DSN status (only in browser)
+if (typeof window !== 'undefined') {
+  const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+  console.log('[SENTRY CLIENT] Initializing...', {
+    dsn: dsn ? 'SET' : 'NOT SET',
+    dsnLength: dsn?.length || 0,
+    environment: process.env.NEXT_PUBLIC_ENVIRONMENT || 'production',
+  });
+}
+
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   
@@ -62,3 +72,17 @@ Sentry.init({
     return event;
   },
 });
+
+// Debug: Log initialization status (only in browser)
+if (typeof window !== 'undefined') {
+  console.log('[SENTRY CLIENT] Initialized', {
+    client: Sentry.getCurrentHub().getClient() ? 'OK' : 'FAILED',
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN ? 'SET' : 'NOT SET',
+  });
+  
+  // Make Sentry available globally for debugging
+  if (typeof window !== 'undefined') {
+    (window as any).Sentry = Sentry;
+    console.log('[SENTRY CLIENT] window.Sentry available:', typeof (window as any).Sentry);
+  }
+}
