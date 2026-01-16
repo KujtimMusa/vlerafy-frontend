@@ -123,6 +123,15 @@ export function PriceRecommendationCard({
   const hasMarginWarning = recommendation.margin_analysis && !recommendation.margin_analysis.is_safe
   const isCriticalWarning = recommendation.warnings?.some(w => w.severity === 'HIGH' || w.severity === 'high')
   
+  // ✅ FIX: Use overall_confidence from new confidence breakdown if available
+  // overall_confidence is 0-100, legacy confidence is 0-1
+  const rawConfidence = (recommendation as any).overall_confidence !== undefined
+    ? (recommendation as any).overall_confidence / 100.0  // Convert 0-100 to 0-1
+    : recommendation.confidence
+  
+  // ✅ FIX: Ensure confidence is always valid (0-1 range) - like PriceReasoningStory.tsx
+  const validConfidence = Math.max(0, Math.min(1, rawConfidence ?? 0.5))
+  
   // Generiere UI-Texte aus Recommendation-Daten
   const recommendationTexts = generateRecommendationTexts({
     product_title: recommendation.product_title || recommendation.product_name,
@@ -143,15 +152,6 @@ export function PriceRecommendationCard({
   
   // Normalize reasoning (für Fallback)
   const reasoningText = recommendationTexts.confidence
-  
-  // ✅ FIX: Use overall_confidence from new confidence breakdown if available
-  // overall_confidence is 0-100, legacy confidence is 0-1
-  const rawConfidence = (recommendation as any).overall_confidence !== undefined
-    ? (recommendation as any).overall_confidence / 100.0  // Convert 0-100 to 0-1
-    : recommendation.confidence
-  
-  // ✅ FIX: Ensure confidence is always valid (0-1 range) - like PriceReasoningStory.tsx
-  const validConfidence = Math.max(0, Math.min(1, rawConfidence ?? 0.5))
   
   // Handle actions
   const handleApply = async () => {
