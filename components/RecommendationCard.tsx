@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { ArrowUp, ArrowDown, RefreshCw, Clock, CheckCircle2, AlertCircle, X } from 'lucide-react'
+import { toast } from 'sonner'
 import MetricCard from './MetricCard'
 import { formatRelativeTime, formatStrategyName, getConfidenceColor, getConfidenceMessage } from '@/lib/recommendationUtils'
 import { ConfidenceExplanation } from './ConfidenceExplanation'
@@ -94,15 +95,14 @@ export default function RecommendationCard({
       if (onUpdate) {
         onUpdate({ ...data, status: 'accepted' })
       }
-      // Show success message
-      if (typeof window !== 'undefined' && (window as any).toast) {
-        (window as any).toast.success('Recommendation akzeptiert')
-      }
+      toast.success('Recommendation akzeptiert! ✓', {
+        description: `Preis: €${data.recommended_price.toFixed(2)} (${data.price_change_pct > 0 ? '+' : ''}${data.price_change_pct.toFixed(1)}%)`
+      })
     } catch (error: any) {
       console.error('Failed to accept recommendation:', error)
-      if (typeof window !== 'undefined' && (window as any).toast) {
-        (window as any).toast.error(error.message || 'Fehler beim Akzeptieren')
-      }
+      toast.error('Fehler beim Akzeptieren', {
+        description: error.message || 'Bitte versuche es erneut'
+      })
     } finally {
       setIsLoading(false)
     }
@@ -115,15 +115,14 @@ export default function RecommendationCard({
       if (onUpdate) {
         onUpdate({ ...data, status: 'rejected' })
       }
-      // Show success message
-      if (typeof window !== 'undefined' && (window as any).toast) {
-        (window as any).toast.success('Recommendation abgelehnt')
-      }
+      toast.warning('Recommendation abgelehnt', {
+        description: 'Keine Änderungen werden angewendet'
+      })
     } catch (error: any) {
       console.error('Failed to reject recommendation:', error)
-      if (typeof window !== 'undefined' && (window as any).toast) {
-        (window as any).toast.error(error.message || 'Fehler beim Ablehnen')
-      }
+      toast.error('Fehler beim Ablehnen', {
+        description: error.message || 'Bitte versuche es erneut'
+      })
     } finally {
       setIsLoading(false)
     }

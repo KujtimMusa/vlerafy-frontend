@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
 import { getLatestRecommendation, generateRecommendation } from '@/lib/api'
 import { applyRecommendedPrice } from '@/lib/shopifyService'
 import { PriceRecommendationCard } from './pricing/PriceRecommendationCard'
@@ -115,15 +116,28 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         
         console.log('[LatestRecommendation] ✅ Setting fresh recommendation with all fields:', rec)
         setRecommendation(rec)
+        
+        // ✅ Toast Notification
+        toast.success('Recommendation generiert! 🎯', {
+          description: `Confidence: ${Math.round(rec.confidence * 100)}% | Strategy: ${rec.strategy || 'N/A'}`
+        })
       } else {
         console.log('[LatestRecommendation] No recommendation in response')
         setRecommendation(null)
+        toast.error('Keine Recommendation erhalten', {
+          description: 'Bitte versuche es erneut'
+        })
       }
     } catch (err: any) {
       console.error('[LatestRecommendation] Error generating recommendation:', err)
       console.error('[LatestRecommendation] Error details:', err.response || err.message)
       setError(err.message || 'Fehler beim Generieren der Empfehlung')
       setRecommendation(null)
+      
+      // ✅ Toast Notification für Fehler
+      toast.error('Fehler beim Generieren der Recommendation', {
+        description: err.message || 'Bitte versuche es erneut'
+      })
     } finally {
       setLoading(false)
     }
@@ -148,9 +162,13 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
       console.log('[LatestRecommendation] 🔄 Manual refresh requested')
       // Reload generates fresh recommendation
       await loadLatestRecommendation()
+      // Toast wird bereits in loadLatestRecommendation() angezeigt
     } catch (err: any) {
       console.error('[LatestRecommendation] Error generating recommendation:', err)
       setError(err.message || 'Fehler beim Generieren der Empfehlung')
+      toast.error('Fehler beim Aktualisieren', {
+        description: err.message || 'Bitte versuche es erneut'
+      })
     } finally {
       setGenerating(false)
     }
@@ -190,15 +208,19 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
       
       console.log('[LatestRecommendation] Price applied successfully:', result)
       
-      // Erfolgsmeldung
-      alert(`Preis erfolgreich auf Shopify aktualisiert: €${result.new_price.toFixed(2)}`)
+      // ✅ Toast Notification statt alert
+      toast.success('Preis erfolgreich angewendet! ✓', {
+        description: `Neuer Preis: €${result.new_price?.toFixed(2) || price.toFixed(2)}`
+      })
       
       // Reload Recommendation um aktualisierten Preis zu sehen
       await loadLatestRecommendation()
       
     } catch (err: any) {
       console.error('[LatestRecommendation] Error applying price:', err)
-      alert(`Fehler beim Anwenden des Preises: ${err.message || 'Unbekannter Fehler'}`)
+      toast.error('Fehler beim Anwenden des Preises', {
+        description: err.message || 'Unbekannter Fehler'
+      })
       throw err
     }
   }
