@@ -7,6 +7,9 @@ Sentry.init({
   environment: process.env.NEXT_PUBLIC_ENVIRONMENT || "production",
   release: process.env.NEXT_PUBLIC_GIT_COMMIT_HASH || "unknown",
   
+  // Debug mode (only in development)
+  debug: process.env.NODE_ENV === "development",
+  
   // Performance Monitoring
   tracesSampleRate: 0.1, // 10% of transactions
   

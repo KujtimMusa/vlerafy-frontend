@@ -6,6 +6,11 @@ const withNextIntl = createNextIntlPlugin('./i18n.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  
+  // Enable instrumentation hook for Sentry
+  experimental: {
+    instrumentationHook: true,
+  },
 }
 
 // Wrap with Sentry config (only if SENTRY_ORG is set)
