@@ -144,6 +144,9 @@ export function PriceRecommendationCard({
   // Normalize reasoning (für Fallback)
   const reasoningText = recommendationTexts.confidence
   
+  // ✅ FIX: Ensure confidence is always valid (0-1 range) - like PriceReasoningStory.tsx
+  const validConfidence = Math.max(0, Math.min(1, recommendation.confidence ?? 0.5))
+  
   // Handle actions
   const handleApply = async () => {
     if (!onApply) return
@@ -236,7 +239,7 @@ export function PriceRecommendationCard({
                 color: '#f1f5f9',
                 margin: 0
               }}>
-                Unsere KI ist {Math.round(recommendation.confidence * 100)}% sicher
+                Unsere KI ist {Math.round(validConfidence * 100)}% sicher
               </h3>
             </div>
             
@@ -245,7 +248,7 @@ export function PriceRecommendationCard({
               <div className="flex justify-between items-center mb-2">
                 <span style={{ fontSize: '14px', fontWeight: '500', color: '#94a3b8' }}>Sicherheitswert</span>
                 <span style={{ fontSize: '18px', fontWeight: '600', color: '#10b981' }}>
-                  {Math.round(recommendation.confidence * 100)}%
+                  {Math.round(validConfidence * 100)}%
                 </span>
               </div>
               <div style={{ 
@@ -257,7 +260,7 @@ export function PriceRecommendationCard({
               }}>
                 <div 
                   style={{ 
-                    width: `${recommendation.confidence * 100}%`,
+                    width: `${validConfidence * 100}%`,
                     height: '100%',
                     background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
                     borderRadius: '4px',
@@ -490,7 +493,7 @@ export function PriceRecommendationCard({
           {/* Confidence Box */}
           <div className="mt-6 px-6">
             <ConfidenceIndicator 
-              confidence={recommendation.confidence}
+              confidence={validConfidence}
               reasoning={recommendationTexts.confidence}
               compact={false}
               confidenceBasis={recommendation.confidence_basis}
