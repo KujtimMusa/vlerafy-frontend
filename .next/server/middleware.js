@@ -13011,7 +13011,7 @@ const rewriteFramesIntegration_rewriteFramesIntegration = defineIntegration(cust
 var _sentryCollisionFreeGlobalObject =  false ? 0 : typeof __webpack_require__.g != "undefined" ? __webpack_require__.g : typeof self != "undefined" ? self : {};
 _sentryCollisionFreeGlobalObject["__sentryRewritesTunnelPath__"] = undefined;
 _sentryCollisionFreeGlobalObject["SENTRY_RELEASE"] = {
-    "id": "15ajf7g8aQknSFjwEsxw1"
+    "id": "DMrrq0V0uCGnQK9VhCnx5"
 };
 _sentryCollisionFreeGlobalObject["__sentryBasePath"] = undefined;
 _sentryCollisionFreeGlobalObject["__rewriteFramesDistDir__"] = ".next";
@@ -13025,7 +13025,9 @@ edge_init({
     // Before Send Hook
     beforeSend (event, hint) {
         // Filter sensitive data
-        if (event.request && event.request.headers) {
+        const request = event.request;
+        if (request && request.headers) {
+            const headers = request.headers;
             const sensitiveHeaders = [
                 "authorization",
                 "x-api-key",
@@ -13033,9 +13035,9 @@ edge_init({
             ];
             sensitiveHeaders.forEach((header)=>{
                 const headerLower = header.toLowerCase();
-                Object.keys(event.request.headers).forEach((key)=>{
+                Object.keys(headers).forEach((key)=>{
                     if (key.toLowerCase() === headerLower) {
-                        event.request.headers[key] = "[Filtered]";
+                        headers[key] = "[Filtered]";
                     }
                 });
             });

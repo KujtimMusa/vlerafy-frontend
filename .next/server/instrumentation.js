@@ -1,0 +1,2 @@
+"use strict";(()=>{var e={};e.id=118,e.ids=[118],e.modules={9228:(e,r,s)=>{async function t(){await s.e(30).then(s.bind(s,3030))}s.r(r),s.d(r,{register:()=>t})},8097:e=>{e.exports=require("@sentry/nextjs")}};var r=require("./webpack-runtime.js");r.C(e);var s=r(r.s=9228);module.exports=s})();
+//# sourceMappingURL=instrumentation.js.map

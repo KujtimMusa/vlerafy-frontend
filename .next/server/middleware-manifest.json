@@ -5,6 +5,7 @@
   "middleware": {
     "/": {
       "files": [
+        "server/edge-instrumentation.js",
         "prerender-manifest.js",
         "server/edge-runtime-webpack.js",
         "server/middleware.js"

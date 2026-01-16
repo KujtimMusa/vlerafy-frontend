@@ -18,18 +18,18 @@ Sentry.init({
   // Before Send Hook
   beforeSend(event, hint) {
     // Filter sensitive data
-    if (event.request) {
-      if (event.request.headers) {
-        const sensitiveHeaders = ['authorization', 'x-api-key', 'cookie'];
-        sensitiveHeaders.forEach(header => {
-          const headerLower = header.toLowerCase();
-          Object.keys(event.request.headers).forEach(key => {
-            if (key.toLowerCase() === headerLower) {
-              event.request.headers[key] = '[Filtered]';
-            }
-          });
+    const request = event.request;
+    if (request && request.headers) {
+      const headers = request.headers;
+      const sensitiveHeaders = ['authorization', 'x-api-key', 'cookie'];
+      sensitiveHeaders.forEach(header => {
+        const headerLower = header.toLowerCase();
+        Object.keys(headers).forEach(key => {
+          if (key.toLowerCase() === headerLower) {
+            headers[key] = '[Filtered]';
+          }
         });
-      }
+      });
     }
     return event;
   },

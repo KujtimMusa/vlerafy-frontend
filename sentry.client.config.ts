@@ -39,19 +39,21 @@ Sentry.init({
   // Before Send Hook
   beforeSend(event, hint) {
     // Filter sensitive data
-    if (event.request) {
+    const request = event.request;
+    if (request) {
       // Remove cookies, tokens, etc.
-      if (event.request.cookies) {
-        delete event.request.cookies;
+      if (request.cookies) {
+        delete request.cookies;
       }
-      if (event.request.headers) {
+      const headers = request.headers;
+      if (headers) {
         // Remove sensitive headers
         const sensitiveHeaders = ['authorization', 'x-api-key', 'cookie'];
         sensitiveHeaders.forEach(header => {
           const headerLower = header.toLowerCase();
-          Object.keys(event.request.headers).forEach(key => {
+          Object.keys(headers).forEach(key => {
             if (key.toLowerCase() === headerLower) {
-              event.request.headers[key] = '[Filtered]';
+              headers[key] = '[Filtered]';
             }
           });
         });

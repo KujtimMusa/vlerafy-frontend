@@ -1,6 +1,6 @@
 'use client';
 
-import { ErrorBoundary } from './ErrorBoundary';
+import ErrorBoundary from './ErrorBoundary';
 
 /**
  * Client Component Wrapper für Error Boundary
