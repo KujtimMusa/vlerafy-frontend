@@ -49,7 +49,8 @@ export interface Recommendation {
   price_change_pct?: number;
   
   // ML Fields
-  confidence: number;                    // 0-1 (Overall Confidence)
+  confidence: number;                    // 0-1 (Legacy Overall Confidence)
+  overall_confidence?: number;           // NEW: 0-100 (from confidence breakdown)
   strategy: string;                      // "ml_enhanced" | "demand" | "cost" | "competitive" | "inventory"
   status: 'pending' | 'accepted' | 'rejected' | 'applied';
   
@@ -137,9 +138,31 @@ export interface Recommendation {
 
 // API Response Types
 export interface GenerateRecommendationResponse {
-  success: boolean;
-  recommendation: Recommendation;
-  message?: string;
+  success: boolean
+  recommendation: Recommendation
+  confidence?: {  // NEW: Feature confidence breakdown
+    overall_confidence: number  // 0-100
+    total_features: number
+    available_features: number
+    categories: Record<string, {
+      percentage: number
+      status: string
+      available: number
+      total: number
+      missing_critical: string[]
+      missing_non_critical: string[]
+      legitimate_zeros: string[]
+      not_implemented: string[]
+    }>
+    warnings?: string[]
+    recommendations?: string[]
+  }
+  details?: any
+  shop_context?: {
+    shop_id: number
+    is_demo: boolean
+  }
+  message?: string
 }
 
 export interface GetRecommendationsResponse {

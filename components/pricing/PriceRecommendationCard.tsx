@@ -130,7 +130,7 @@ export function PriceRecommendationCard({
     current_price: recommendation.current_price,
     recommended_price: recommendation.recommended_price,
     price_change_pct: recommendation.price_change_pct,
-    confidence: recommendation.confidence,
+    confidence: validConfidence,  // Use calculated validConfidence (from overall_confidence if available)
     strategies: extractStrategies(recommendation),
     competitor_context: extractCompetitorContext(recommendation),
     ml_predictions: extractMLPredictions(recommendation),
@@ -144,8 +144,14 @@ export function PriceRecommendationCard({
   // Normalize reasoning (für Fallback)
   const reasoningText = recommendationTexts.confidence
   
+  // ✅ FIX: Use overall_confidence from new confidence breakdown if available
+  // overall_confidence is 0-100, legacy confidence is 0-1
+  const rawConfidence = (recommendation as any).overall_confidence !== undefined
+    ? (recommendation as any).overall_confidence / 100.0  // Convert 0-100 to 0-1
+    : recommendation.confidence
+  
   // ✅ FIX: Ensure confidence is always valid (0-1 range) - like PriceReasoningStory.tsx
-  const validConfidence = Math.max(0, Math.min(1, recommendation.confidence ?? 0.5))
+  const validConfidence = Math.max(0, Math.min(1, rawConfidence ?? 0.5))
   
   // Handle actions
   const handleApply = async () => {

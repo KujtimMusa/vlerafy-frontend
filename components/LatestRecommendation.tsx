@@ -19,7 +19,8 @@ interface RecommendationData extends Partial<Recommendation> {
   recommended_price: number
   price_change_pct: number
   strategy: string
-  confidence: number
+  confidence: number  // Legacy: 0-1 range
+  overall_confidence?: number  // NEW: 0-100 range from confidence breakdown
   reasoning: string | any
   
   // Metrics
@@ -118,6 +119,15 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         // ✅ NEW: Add feature_confidence from response
         if (data.confidence) {
           rec.feature_confidence = data.confidence
+          
+          // ✅ Use overall_confidence from new confidence breakdown if available
+          // overall_confidence is 0-100, legacy confidence is 0-1
+          if (data.confidence.overall_confidence !== undefined) {
+            // Convert overall_confidence (0-100) to 0-1 range for backward compatibility
+            rec.confidence = data.confidence.overall_confidence / 100.0
+            rec.overall_confidence = data.confidence.overall_confidence
+            console.log(`[LatestRecommendation] Using overall_confidence: ${data.confidence.overall_confidence}%`)
+          }
         }
         
         // ✅ BEHALTE ALLE Backend-Fields:
@@ -127,9 +137,10 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         console.log('[LatestRecommendation] ✅ Setting fresh recommendation with all fields:', rec)
         setRecommendation(rec)
         
-        // ✅ Toast Notification
+        // ✅ Toast Notification - use overall_confidence if available
+        const displayConfidence = rec.overall_confidence ?? (rec.confidence ? Math.round(rec.confidence * 100) : 0)
         toast.success('Recommendation generiert! 🎯', {
-          description: `Confidence: ${Math.round(rec.confidence * 100)}% | Strategy: ${rec.strategy || 'N/A'}`
+          description: `Confidence: ${displayConfidence}% | Strategy: ${rec.strategy || 'N/A'}`
         })
       } else {
         console.log('[LatestRecommendation] No recommendation in response')
@@ -334,6 +345,11 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     })) || []
   } : undefined
   
+  // Get confidence: prefer overall_confidence (0-100), fallback to legacy confidence (0-1)
+  const displayConfidence = recommendation.overall_confidence !== undefined
+    ? recommendation.overall_confidence / 100.0  // Convert 0-100 to 0-1
+    : recommendation.confidence
+  
   const transformedRecommendation = {
     product_id: recommendation.product_id,
     product_name: recommendation.product_name,
@@ -341,7 +357,8 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     recommended_price: recommendation.recommended_price,
     price_change: recommendation.recommended_price - recommendation.current_price,
     price_change_pct: recommendation.price_change_pct,
-    confidence: recommendation.confidence,
+    confidence: displayConfidence,  // Use overall_confidence if available
+    overall_confidence: recommendation.overall_confidence,  // Pass through for display
     reasoning: typeof reasoning === 'string' ? reasoning : (reasoningObj as any).summary || JSON.stringify(reasoningObj),
     strategy_details: strategyDetails.length > 0 ? strategyDetails : undefined,
     competitor_data: competitorData,
