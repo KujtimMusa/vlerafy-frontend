@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface AnimatedGradientProps {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 
