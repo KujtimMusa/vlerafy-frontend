@@ -84,6 +84,8 @@ module.exports = {
         'gradient': 'gradient 8s linear infinite',
         'mesh-move': 'mesh-move 20s ease infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'grid': 'grid 20s linear infinite',
         'shimmer': 'shimmer 2s linear infinite',
         'fade-in-up': 'fade-in-up 0.6s ease-out',
       },
@@ -115,13 +117,15 @@ module.exports = {
         },
         'gradient': {
           '0%, 100%': {
-            'background-size': '200% 200%',
-            'background-position': 'left center'
+            'background-position': '0% 50%'
           },
           '50%': {
-            'background-size': '200% 200%',
-            'background-position': 'right center'
+            'background-position': '100% 50%'
           }
+        },
+        'grid': {
+          '0%': { 'transform': 'translate(0, 0)' },
+          '100%': { 'transform': 'translate(80px, 80px)' }
         },
       },
       

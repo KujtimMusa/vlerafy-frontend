@@ -53,19 +53,23 @@ export function PremiumFeaturesSection() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative"
             >
-              {/* Glow on Hover */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl opacity-0 group-hover:opacity-30 blur transition duration-500" />
+              {/* Glow on Hover - STÄRKER! */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl opacity-0 group-hover:opacity-50 blur-xl transition duration-500" />
               
               {/* Card */}
-              <div className="relative p-8 bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 rounded-2xl transition-all duration-500 group-hover:border-blue-500/50 group-hover:transform group-hover:scale-105">
+              <div className="relative p-8 bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 rounded-2xl transition-all duration-500 group-hover:border-blue-500/80 group-hover:transform group-hover:scale-105 group-hover:shadow-[0_0_80px_rgba(59,130,246,0.3)]">
                 
-                {/* Icon */}
-                <div className="w-14 h-14 bg-blue-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600/20 transition">
-                  {feature.icon}
+                {/* Icon - ANIMATED! */}
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-600/20 to-blue-400/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <div className="group-hover:text-blue-300 transition-colors duration-300">
+                    {feature.icon}
+                  </div>
                 </div>
                 
                 {/* Text */}
-                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-blue-300 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
+                  {feature.title}
+                </h3>
                 <p className="text-zinc-400 leading-relaxed">
                   {feature.description}
                 </p>

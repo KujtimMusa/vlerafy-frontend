@@ -51,26 +51,26 @@ export function PremiumFinalCTASection() {
         
         {/* Form (Same as Hero) */}
         <div className="relative group max-w-xl mx-auto">
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition duration-500" />
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 rounded-2xl blur-xl opacity-40 group-hover:opacity-60 animate-pulse-slow transition duration-500" />
           {success ? (
-            <div className="relative flex items-center justify-center p-6 bg-zinc-900 rounded-2xl border border-zinc-800">
+            <div className="relative flex items-center justify-center p-6 bg-zinc-900 rounded-2xl border-2 border-zinc-800">
               <div className="text-green-400 font-medium">✓ You're on the waitlist!</div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="relative flex gap-3 p-2 bg-zinc-900 rounded-2xl border border-zinc-800">
+            <form onSubmit={handleSubmit} className="relative flex gap-3 p-2 bg-zinc-900 rounded-2xl border-2 border-zinc-800 group-hover:border-blue-500/50 transition-all duration-300 shadow-[0_0_100px_rgba(0,0,0,0.8)]">
               <input
                 type="email"
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-6 py-4 bg-transparent text-white placeholder:text-zinc-500 outline-none text-lg"
+                className="flex-1 px-6 py-5 bg-transparent text-white placeholder:text-zinc-500 outline-none text-lg focus:placeholder:text-zinc-400 transition"
                 disabled={loading}
                 required
               />
               <button 
                 type="submit"
                 disabled={loading}
-                className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-10 py-5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_40px_rgba(59,130,246,0.4)]"
               >
                 {loading ? 'Joining...' : 'Join Waitlist →'}
               </button>
@@ -84,9 +84,11 @@ export function PremiumFinalCTASection() {
         <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
           
           {/* Logo */}
-          <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-            Vlerafy
-          </div>
+          <img 
+            src="/logo.svg" 
+            alt="Vlerafy" 
+            className="h-6 w-auto opacity-80 hover:opacity-100 transition"
+          />
           
           {/* Links */}
           <div className="flex gap-8 text-sm text-zinc-500">
