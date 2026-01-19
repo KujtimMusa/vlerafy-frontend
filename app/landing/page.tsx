@@ -1,21 +1,17 @@
 'use client';
 
-import { HeroSection } from '@/components/landing/HeroSection';
-import { TrustBar } from '@/components/landing/TrustBar';
-import { FeaturesSection } from '@/components/landing/FeaturesSection';
-import { SneakPeekSection } from '@/components/landing/SneakPeekSection';
-import { WaitlistSection } from '@/components/landing/WaitlistSection';
-import { Footer } from '@/components/landing/Footer';
+import { PremiumHeroSection } from '@/components/landing/PremiumHeroSection';
+import { PremiumFeaturesSection } from '@/components/landing/PremiumFeaturesSection';
+import { PremiumSocialProofSection } from '@/components/landing/PremiumSocialProofSection';
+import { PremiumFinalCTASection } from '@/components/landing/PremiumFinalCTASection';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-bg-primary">
-      <HeroSection />
-      <TrustBar />
-      <FeaturesSection />
-      <SneakPeekSection />
-      <WaitlistSection />
-      <Footer />
+    <div className="min-h-screen bg-black">
+      <PremiumHeroSection />
+      <PremiumFeaturesSection />
+      <PremiumSocialProofSection />
+      <PremiumFinalCTASection />
     </div>
   );
 }

@@ -81,6 +81,7 @@ module.exports = {
       // Animations
       animation: {
         'gradient-shift': 'gradient-shift 3s ease infinite',
+        'gradient': 'gradient 8s linear infinite',
         'mesh-move': 'mesh-move 20s ease infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'shimmer': 'shimmer 2s linear infinite',
@@ -111,6 +112,16 @@ module.exports = {
         'fade-in-up': {
           '0%': { 'opacity': '0', 'transform': 'translateY(30px)' },
           '100%': { 'opacity': '1', 'transform': 'translateY(0)' },
+        },
+        'gradient': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
         },
       },
       
