@@ -64,8 +64,14 @@ export default function AdminDashboardPage() {
   };
 
   const handleGoToMainDashboard = () => {
-    // Navigate to main dashboard (default locale: de)
-    router.push('/de');
+    // Navigate to main dashboard
+    // With localePrefix: 'as-needed', /de might redirect to /
+    // But / redirects to /landing, so we need to explicitly go to /de
+    // Force navigation to /de which should render app/[locale]/page.tsx (Dashboard)
+    if (typeof window !== 'undefined') {
+      // Use replace to avoid redirect loops
+      window.location.replace('/de');
+    }
   };
 
   if (loading) {
