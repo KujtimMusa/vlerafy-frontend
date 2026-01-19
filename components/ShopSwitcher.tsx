@@ -319,7 +319,7 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
                 </h3>
                 
                 <p className="text-sm mb-6" style={{ color: '#94a3b8' }}>
-                  Installiere PriceIQ in deinem Shopify Store um automatisch Preis-Optimierungen zu erhalten.
+                  Installiere Vlerafy in deinem Shopify Store um automatisch Preis-Optimierungen zu erhalten.
                 </p>
                 
                 {/* Install Method 1: Direkt Domain eingeben */}
@@ -346,7 +346,7 @@ export function ShopSwitcher({ className = '' }: ShopSwitcherProps) {
                 
                 {/* Install Method 2: Shopify App Store Link */}
                 <div className="text-sm" style={{ color: '#94a3b8' }}>
-                  Oder installiere PriceIQ direkt aus dem{' '}
+                  Oder installiere Vlerafy direkt aus dem{' '}
                   <a 
                     href="https://apps.shopify.com" 
                     target="_blank"

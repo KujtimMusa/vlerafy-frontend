@@ -185,7 +185,7 @@ export default function Home() {
             
             <div className="flex-1">
               <h2 className="text-lg font-bold text-white tracking-tight leading-none">
-                PriceIQ
+                Vlerafy
               </h2>
               <p className="text-[10px] font-semibold text-blue-400 uppercase tracking-widest mt-0.5">
                 Pricing Intelligence

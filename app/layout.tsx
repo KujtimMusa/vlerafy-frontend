@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
-  title: 'PriceIQ',
-  description: 'Shopify Pricing Optimization Tool',
+  title: 'Vlerafy',
+  description: 'AI-Powered Shopify Pricing Optimization',
 }
 
 export default function RootLayout({

@@ -128,7 +128,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
           margin: 0,
           padding: 0,
         }}>
-          PriceIQ
+          Vlerafy
         </span>
       </div>
 
