@@ -13,12 +13,18 @@ export default function middleware(request: NextRequest) {
     return; // Skip i18n middleware for /dashboard
   }
   
+  // Exclude /landing and /admin from i18n middleware (direct routes, no locale prefix)
+  if (request.nextUrl.pathname.startsWith('/landing') || 
+      request.nextUrl.pathname.startsWith('/admin')) {
+    return; // Skip i18n middleware for /landing and /admin
+  }
+  
   // Apply i18n middleware for all other routes
   return intlMiddleware(request);
 }
 
 export const config = {
-  // Match all pathnames except for API routes, static files, dashboard, etc.
-  matcher: ['/', '/(de|en)/:path*', '/((?!api|_next|_vercel|dashboard|.*\\..*).*)']
+  // Match all pathnames except for API routes, static files, dashboard, landing, admin, etc.
+  matcher: ['/', '/(de|en)/:path*', '/((?!api|_next|_vercel|dashboard|landing|admin|.*\\..*).*)']
 };
 
