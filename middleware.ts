@@ -8,23 +8,33 @@ const intlMiddleware = createMiddleware({
 });
 
 export default function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Exclude root path "/" - let app/page.tsx handle it
+  if (pathname === '/') {
+    return; // Skip i18n middleware for root, allow app/page.tsx redirect
+  }
+  
   // Exclude /dashboard from i18n middleware (direct route, no locale prefix)
-  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+  if (pathname.startsWith('/dashboard')) {
     return; // Skip i18n middleware for /dashboard
   }
   
   // Exclude /landing and /admin from i18n middleware (direct routes, no locale prefix)
-  if (request.nextUrl.pathname.startsWith('/landing') || 
-      request.nextUrl.pathname.startsWith('/admin')) {
+  if (pathname.startsWith('/landing') || pathname.startsWith('/admin')) {
     return; // Skip i18n middleware for /landing and /admin
   }
   
-  // Apply i18n middleware for all other routes
+  // Apply i18n middleware ONLY for locale routes
   return intlMiddleware(request);
 }
 
 export const config = {
-  // Match all pathnames except for API routes, static files, dashboard, landing, admin, etc.
-  matcher: ['/', '/(de|en)/:path*', '/((?!api|_next|_vercel|dashboard|landing|admin|.*\\..*).*)']
+  // Remove '/' from matcher, nur locale-specific routes
+  // Root "/" wird NICHT gematcht, damit app/page.tsx den Redirect handhaben kann
+  matcher: [
+    '/(de|en)/:path*',
+    '/((?!api|_next|_vercel|dashboard|landing|admin|.*\\..*).*)'
+  ]
 };
 
