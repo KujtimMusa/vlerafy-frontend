@@ -6,7 +6,8 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000
  */
 export async function getDashboardStats() {
   const response = await fetch(`${API_URL}/api/dashboard/stats`, {
-    headers: getHeaders()
+    headers: getHeaders(),
+    credentials: 'include'  // ✅ WICHTIG: Cookies mit senden und empfangen
   });
   if (!response.ok) {
     const error = await response.json();
@@ -53,7 +54,8 @@ export async function fetchProducts(shopId?: number) {
     ? `${API_URL}/products/?shop_id=${shopId}`
     : `${API_URL}/products/`;
   const response = await fetch(url, {
-    headers: getHeaders()
+    headers: getHeaders(),
+    credentials: 'include'  // ✅ WICHTIG: Cookies mit senden und empfangen
   });
   if (!response.ok) {
     const error = await response.json();
@@ -195,7 +197,8 @@ export async function generateRecommendation(productId: number) {
 // Shop Management API
 export async function getAvailableShops() {
   const response = await fetch(`${API_URL}/shops`, {
-    headers: getHeaders()
+    headers: getHeaders(),
+    credentials: 'include'  // ✅ WICHTIG: Cookies mit senden und empfangen
   });
   if (!response.ok) {
     const errorData = await response.json();
@@ -206,7 +209,8 @@ export async function getAvailableShops() {
 
 export async function getCurrentShop() {
   const response = await fetch(`${API_URL}/shops/current`, {
-    headers: getHeaders()
+    headers: getHeaders(),
+    credentials: 'include'  // ✅ WICHTIG: Cookies mit senden und empfangen
   });
   if (!response.ok) {
     const errorData = await response.json();
