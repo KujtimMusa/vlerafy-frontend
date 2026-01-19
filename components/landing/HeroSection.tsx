@@ -21,7 +21,7 @@ export function HeroSection() {
     e.preventDefault();
     
     if (!email || !email.includes('@')) {
-      toast.error('Bitte gib eine gültige E-Mail-Adresse ein');
+      toast.error('Please enter a valid email address');
       return;
     }
 
@@ -31,13 +31,13 @@ export function HeroSection() {
       if (result.success) {
         setSuccess(true);
         setEmail('');
-        toast.success('Du bist auf der Waitlist! 🎉');
+        toast.success('You are on the waitlist! 🎉');
         setTimeout(() => setSuccess(false), 5000);
       } else {
-        toast.error(result.message || 'Fehler beim Hinzufügen zur Waitlist');
+        toast.error(result.message || 'Error adding to waitlist');
       }
     } catch (error) {
-      toast.error('Fehler beim Hinzufügen zur Waitlist');
+      toast.error('Error adding to waitlist');
       console.error(error);
     } finally {
       setLoading(false);
@@ -69,7 +69,7 @@ export function HeroSection() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-glass-border"
             >
               <Sparkles className="w-4 h-4 text-accent-end" />
-              <span className="text-sm font-medium text-text-primary">AI-Powered Pricing für Shopify</span>
+              <span className="text-sm font-medium text-text-primary">AI-Powered Pricing for Shopify</span>
             </motion.div>
 
             {/* Main Headline */}
@@ -83,7 +83,7 @@ export function HeroSection() {
                 AI-Powered Pricing.
               </GradientText>
               <br />
-              <span className="text-text-primary">Mehr Umsatz. Weniger Raten.</span>
+              <span className="text-text-primary">More Revenue. Less Guessing.</span>
             </motion.h1>
 
             {/* Subheadline */}
@@ -93,7 +93,7 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="text-hero-sub font-sans text-text-secondary max-w-xl"
             >
-              Die erste Shopify-App, die deine Preise mit Machine Learning optimiert – automatisch, datenbasiert, profitabel.
+              The first Shopify app that optimizes your prices with Machine Learning – automatic, data-driven, profitable.
             </motion.p>
 
             {/* CTAs */}

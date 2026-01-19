@@ -25,12 +25,12 @@ export function WaitlistSection() {
     setError('');
 
     if (!email) {
-      setError('Bitte gib eine E-Mail-Adresse ein');
+      setError('Please enter an email address');
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('Bitte gib eine gültige E-Mail-Adresse ein');
+      setError('Please enter a valid email address');
       return;
     }
 
@@ -40,15 +40,15 @@ export function WaitlistSection() {
       if (result.success) {
         setSuccess(true);
         setEmail('');
-        toast.success('Du bist auf der Waitlist! 🎉');
+        toast.success('You are on the waitlist! 🎉');
         setTimeout(() => setSuccess(false), 5000);
       } else {
-        setError(result.message || 'Diese E-Mail ist bereits auf der Waitlist.');
-        toast.error(result.message || 'Fehler beim Hinzufügen zur Waitlist');
+        setError(result.message || 'This email is already on the waitlist.');
+        toast.error(result.message || 'Error adding to waitlist');
       }
     } catch (err) {
-      setError('Fehler beim Hinzufügen zur Waitlist');
-      toast.error('Fehler beim Hinzufügen zur Waitlist');
+      setError('Error adding to waitlist');
+      toast.error('Error adding to waitlist');
       console.error(err);
     } finally {
       setLoading(false);
@@ -67,12 +67,12 @@ export function WaitlistSection() {
           className="mb-12"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-text-primary mb-4 font-serif">
-            Sei einer der{' '}
-            <GradientText>Ersten</GradientText>
+            Be One of the{' '}
+            <GradientText>First</GradientText>
             .
           </h2>
           <p className="text-xl text-text-secondary font-sans">
-            Keine Spam. Nur Updates, wenn wir live gehen. Versprochen.
+            No spam. Only updates when we go live. Promise.
           </p>
         </motion.div>
 
@@ -92,7 +92,7 @@ export function WaitlistSection() {
               className="glass p-6 rounded-xl flex items-center justify-center gap-3 text-success"
             >
               <CheckCircle2 className="w-6 h-6" />
-              <span className="font-medium">Du bist auf der Waitlist!</span>
+              <span className="font-medium">You are on the waitlist!</span>
             </motion.div>
           ) : (
             <>
@@ -121,7 +121,7 @@ export function WaitlistSection() {
                   className="w-full sm:w-auto"
                 >
                   {loading ? (
-                    'Wird hinzugefügt...'
+                    'Adding...'
                   ) : (
                     <>
                       Join Waitlist

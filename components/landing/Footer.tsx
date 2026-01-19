@@ -14,8 +14,8 @@ export function Footer() {
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-2xl font-bold text-text-primary mb-4 font-serif">Vlerafy</h3>
             <p className="text-text-secondary mb-4 max-w-md font-sans">
-              AI-Powered Pricing Optimization für Shopify-Merchants. 
-              Maximiere deine Gewinnmargen mit intelligenten Preisempfehlungen.
+              AI-Powered Pricing Optimization for Shopify Merchants. 
+              Maximize your profit margins with intelligent price recommendations.
             </p>
             <div className="flex gap-4">
               <a
@@ -44,28 +44,28 @@ export function Footer() {
 
           {/* Links */}
           <div>
-            <h4 className="text-text-primary font-semibold mb-4 font-sans">Rechtliches</h4>
+            <h4 className="text-text-primary font-semibold mb-4 font-sans">Legal</h4>
             <ul className="space-y-2">
               <li>
                 <Link href="/privacy" className="text-text-secondary hover:text-text-primary transition-colors font-sans">
-                  Datenschutz
+                  Privacy
                 </Link>
               </li>
               <li>
                 <Link href="/imprint" className="text-text-secondary hover:text-text-primary transition-colors font-sans">
-                  Impressum
+                  Imprint
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="text-text-secondary hover:text-text-primary transition-colors font-sans">
-                  AGB
+                  Terms
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-text-primary font-semibold mb-4 font-sans">Kontakt</h4>
+            <h4 className="text-text-primary font-semibold mb-4 font-sans">Contact</h4>
             <ul className="space-y-2">
               <li>
                 <a href="mailto:contact@vlerafy.com" className="text-text-secondary hover:text-text-primary transition-colors font-sans">
@@ -74,12 +74,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/contact" className="text-text-secondary hover:text-text-primary transition-colors font-sans">
-                  Kontaktformular
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/login" className="text-text-muted hover:text-text-secondary transition-colors text-xs font-sans">
-                  Admin
+                  Contact Form
                 </Link>
               </li>
             </ul>
@@ -89,11 +84,21 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-8 pt-8 border-t border-glass-border flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-text-muted text-sm font-sans">
-            © {currentYear} Vlerafy. Alle Rechte vorbehalten.
+            © {currentYear} Vlerafy. All rights reserved.
           </p>
           <p className="text-text-muted text-sm font-sans">
-            Made with ❤️ für Shopify-Merchants
+            Made with 💜 for Shopify Merchants
           </p>
+        </div>
+
+        {/* Admin Link */}
+        <div className="mt-8 pt-4 border-t border-gray-800 text-center">
+          <Link 
+            href="/admin/login" 
+            className="text-xs text-gray-600 hover:text-gray-400 transition-colors font-sans"
+          >
+            Admin
+          </Link>
         </div>
       </div>
     </footer>

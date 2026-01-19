@@ -18,12 +18,12 @@ export function SneakPeekSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-text-primary mb-4 font-serif">
-            Ein Dashboard, das{' '}
-            <GradientText>denkt</GradientText>
+            A Dashboard That{' '}
+            <GradientText>Thinks</GradientText>
             .
           </h2>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto font-sans">
-            Sehe auf einen Blick: Welche Produkte optimiert werden sollten, warum, und mit welcher Confidence.
+            See at a glance: Which products should be optimized, why, and with what confidence.
           </p>
         </motion.div>
 
@@ -59,10 +59,10 @@ export function SneakPeekSection() {
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {[
-                  { icon: DollarSign, label: 'Umsatz', value: '€12,450', change: '+12%' },
-                  { icon: Package, label: 'Produkte', value: '234', change: '+5' },
-                  { icon: TrendingUp, label: 'Optimierungen', value: '18', change: '+3' },
-                  { icon: BarChart3, label: 'Marge', value: '32%', change: '+2.5%' },
+                  { icon: DollarSign, label: 'Revenue', value: '€12,450', change: '+12%' },
+                  { icon: Package, label: 'Products', value: '234', change: '+5' },
+                  { icon: TrendingUp, label: 'Optimizations', value: '18', change: '+3' },
+                  { icon: BarChart3, label: 'Margin', value: '32%', change: '+2.5%' },
                 ].map((stat, index) => {
                   const Icon = stat.icon;
                   return (
@@ -89,7 +89,7 @@ export function SneakPeekSection() {
               <div className="glass p-8 rounded-xl h-64 flex items-center justify-center">
                 <div className="text-center">
                   <BarChart3 className="w-16 h-16 text-text-muted/30 mx-auto mb-4" />
-                  <p className="text-text-muted">Preis-Trends & Analytics</p>
+                  <p className="text-text-muted">Price Trends & Analytics</p>
                 </div>
               </div>
             </div>

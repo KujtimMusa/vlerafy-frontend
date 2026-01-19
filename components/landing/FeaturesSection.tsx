@@ -14,25 +14,25 @@ const features = [
   {
     icon: Brain,
     title: 'AI Price Recommendations',
-    description: 'Machine Learning analysiert 80+ Faktoren – von Sales-History bis Competitor-Preisen.',
+    description: 'Machine Learning analyzes 80+ factors – from sales history to competitor prices.',
     gradient: 'from-purple-500 to-pink-500',
   },
   {
     icon: TrendingUp,
     title: 'Real-Time Monitoring',
-    description: 'Live-Dashboard mit Sentry-Integration. Sehe sofort, was funktioniert.',
+    description: 'Live dashboard with Sentry integration. See instantly what\'s working.',
     gradient: 'from-blue-500 to-cyan-500',
   },
   {
     icon: Zap,
     title: 'Automated Apply',
-    description: '1-Click Price Update direkt in Shopify. Secure, tested, production-ready.',
+    description: '1-click price update directly in Shopify. Secure, tested, production-ready.',
     gradient: 'from-yellow-500 to-orange-500',
   },
   {
     icon: Shield,
     title: 'Security-First',
-    description: 'JWT Auth, Rate Limiting, 80%+ Test Coverage. Deine Daten sind safe.',
+    description: 'JWT Auth, Rate Limiting, 80%+ test coverage. Your data is safe.',
     gradient: 'from-green-500 to-emerald-500',
   },
 ];
@@ -50,12 +50,11 @@ export function FeaturesSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-text-primary mb-4 font-serif">
-            Alles, was du für erfolgreiche{' '}
-            <GradientText>Preisoptimierung</GradientText>{' '}
-            brauchst
+            Everything you need for successful{' '}
+            <GradientText>price optimization</GradientText>
           </h2>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto font-sans">
-            Ein komplettes Toolkit für moderne E-Commerce-Unternehmen
+            A complete toolkit for modern e-commerce businesses
           </p>
         </motion.div>
 
