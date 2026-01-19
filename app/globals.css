@@ -10,6 +10,7 @@
 @tailwind utilities;
 
 @import './styles/color-system.css';
+@import './styles/design-system.css';
 
 body {
   color: var(--text-secondary);

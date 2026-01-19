@@ -1,0 +1,329 @@
+/**
+ * Futuristic SaaS Landing Page - Design System
+ * Dark Mode Native, Glassmorphism, 3D Effects
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ============================================ */
+
+:root {
+  /* Background Layers (Layered Blacks) */
+  --bg-primary: #0A0A0F;
+  --bg-secondary: #12121A;
+  --bg-elevated: #1A1A26;
+  --bg-overlay: #242430;
+  
+  /* Text Colors */
+  --text-primary: #E8E8F0;
+  --text-secondary: #9999AA;
+  --text-muted: #666677;
+  
+  /* Accent Colors (Gradient) */
+  --accent-start: #6366F1;
+  --accent-end: #8B5CF6;
+  --accent-glow: rgba(139, 92, 246, 0.3);
+  
+  /* Success (Desaturated) */
+  --success: #10B981;
+  --success-glow: rgba(16, 185, 129, 0.2);
+  
+  /* Glassmorphism Colors */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-elevated: rgba(255, 255, 255, 0.15);
+  --glass-shadow: rgba(0, 0, 0, 0.37);
+  --glass-shadow-elevated: rgba(0, 0, 0, 0.5);
+  
+  /* Gradient Mesh Colors */
+  --gradient-purple: #8B5CF6;
+  --gradient-blue: #6366F1;
+  --gradient-cyan: #06B6D4;
+  
+  /* Typography */
+  --font-serif: 'Zodiak', 'Recoleta', 'Georgia', serif;
+  --font-sans: 'Inter Variable', 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  
+  /* Blur */
+  --blur-glass: 10px;
+  --blur-glass-lg: 12px;
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITIES
+   ============================================ */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--glass-shadow);
+}
+
+.glass-elevated {
+  background: var(--glass-bg-elevated);
+  backdrop-filter: blur(var(--blur-glass-lg));
+  -webkit-backdrop-filter: blur(var(--blur-glass-lg));
+  border: 1px solid var(--glass-border-elevated);
+  box-shadow: 0 12px 40px 0 var(--glass-shadow-elevated);
+}
+
+.glass-gradient {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid transparent;
+  background-image: 
+    linear-gradient(var(--glass-bg), var(--glass-bg)),
+    linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 8px 32px 0 var(--glass-shadow);
+}
+
+/* ============================================
+   3D EFFECTS & DEPTH
+   ============================================ */
+
+.transform-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.card-3d {
+  transform: translateZ(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-3d:hover {
+  transform: translateY(-8px) translateZ(20px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 40px rgba(139, 92, 246, 0.2);
+}
+
+.parallax-container {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.parallax-element {
+  transform: translateZ(0);
+  transition: transform 0.1s ease-out;
+}
+
+/* ============================================
+   GRADIENT SYSTEM
+   ============================================ */
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-animated {
+  background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 50%, var(--gradient-cyan) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { 
+    background-position: 0% 50%; 
+  }
+  50% { 
+    background-position: 100% 50%; 
+  }
+}
+
+.gradient-mesh {
+  background: 
+    radial-gradient(at 20% 30%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+  background-size: 200% 200%;
+  animation: mesh-move 20s ease infinite;
+}
+
+@keyframes mesh-move {
+  0%, 100% { 
+    background-position: 0% 0%, 100% 100%, 50% 50%; 
+  }
+  50% { 
+    background-position: 100% 100%, 0% 0%, 50% 50%; 
+  }
+}
+
+/* ============================================
+   GLOW EFFECTS
+   ============================================ */
+
+.glow-purple {
+  box-shadow: 
+    0 0 20px rgba(139, 92, 246, 0.3),
+    0 0 40px rgba(139, 92, 246, 0.2),
+    0 0 60px rgba(139, 92, 246, 0.1);
+}
+
+.glow-purple-animated {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(139, 92, 246, 0.3),
+      0 0 40px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(139, 92, 246, 0.5),
+      0 0 60px rgba(139, 92, 246, 0.3),
+      0 0 80px rgba(139, 92, 246, 0.2);
+  }
+}
+
+/* ============================================
+   ANIMATION SYSTEM
+   ============================================ */
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.stagger-item.visible {
+  animation: stagger-fade-in 0.6s ease-out forwards;
+}
+
+@keyframes stagger-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+}
+
+/* ============================================
+   TYPOGRAPHY UTILITIES
+   ============================================ */
+
+.text-hero {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.text-hero-sub {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* ============================================
+   BUTTON UTILITIES
+   ============================================ */
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+  color: white;
+  font-weight: 600;
+  padding: 0.875rem 2rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 500;
+  padding: 0.875rem 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-ghost:hover {
+  background: var(--glass-bg);
+  border-color: var(--glass-border-elevated);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   INPUT UTILITIES
+   ============================================ */
+
+.input-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 0.875rem 1.25rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.input-glass:focus {
+  outline: none;
+  border-color: var(--accent-end);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.input-glass::placeholder {
+  color: var(--text-muted);
+}
