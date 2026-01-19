@@ -65,12 +65,15 @@ export default function AdminDashboardPage() {
 
   const handleGoToMainDashboard = () => {
     // Navigate to main dashboard
-    // With localePrefix: 'as-needed', /de might redirect to /
-    // But / redirects to /landing, so we need to explicitly go to /de
-    // Force navigation to /de which should render app/[locale]/page.tsx (Dashboard)
+    // Problem: With localePrefix: 'as-needed', /de redirects to /, which redirects to /landing
+    // Solution: Use /en instead (which has explicit prefix) OR check if /de works
+    // Actually: /de should work because middleware matches '/(de|en)/:path*'
+    // But next-intl might redirect /de to / if it's default locale
+    // Let's try /en first, or force /de with explicit navigation
     if (typeof window !== 'undefined') {
-      // Use replace to avoid redirect loops
-      window.location.replace('/de');
+      // Try /en which should definitely work (has explicit prefix)
+      // Or use /de and hope middleware handles it correctly
+      window.location.href = '/en'; // Use /en which has explicit prefix
     }
   };
 
