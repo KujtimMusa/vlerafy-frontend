@@ -18,7 +18,7 @@ const sentryWebpackPluginOptions = {
   // Sentry Webpack Plugin Options
   silent: true, // Suppress logs during build
   org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT || "priceiq-frontend",
+  project: process.env.SENTRY_PROJECT || "vlerafy-frontend",
   
   // Upload source maps (only if org is set)
   widenClientFileUpload: true,
