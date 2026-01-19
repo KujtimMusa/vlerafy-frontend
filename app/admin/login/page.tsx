@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import { Lock, Mail, ArrowRight, AlertCircle, LayoutDashboard } from 'lucide-react';
 import { adminLogin } from '@/lib/waitlist-api';
 import { toast } from 'sonner';
 
@@ -130,14 +130,23 @@ export default function AdminLoginPage() {
           </form>
         </div>
 
-        {/* Back Link */}
-        <div className="mt-6 text-center">
+        {/* Links */}
+        <div className="mt-6 space-y-3 text-center">
           <a
-            href="/landing"
-            className="text-gray-400 hover:text-white transition-colors text-sm"
+            href="/de"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#111111] border border-gray-800 rounded-xl text-gray-300 hover:text-white hover:border-indigo-500/50 transition-all text-sm"
           >
-            ← Zurück zur Landing Page
+            <LayoutDashboard className="w-4 h-4" />
+            Main Dashboard
           </a>
+          <div>
+            <a
+              href="/landing"
+              className="text-gray-400 hover:text-white transition-colors text-sm"
+            >
+              ← Zurück zur Landing Page
+            </a>
+          </div>
         </div>
       </motion.div>
     </div>
