@@ -82,6 +82,7 @@ module.exports = {
       animation: {
         'gradient-shift': 'gradient-shift 3s ease infinite',
         'gradient': 'gradient 8s linear infinite',
+        'gradient-flow': 'gradient-flow 3s ease infinite',
         'mesh-move': 'mesh-move 20s ease infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -90,6 +91,8 @@ module.exports = {
         'blob': 'blob 7s infinite',
         'shimmer': 'shimmer 3s linear infinite',
         'fade-in-up': 'fadeInUp 0.8s ease-out',
+        'float': 'float 6s ease-in-out infinite',
+        'scroll-line': 'scroll-line 2s ease-in-out infinite',
       },
       
       // Animation Delays
@@ -149,6 +152,19 @@ module.exports = {
         'fadeInUp': {
           '0%': { 'opacity': '0', 'transform': 'translateY(20px)' },
           '100%': { 'opacity': '1', 'transform': 'translateY(0)' }
+        },
+        'gradient-flow': {
+          '0%, 100%': { 'background-position': '0% 50%' },
+          '50%': { 'background-position': '100% 50%' }
+        },
+        'float': {
+          '0%, 100%': { 'transform': 'translate(0, 0)' },
+          '50%': { 'transform': 'translate(20px, -20px)' }
+        },
+        'scroll-line': {
+          '0%': { 'height': '0' },
+          '50%': { 'height': '32px' },
+          '100%': { 'height': '0' }
         },
       },
       

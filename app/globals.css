@@ -94,6 +94,15 @@ body {
   }
 }
 
+/* Linear-Style Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.bg-gradient-radial {
+  background-image: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
