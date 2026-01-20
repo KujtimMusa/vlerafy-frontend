@@ -73,7 +73,8 @@ export async function syncProducts(shopId: number) {
 
 export async function getRecommendations(productId: number) {
   const response = await fetch(`${API_URL}/recommendations/product/${productId}`, {
-    headers: getHeaders()
+    headers: getHeaders(),
+    credentials: 'include'  // ✅ Required for session cookie
   });
   if (!response.ok) {
     const error = await response.json();
@@ -178,6 +179,7 @@ export async function generateRecommendation(productId: number) {
   const response = await fetch(`${API_URL}/recommendations/generate/${productId}`, {
     method: 'POST',
     headers: getHeaders(),
+    credentials: 'include'  // ✅ Required for session cookie
   });
   if (!response.ok) {
     const error = await response.json();
