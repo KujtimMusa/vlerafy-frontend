@@ -86,9 +86,18 @@ module.exports = {
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'grid': 'grid 20s linear infinite',
+        'grid-move': 'grid-move 20s linear infinite',
         'blob': 'blob 7s infinite',
-        'shimmer': 'shimmer 2s linear infinite',
+        'shimmer': 'shimmer 3s linear infinite',
         'fade-in-up': 'fadeInUp 0.8s ease-out',
+      },
+      
+      // Animation Delays
+      animationDelay: {
+        '100': '100ms',
+        '200': '200ms',
+        '300': '300ms',
+        '400': '400ms',
       },
       
       keyframes: {
@@ -127,6 +136,10 @@ module.exports = {
         'grid': {
           '0%': { 'transform': 'translate(0, 0)' },
           '100%': { 'transform': 'translate(80px, 80px)' }
+        },
+        'grid-move': {
+          '0%': { 'transform': 'translate(0, 0)' },
+          '100%': { 'transform': 'translate(60px, 60px)' }
         },
         'blob': {
           '0%, 100%': { 'transform': 'translate(0, 0) scale(1)' },

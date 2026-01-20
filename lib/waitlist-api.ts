@@ -61,8 +61,11 @@ export async function addToWaitlist(
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Fehler beim Hinzufügen zur Waitlist' }));
-    throw new Error(error.message || 'Fehler beim Hinzufügen zur Waitlist');
+    const errorData = await response.json().catch(() => ({ message: 'Failed to add to waitlist' }));
+    return { 
+      success: false, 
+      message: errorData.message || 'Failed to add to waitlist' 
+    };
   }
 
   return response.json();
