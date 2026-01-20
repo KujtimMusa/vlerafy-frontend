@@ -1,17 +1,16 @@
 'use client';
-
-import { PremiumHeroSection } from '@/components/landing/PremiumHeroSection';
-import { PremiumFeaturesSection } from '@/components/landing/PremiumFeaturesSection';
-import { PremiumSocialProofSection } from '@/components/landing/PremiumSocialProofSection';
-import { PremiumFinalCTASection } from '@/components/landing/PremiumFinalCTASection';
+import { UltraModernHeroSection } from '@/components/landing/UltraModernHeroSection';
+import { UltraModernFeaturesSection } from '@/components/landing/UltraModernFeaturesSection';
+import { UltraModernSocialProofSection } from '@/components/landing/UltraModernSocialProofSection';
+import { UltraModernFinalCTASection } from '@/components/landing/UltraModernFinalCTASection';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-black">
-      <PremiumHeroSection />
-      <PremiumFeaturesSection />
-      <PremiumSocialProofSection />
-      <PremiumFinalCTASection />
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <UltraModernHeroSection />
+      <UltraModernFeaturesSection />
+      <UltraModernSocialProofSection />
+      <UltraModernFinalCTASection />
     </div>
   );
 }
