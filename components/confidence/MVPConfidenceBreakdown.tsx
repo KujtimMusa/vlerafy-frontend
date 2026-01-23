@@ -57,7 +57,7 @@ export function MVPConfidenceBreakdown({
       {/* Tier Breakdown */}
       <div className="space-y-3">
         {tiers.map(tier => {
-          const score = breakdown[tier.key] || 0
+          const score = breakdown[tier.key as keyof typeof breakdown] || 0
           const scorePercent = (score * 100).toFixed(1)
           const contribution = (score * tier.weight / 100).toFixed(1)
           
