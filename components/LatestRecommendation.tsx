@@ -20,7 +20,15 @@ interface RecommendationData extends Partial<Recommendation> {
   price_change_pct: number
   strategy: string
   confidence: number  // Legacy: 0-1 range
-  overall_confidence?: number  // NEW: 0-100 range from confidence breakdown
+  confidence_label?: string  // NEW: MVP v2.0 - 'High' | 'Medium' | 'Low' | 'Very Low'
+  confidence_breakdown?: {  // NEW: MVP v2.0 breakdown
+    data_richness: number
+    market_intelligence: number
+    model_confidence: number
+    product_maturity: number
+    content_quality: number
+  }
+  confidence_details?: any  // NEW: MVP v2.0 detailed breakdown
   reasoning: string | any
   
   // Metrics
@@ -116,17 +124,32 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         }
         rec.reasoning = reasoningParsed
         
-        // ✅ NEW: Add feature_confidence from response
-        if (data.confidence) {
-          rec.feature_confidence = data.confidence
+        // ✅ NEW: Add MVP v2.0 confidence fields from response
+        if (data.recommendation) {
+          // MVP v2.0 confidence (0-1 range)
+          if (data.recommendation.confidence !== undefined) {
+            rec.confidence = data.recommendation.confidence
+            console.log(`[LatestRecommendation] Using MVP confidence: ${(data.recommendation.confidence * 100).toFixed(1)}%`)
+          }
           
-          // ✅ Use overall_confidence from new confidence breakdown if available
-          // overall_confidence is 0-100, legacy confidence is 0-1
-          if (data.confidence.overall_confidence !== undefined) {
-            // Convert overall_confidence (0-100) to 0-1 range for backward compatibility
-            rec.confidence = data.confidence.overall_confidence / 100.0
-            rec.overall_confidence = data.confidence.overall_confidence
-            console.log(`[LatestRecommendation] Using overall_confidence: ${data.confidence.overall_confidence}%`)
+          // MVP v2.0 confidence label
+          if (data.recommendation.confidence_label) {
+            rec.confidence_label = data.recommendation.confidence_label
+          }
+          
+          // MVP v2.0 confidence breakdown
+          if (data.recommendation.confidence_breakdown) {
+            rec.confidence_breakdown = data.recommendation.confidence_breakdown
+          }
+          
+          // MVP v2.0 confidence details
+          if (data.recommendation.confidence_details) {
+            rec.confidence_details = data.recommendation.confidence_details
+          }
+          
+          // Legacy: feature_confidence (for backward compatibility)
+          if (data.confidence) {
+            rec.feature_confidence = data.confidence
           }
         }
         
@@ -137,10 +160,11 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
         console.log('[LatestRecommendation] ✅ Setting fresh recommendation with all fields:', rec)
         setRecommendation(rec)
         
-        // ✅ Toast Notification - use overall_confidence if available
-        const displayConfidence = rec.overall_confidence ?? (rec.confidence ? Math.round(rec.confidence * 100) : 0)
+        // ✅ Toast Notification - use MVP confidence
+        const displayConfidence = rec.confidence ? Math.round(rec.confidence * 100) : 0
+        const confidenceLabel = rec.confidence_label || (displayConfidence >= 80 ? 'High' : displayConfidence >= 65 ? 'Medium' : displayConfidence >= 50 ? 'Low' : 'Very Low')
         toast.success('Recommendation generiert! 🎯', {
-          description: `Confidence: ${displayConfidence}% | Strategy: ${rec.strategy || 'N/A'}`
+          description: `Confidence: ${displayConfidence}% (${confidenceLabel}) | Strategy: ${rec.strategy || 'N/A'}`
         })
       } else {
         console.log('[LatestRecommendation] No recommendation in response')
@@ -345,10 +369,8 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     })) || []
   } : undefined
   
-  // Get confidence: prefer overall_confidence (0-100), fallback to legacy confidence (0-1)
-  const displayConfidence = recommendation.overall_confidence !== undefined
-    ? recommendation.overall_confidence / 100.0  // Convert 0-100 to 0-1
-    : recommendation.confidence
+  // ✅ MVP v2.0: Use confidence (0-1 range) directly
+  const displayConfidence = recommendation.confidence ?? 0.5
   
   const transformedRecommendation = {
     product_id: recommendation.product_id,
@@ -357,8 +379,10 @@ export default function LatestRecommendation({ productId }: LatestRecommendation
     recommended_price: recommendation.recommended_price,
     price_change: recommendation.recommended_price - recommendation.current_price,
     price_change_pct: recommendation.price_change_pct,
-    confidence: displayConfidence,  // Use overall_confidence if available
-    overall_confidence: recommendation.overall_confidence,  // Pass through for display
+    confidence: displayConfidence,  // MVP v2.0 confidence (0-1)
+    confidence_label: recommendation.confidence_label,  // MVP v2.0 label
+    confidence_breakdown: recommendation.confidence_breakdown,  // MVP v2.0 breakdown
+    confidence_details: recommendation.confidence_details,  // MVP v2.0 details
     reasoning: typeof reasoning === 'string' ? reasoning : (reasoningObj as any).summary || JSON.stringify(reasoningObj),
     strategy_details: strategyDetails.length > 0 ? strategyDetails : undefined,
     competitor_data: competitorData,
